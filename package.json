@@ -1,0 +1,45 @@
+{
+  "name": "checkpoint_twentyone",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A game using my own module for laboration 3 in course 1DV610 at Linnaeus University.",
+  "type": "module",
+  "scripts": {
+    "test": "vitest",
+    "test:run": "vitest run --passWithNoTests",
+    "test:match": "vitest run -t",
+    "lint": "eslint ./src --cache",
+    "lint:fix": "eslint ./src --cache --fix",
+    "format": "prettier --write ./src",
+    "format:check": "prettier ./src --check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m-mellin/checkpoint_twentyone.git"
+  },
+  "keywords": [],
+  "author": "Mattias Mellin <mattias.mellin@gmail.com> <mm225vh@student.lnu.se>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/m-mellin/checkpoint_twentyone/issues"
+  },
+  "homepage": "https://github.com/m-mellin/checkpoint_twentyone#readme",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@lnu/eslint-config": "^2.0.17",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "eslint": "^10.12.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jsdoc": "^65.3.0",
+    "eslint-plugin-n": "^18.4.1",
+    "eslint-plugin-regexp": "^3.3.1",
+    "eslint-plugin-security": "^4.2.0",
+    "globals": "^17.13.0",
+    "jsdom": "^30.1.1",
+    "prettier": "^3.9.6",
+    "vitest": "^5.0.0"
+  },
+  "dependencies": {
+    "2d-sprite-renderer": "^1.0.7"
+  }
+}
