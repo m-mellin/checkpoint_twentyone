@@ -43,6 +43,6 @@
     "vitest": "^5.0.0"
   },
   "dependencies": {
-    "2d-sprite-renderer": "^1.0.7"
+    "2d-sprite-renderer": "github:m-mellin/2d-sprite-renderer#feature/text-sprite"
   }
 }
