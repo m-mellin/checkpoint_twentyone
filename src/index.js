@@ -1,5 +1,6 @@
 import { Sprite, SpriteAnimation, SpriteRegion, SpriteRenderer, TextSprite } from '2d-sprite-renderer'
 import './style.css'
+import { Transcript } from './model/Transcript'
 
 const GAME_WIDTH = 1920
 const GAME_HEIGHT = 1080
@@ -9,15 +10,6 @@ canvas.width = GAME_WIDTH
 canvas.height = GAME_HEIGHT
 
 const PIXEL_FONT = '16px "Press Start 2P"'
-
-const travellerName = new TextSprite('ERIK LINDQVIST', {
-  x: 700,
-  y: 650,
-  font: PIXEL_FONT,
-  color: '#2b2b2b'
-})
-
-
 
 const renderer = new SpriteRenderer(canvas)
 
@@ -67,11 +59,43 @@ const lightRegion = [
 ]
 const lightAnimation = new SpriteAnimation(lightRegion, 400)
 
+const transcriptContainer = new Transcript()
+
+const transcriptOne = new TextSprite('ERIK LINDQVIST', {
+  font: PIXEL_FONT,
+  x: 60,
+  color: '#2b2b2b'
+})
+const transcriptTwo = new TextSprite('ERIK LINDQVIST', {
+  font: PIXEL_FONT,
+  x: 60,
+  color: '#2b2b2b'
+})
+const transcriptThree = new TextSprite('ERIK LINDQVIST', {
+  font: PIXEL_FONT,
+  x: 60,
+  color: '#2b2b2b'
+})
+
+transcriptContainer.addTranscript(transcriptOne)
+transcriptContainer.addTranscript(transcriptTwo)
+transcriptContainer.addTranscript(transcriptThree)
+
+const transcriptMeasureOne = transcriptContainer.measureText(transcriptOne)
+const transcriptMeasureTwo = transcriptContainer.measureText(transcriptTwo)
+const transcriptMeasureThree = transcriptContainer.measureText(transcriptThree)
+
+transcriptOne.y = 20
+transcriptTwo.y = transcriptOne.y + transcriptMeasureOne.height
+transcriptThree.y = transcriptTwo.y + transcriptMeasureThree.height
+
 renderer.add(board)
 renderer.add(travellers)
 renderer.add(lightEffect)
 renderer.add(transcript)
-renderer.add(travellerName)
+renderer.add(transcriptOne)
+renderer.add(transcriptTwo)
+renderer.add(transcriptThree)
 renderer.render()
 
 let previousTimestamp = 0;
