@@ -3,9 +3,7 @@ import './style.css'
 import { TranscriptDocument } from './model/TranscriptDocument'
 import { Transcript } from './model/Transcript'
 import { Repository } from './repository/Repository'
-import { Nation } from './model/Nation.js'
-import { NationController } from './controller/NationController'
-import { TravellerGenerator } from './model/TravellerGenerator'
+import { GameController } from './controller/GameController'
 
 const GAME_WIDTH = 1920
 const GAME_HEIGHT = 1080
@@ -32,15 +30,6 @@ const transcript = new Sprite(transcriptSrc, {x: 0, y: 0, width: 1272 / 1.7, hei
 
 const travellerOne = new SpriteRegion({x: 31, y: 0, width: 240, height: 187})
 travellers.region = travellerOne
-
-const nationController = new NationController()
-const now = new Date()
-const generator = new TravellerGenerator(new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())))
-generator.createPeople(20, nationController.nations)
-// const travellerController = new TravellerController()
-// travellerController.createTraveller(5, nationController.nations)
-
-// console.log(travellerController.travellers.getAllItems())
 
 const travellerEffect = [
   new SpriteRegion({x: 31, y: 0, width: 240, height: 187}),
@@ -93,29 +82,21 @@ const transcriptDocument = new TranscriptDocument()
 
 await document.fonts.load(PIXEL_FONT)
 
+const gameController = new GameController()
+gameController.startGame('easy')
+
 const transcriptOne = new Transcript('ERIK LINDQVIST', '#2b2b2b', PIXEL_FONT)
 const transcriptTwo = new Transcript('ERIK LINDQVIST', '#2b2b2b', PIXEL_FONT)
 const transcriptThree = new Transcript('ERIK LINDQVIST', '#2b2b2b', PIXEL_FONT)
 
-const nations = new Repository(Nation)
 const transcripts = new Repository(Transcript)
 transcripts.add(transcriptOne)
 transcripts.add(transcriptTwo)
 transcripts.add(transcriptThree)
 
-console.log(transcripts.getAllItems())
-
 transcriptDocument.addTranscript(transcriptOne)
 transcriptDocument.addTranscript(transcriptTwo)
 transcriptDocument.addTranscript(transcriptThree)
-
-// const transcriptMeasureOne = transcriptContainer.measureText(transcriptOne)
-// const transcriptMeasureTwo = transcriptContainer.measureText(transcriptTwo)
-// const transcriptMeasureThree = transcriptContainer.measureText(transcriptThree)
-
-// transcriptOne.y = 20
-// transcriptTwo.y = transcriptOne.y + transcriptMeasureOne.height
-// transcriptThree.y = transcriptTwo.y + transcriptMeasureThree.height
 
 renderer.add(board)
 renderer.add(travellers)
