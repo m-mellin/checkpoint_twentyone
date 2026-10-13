@@ -43,7 +43,7 @@ export class Nation {
     assertNonEmptyString(name, 'name')
 
     if (!COUNTRY_CODE_PATTERN.test(countryCode)) {
-      throw new RangeError('countryCode must have max three capital letters, for example "SWE"')
+      throw new RangeError('countryCode must have three capital letters, for example "SWE"')
     }
 
     this.#name = name
