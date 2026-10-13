@@ -219,7 +219,7 @@ export class TravellerGenerator {
    * @param {'M' | 'F'} sex 
    * @returns {readonly string[]}
    */
-  #firstNameFor (nation, sex) {
+  #firstNamesFor (nation, sex) {
     return sex === Sex.MALE ? nation.maleFirstNames : nation.femaleFirstNames
   }
 
@@ -236,11 +236,12 @@ export class TravellerGenerator {
   /**
    * Returns the name with one letter removed, never the first one.
    * 
-   * @param {string} name 
-   * @returns {string}
+   * @param {string} name - The name to misspell, at least two letters long.
+   * @returns {string} The misspelled name, for example "Eik" for "Erik".
    */
   #misspell (name) {
     const index = this.#random.integer(1, name.length - 1)
+
     return name.slice(0, index) + name.slice(index + 1)
   }
 }
