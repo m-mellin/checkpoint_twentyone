@@ -33,6 +33,8 @@ export class TravellerGenerator {
     for (let i = 1; i <= count; i++) {
       people.push(this.createPerson(this.#random.pick(nations)))
     }
+
+    return people
   }
 
   /**
