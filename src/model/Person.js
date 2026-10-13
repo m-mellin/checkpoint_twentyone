@@ -85,9 +85,10 @@ export class Person {
    * @throws {RangeError} If the sex is not Sex.MALE or Sex.FEMALE.
    */
   constructor ({ firstName, surname, heightInCm, nationality, dateOfBirth, birthplace, sex, apperance }) {
-    assertNonEmptyString(firstName, 'firstName')
-    assertNonEmptyString(surname, 'surname')
-    assertNonEmptyString(birthplace, 'birthplace')
+    for (const [name, value] of Object.entries({ firstName, surname, birthplace, apperance })) {
+      assertNonEmptyString(value, name)
+    }
+    
     assertValidDate(dateOfBirth, 'dateOfBirth')
     assertNumberIsFinite(heightInCm, 'heightInCm')
     assertInstanceOf(nationality, Nation, 'nationality')
