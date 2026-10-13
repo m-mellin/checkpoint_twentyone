@@ -129,11 +129,10 @@ export class TravellerGenerator {
    * @returns {Date} The date of birth, at midnight UTC.
    */
   #randomDateOfBirth () {
-    const youngest = this.#yearsBefore(this.#gameDate, MIN_AGE)
-    const oldest = this.#yearsBefore(this.#gameDate, MAX_AGE)
-    const daysBetween = Math.round((youngest.getTime() - oldest.getTime()) / DAY_IN_MS)
+    const youngest = addYears(this.#gameDate, -MIN_AGE)
+    const oldest = addYears(this.#gameDate, -MAX_AGE)
 
-    return new Date(oldest.getTime() + this.#random.integer(0, daysBetween) * DAY_IN_MS)
+    return addDays(oldest, this.#random.integer(0, daysBetween(oldest, youngest)))
   }
 
   /**
