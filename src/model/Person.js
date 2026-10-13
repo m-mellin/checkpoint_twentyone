@@ -4,7 +4,6 @@ import { assertInstanceOf, assertNonEmptyString, assertNumberIsFinite, assertVal
 export const Sex = Object.freeze({ MALE: 'M', FEMALE: 'F' })
 
 export class Person {
-  // #sprite
   #firstName
   #surname
   #heightInCm
@@ -42,7 +41,7 @@ export class Person {
     this.#firstName = firstName
     this.#surname = surname
     this.#heightInCm = heightInCm
-    this.#nationality = nationality,
+    this.#nationality = nationality
     this.#dateOfBirth = new Date(dateOfBirth)
     this.#birthplace = birthplace
     this.#sex = sex
@@ -96,12 +95,4 @@ export class Person {
   get sex () {
     return this.#sex
   }
-
-  // get sprite () {
-  //   return this.#sprite
-  // }
-
-  // set sprite (sprite) {
-  //   this.#sprite = sprite
-  // }
 }
