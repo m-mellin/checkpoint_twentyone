@@ -1,0 +1,5 @@
+{
+  "easy": ["SWE", "GBR", "DEU", "NOR"],
+  "medium": ["SWE", "GBR", "DEU", "NOR", "DNK", "POL"],
+  "hard": ["SWE", "GBR", "DEU", "NOR", "DNK", "POL", "EST", "FIN", "LVA", "LTU"]
+}
