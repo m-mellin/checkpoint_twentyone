@@ -66,11 +66,11 @@ export class Nation {
     return this.#issuingCities
   }
 
-  get maleFirstnames () {
+  get maleFirstNames () {
     return this.#maleFirstnames
   }
 
-  get femaleFirstnames () {
+  get femaleFirstNames () {
     return this.#femaleFirstnames;
   }
 
