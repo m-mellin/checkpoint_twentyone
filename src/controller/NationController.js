@@ -11,7 +11,7 @@ export class NationController {
 
   constructor() {
     this.#nations = new Repository(Nation)
-    this.#createNations()
+    this.#createNations("easy")
   }
 
   #createNations (difficulty) {
@@ -26,5 +26,9 @@ export class NationController {
         this.#nations.add(new Nation(data))
       }
     }
+  }
+
+  get nations () {
+    return this.#nations.getAllItems()
   }
 }
