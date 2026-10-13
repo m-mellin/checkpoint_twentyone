@@ -1,12 +1,11 @@
-import { Random } from "./Random.js"
-import { Person, Sex } from "./Person.js"
-import { Nation } from "./Nation.js"
+import { Random } from './Random.js'
+import { Person, Sex } from './Person.js'
+import { Nation } from './Nation.js'
 import { addDays, addYears, daysBetween } from './dates.js'
-import { Passport } from "./Passport.js"
-import { Traveller } from "./Traveller.js"
-import { Discrepancy } from "./Discrepancy.js"
+import { Passport } from './Passport.js'
+import { Traveller } from './Traveller.js'
+import { Discrepancy } from './Discrepancy.js'
 
-const DAY_IN_MS = 24 * 60 * 60 * 1000
 const MIN_AGE = 10
 const MAX_AGE = 80
 const MIN_HEIGHT_IN_CM = 150
