@@ -1,10 +1,13 @@
 import nationData from '../data/nations.json'
 import difficulties from '../data/difficulties.json'
+import portraitData from '../data/potraits.json'
+
 import { Nation } from '../model/Nation.js'
 import { Repository } from '../repository/Repository.js'
-import { Person } from '../model/Person.js'
+import { Sex } from '../model/Person.js'
 import { TravellerGenerator } from '../model/TravellerGenerator.js'
 import { Transcript } from '../model/Transcript.js'
+import { Traveller } from '../model/Traveller'
 
 export const Difficulties = Object.freeze({ EASY: 'easy', MEDIUM: 'medium', HARD: 'hard'})
 
@@ -15,7 +18,7 @@ export class GameController {
   #nations
 
   /**
-   * @type {Repository<Person>}
+   * @type {Repository<Traveller>}
    */
   #travellers
 
@@ -29,7 +32,7 @@ export class GameController {
    */
   constructor() {
     this.#nations = new Repository(Nation)
-    this.#travellers = new Repository(Person)
+    this.#travellers = new Repository(Traveller)
     this.#transcripts = new Repository(Transcript)
   }
 
@@ -45,15 +48,18 @@ export class GameController {
     const now = new Date()
     const gameDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
 
-    this.#createNations(difficulty)
-    this.#createTravellers(gameDate)
+    this.#generateNations(difficulty)
+    this.#generateTravellers(gameDate)
+
+    console.log(this.#travellers.getAllItems())
+
   }
 
   /**
    * 
    * @param {'easy' | 'medium' | 'hard'} difficulty 
    */
-  #createNations(difficulty) {
+  #generateNations(difficulty) {
     const countryCodes = difficulties[difficulty]
 
     if (!countryCodes) {
@@ -74,11 +80,20 @@ export class GameController {
     return this.#nations.getAllItems()
   }
 
-  #createTravellers(gameDate) {
-    const generator = new TravellerGenerator(gameDate)
+  /**
+   * 
+   * @param {Date} gameDate 
+   */
+  #generateTravellers(gameDate) {
+    const apperances = {
+      [Sex.MALE]: portraitData.filter((portrait) => portrait.sex === Sex.MALE).map((portrait) => portrait.id),
+      [Sex.FEMALE]: portraitData.filter((portrait) => portrait.sex === Sex.FEMALE).map((portrait) => portrait.id)
+    }
 
-    for (const person of generator.createPeople(10, this.nations)) {
-      this.#travellers.add(person)
+    const generator = new TravellerGenerator(gameDate, apperances)
+
+    for (const traveller of generator.createTravellers(10, this.nations)) {
+      this.#travellers.add(traveller)
     }
   }
 }
