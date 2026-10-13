@@ -7,75 +7,94 @@ import { Nation } from '../model/Nation.js'
 import { Repository } from '../repository/Repository.js'
 import { Sex } from '../model/Person.js'
 import { TravellerGenerator } from '../model/TravellerGenerator.js'
-import { Transcript } from '../model/Transcript.js'
-import { Traveller } from '../model/Traveller'
-import { Discrepancy } from '../model/Discrepancy'
+import { Traveller } from '../model/Traveller.js'
+import { Discrepancy } from '../model/Discrepancy.js'
 
-export const Difficulties = Object.freeze({ EASY: 'easy', MEDIUM: 'medium', HARD: 'hard'})
+const TRAVELLERS_PER_DAY = 10
+const FORGERY_PROBABILITY = 0.4
 
+/**
+ * The difficulties a game can be started at.
+ *
+ * @readonly
+ * @enum {'easy' | 'medium' | 'hard'}
+ */
+export const Difficulties = Object.freeze({ EASY: 'easy', MEDIUM: 'medium', HARD: 'hard' })
+
+/**
+ * Sets up a game: the nations in play, the discrepancies that can occur and the travellers of the day.
+ */
 export class GameController {
   /**
+   * The nations travellers can come from.
+   *
    * @type {Repository<Nation>}
    */
-  #nations
+  #nations = new Repository(Nation)
 
   /**
-   * @type {Repository<Traveller>}
-   */
-  #travellers
-
-  /**
-   * @type {Repository<Transcript>}
-   */
-  #transcripts
-
-  /**
+   * The discrepancies a forged passport can have.
+   *
    * @type {Repository<Discrepancy>}
    */
-  #discrepancies
+  #discrepancies = new Repository(Discrepancy)
 
   /**
-   * Constructor
+   * The travellers waiting at the checkpoint.
+   *
+   * @type {Repository<Traveller>}
    */
-  constructor () {
-    this.#nations = new Repository(Nation)
-    this.#travellers = new Repository(Traveller)
-    this.#transcripts = new Repository(Transcript)
-    this.#discrepancies = new Repository(Discrepancy)
-  }
+  #travellers = new Repository(Traveller)
 
   /**
-   * 
-   * @param {'easy' | 'medium' | 'hard'} difficulty 
+   * Starts a new game. Anything from an earlier game is replaced.
+   *
+   * @param {'easy' | 'medium' | 'hard'} difficulty - Difficulties.EASY, Difficulties.MEDIUM or Difficulties.HARD.
+   * @throws {RangeError} If the difficulty is unknown.
    */
   startGame (difficulty) {
     if (!Object.values(Difficulties).includes(difficulty)) {
       throw new RangeError('difficulty must be Difficulties.EASY ("easy"), Difficulties.MEDIUM ("medium") or Difficulties.HARD ("hard")')
     }
 
-    const now = new Date()
-    const gameDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
-    const forgeryProbability = 0.4
+    const gameDate = this.#today()
+
+    this.#nations = new Repository(Nation)
+    this.#discrepancies = new Repository(Discrepancy)
+    this.#travellers = new Repository(Traveller)
 
     this.#generateNations(difficulty)
     this.#generateDiscrepancies(difficulty)
-    this.#generateTravellers(gameDate, forgeryProbability)
-
-    console.log(this.#travellers.getAllItems())
-    console.log(this.#discrepancies.getAllItems())
-
+    this.#generateTravellers(gameDate)
   }
 
   /**
-   * 
-   * @param {'easy' | 'medium' | 'hard'} difficulty 
+   * Returns the travellers waiting at the checkpoint.
+   *
+   * @returns {Traveller[]} A copy of the list of travellers.
+   */
+  get travellers () {
+    return this.#travellers.getAllItems()
+  }
+
+  /**
+   * Returns today's date at midnight UTC.
+   *
+   * @returns {Date} The date.
+   */
+  #today () {
+    const now = new Date()
+
+    return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
+  }
+
+  /**
+   * Adds the nations that are in play at the difficulty.
+   *
+   * @param {'easy' | 'medium' | 'hard'} difficulty - The chosen difficulty.
    */
   #generateNations (difficulty) {
     const countryCodes = difficulties[difficulty]
-
-    if (!countryCodes) {
-      throw new RangeError(`Unkown difficulty: ${difficulty}`)
-    }
 
     for (const data of nationData) {
       if (countryCodes.includes(data.countryCode)) {
@@ -85,32 +104,49 @@ export class GameController {
   }
 
   /**
-   * 
-   * @param {Date} gameDate 
-   * @param {number} forgeryProbability
+   * Adds the discrepancies that can occur at the difficulty.
+   *
+   * @param {'easy' | 'medium' | 'hard'} difficulty - The chosen difficulty.
    */
-  #generateTravellers (gameDate, forgeryProbability) {
-    const apperances = {
-      [Sex.MALE]: portraitData.filter((portrait) => portrait.sex === Sex.MALE).map((portrait) => portrait.id),
-      [Sex.FEMALE]: portraitData.filter((portrait) => portrait.sex === Sex.FEMALE).map((portrait) => portrait.id)
+  #generateDiscrepancies (difficulty) {
+    for (const code of discrepanciesData[difficulty]) {
+      this.#discrepancies.add(new Discrepancy(code))
     }
+  }
 
-    const generator = new TravellerGenerator(gameDate, apperances, forgeryProbability)
+  /**
+   * Adds the travellers of the day, some of them with forged passports.
+   *
+   * @param {Date} gameDate - Today's date in the game, at midnight UTC.
+   */
+  #generateTravellers (gameDate) {
+    const generator = new TravellerGenerator(gameDate, this.#appearancesBySex(), FORGERY_PROBABILITY)
+    const travellers = generator.createTravellers(TRAVELLERS_PER_DAY, this.#nations.getAllItems(), this.#discrepancies.getAllItems())
 
-    for (const traveller of generator.createTravellers(10, this.#nations.getAllItems(), this.#discrepancies.getAllItems())) {
+    for (const traveller of travellers) {
       this.#travellers.add(traveller)
     }
   }
 
   /**
-   * 
-   * @param {'easy' | 'medium' | 'hard'} difficulty 
+   * Returns the portrait ids available for each sex.
+   *
+   * @returns {Record<'M' | 'F', string[]>} The portrait ids, grouped by sex.
    */
-  #generateDiscrepancies (difficulty) {
-    const discrepancies = discrepanciesData[difficulty]
-
-    for (const discrepancy of discrepancies) {
-      this.#discrepancies.add(new Discrepancy(discrepancy))
+  #appearancesBySex () {
+    return {
+      [Sex.MALE]: this.#portraitIdsFor(Sex.MALE),
+      [Sex.FEMALE]: this.#portraitIdsFor(Sex.FEMALE)
     }
+  }
+
+  /**
+   * Returns the ids of the portraits of one sex.
+   *
+   * @param {'M' | 'F'} sex - Sex.MALE or Sex.FEMALE.
+   * @returns {string[]} The portrait ids.
+   */
+  #portraitIdsFor (sex) {
+    return portraitData.filter((portrait) => portrait.sex === sex).map((portrait) => portrait.id)
   }
 }
