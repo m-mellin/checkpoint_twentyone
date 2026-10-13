@@ -1,3 +1,5 @@
+import { assertNonEmptyString } from "./validation"
+
 /**
  * A kind of error a forged passport can have, for example a misspelled surname or an expired date.
  */
@@ -15,6 +17,8 @@ export class Discrepancy {
    * @param {string} code - The discrepancy code, for example "INCORRECT_SEX".
    */
   constructor (code) {
+    assertNonEmptyString(code, 'code')
+    
     this.#code = code
   }
 
