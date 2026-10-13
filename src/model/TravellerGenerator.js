@@ -140,7 +140,7 @@ export class TravellerGenerator {
    * person and is valid on the current game date.
    *
    * @param {Person} person - The passport holder.
-   * @returns {object} The data for new Passport().
+   * @returns {import('./Passport.js').PassportData} The data for new Passport().
    */
   #createPassportData (person) {
     const issueDate = this.#randomIssueDate(person.dateOfBirth)
@@ -188,7 +188,7 @@ export class TravellerGenerator {
   /**
    * Changes genuine passport data so that it has the given discrepancy.
    *
-   * @param {*} data - The passport data to change.
+   * @param {import('./Passport.js').PassportData} data - The passport data to change.
    * @param {string} code - The discrepancy code, for example "INCORRECT_SEX".
    * @param {Nation[]} nations - All nations in play, used to borrow foreign names and cities.
    */
