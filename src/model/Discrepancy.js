@@ -1,11 +1,11 @@
-import { assertNonEmptyString } from "./validation"
+import { assertNonEmptyString } from './validation.js'
 
 /**
  * A kind of error a forged passport can have, for example a misspelled surname or an expired date.
  */
 export class Discrepancy {
   /**
-   * The discrepancy code.
+   * The discrepancy code, for example "INCORRECT_SEX"
    *
    * @type {string}
    */
@@ -18,7 +18,7 @@ export class Discrepancy {
    */
   constructor (code) {
     assertNonEmptyString(code, 'code')
-    
+
     this.#code = code
   }
 
