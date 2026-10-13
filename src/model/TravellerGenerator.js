@@ -189,7 +189,7 @@ export class TravellerGenerator {
         data.surname = this.#random.pick(randomNation.surnames)
         break
       case 'INCORRECT_SEX':
-        data.sex = data.sex === Sex.MALE ? Sex.FEMALE : Sex.MALE
+        data.sex = this.#oppositeSex(data.sex)
         break
       case 'INCORRECT_ISSUING_CITY':
         data.issuingCity = this.#random.pick(randomNation.issuingCities)
@@ -224,6 +224,17 @@ export class TravellerGenerator {
   }
 
   /**
+   * Returns the other sex.
+   *
+   * @param {'M' | 'F'} sex - Sex.MALE or Sex.FEMALE.
+   * @returns {'M' | 'F'} Sex.FEMALE for Sex.MALE, and the other way around.
+   */
+  #oppositeSex (sex) {
+    return sex === Sex.MALE ? Sex.FEMALE : Sex.MALE
+  }
+
+  /**
+   * Returns the name with one letter removed, never the first one.
    * 
    * @param {string} name 
    * @returns {string}
