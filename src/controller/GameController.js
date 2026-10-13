@@ -24,6 +24,9 @@ export class GameController {
    */
   #transcripts
 
+  /**
+   * Constructor
+   */
   constructor() {
     this.#nations = new Repository(Nation)
     this.#travellers = new Repository(Person)
@@ -42,15 +45,15 @@ export class GameController {
     const now = new Date()
     const gameDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
 
-    this.createNations(difficulty)
-    this.createTravellers(gameDate)
+    this.#createNations(difficulty)
+    this.#createTravellers(gameDate)
   }
 
   /**
    * 
    * @param {'easy' | 'medium' | 'hard'} difficulty 
    */
-  createNations(difficulty) {
+  #createNations(difficulty) {
     const countryCodes = difficulties[difficulty]
 
     if (!countryCodes) {
@@ -71,7 +74,7 @@ export class GameController {
     return this.#nations.getAllItems()
   }
 
-  createTravellers(gameDate) {
+  #createTravellers(gameDate) {
     const generator = new TravellerGenerator(gameDate)
 
     for (const person of generator.createPeople(10, this.nations)) {
