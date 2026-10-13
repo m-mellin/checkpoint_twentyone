@@ -1,9 +1,9 @@
 import { Sprite, SpriteAnimation, SpriteRegion, SpriteRenderer } from '2d-sprite-renderer'
 import './style.css'
-import { TranscriptDocument } from './model/TranscriptDocument'
-import { Transcript } from './model/Transcript'
-import { Repository } from './repository/Repository'
-import { GameController } from './controller/GameController'
+import { TranscriptDocument } from './model/TranscriptDocument.js'
+import { Transcript } from './model/Transcript.js'
+import { Repository } from './repository/Repository.js'
+import { GameController } from './controller/GameController.js'
 
 const GAME_WIDTH = 1920
 const GAME_HEIGHT = 1080
