@@ -12,17 +12,45 @@ const MIN_HEIGHT_IN_CM = 150
 const MAX_HEIGHT_IN_CM = 210
 const VALIDITY_IN_YEARS = 10
 
+/**
+ * Creates random travellers, each carrying a passport. Some passports are forged with one discrepancy.
+ */
 export class TravellerGenerator {
+  /**
+   * Today's date in the game
+   *
+   * @type {Date}
+   */
   #gameDate
+
+  /**
+   * The source of randomness.
+   *
+   * @type {Random}
+   */
   #random
+
+  /**
+   * The appearance ids available for each sex.
+   *
+   * @type {Record<'M' | 'F', readonly string[]>}
+   */
   #apperances
+
+  /**
+   * The share of passports that are forged, from 0 to 1.
+   *
+   * @type {number}
+   */
   #forgeryProbability
 
   /**
+   * Creates a generator.
    * 
-   * @param {Date} gameDate 
-   * @param {Record<'M' | 'F', readonly string[]>} apperances
-   * @param {Random} random 
+   * @param {Date} gameDate - Today's date in the game, at midnight UTC.
+   * @param {Record<'M' | 'F', readonly string[]>} apperances - The appearance ids available for each sex.
+   * @param {number} [forgeryProbability=0.4] - The share of passports that are forged, from 0 to 1.
+   * @param {Random} [random=new Random()] - The source of randomness.
    */
   constructor (gameDate, apperances, forgeryProbability = 0.4, random = new Random()) {
     this.#gameDate = new Date(gameDate)
@@ -32,10 +60,12 @@ export class TravellerGenerator {
   }
 
   /**
+   * Creates travellers from random nations. Some carry a passport with one discrepancy.
    * 
-   * @param {number} amount 
-   * @param {Nation[]} nations 
-   * @param {Discrepancy[]} discrepancies
+   * @param {number} amount - How many travellers to create.
+   * @param {Nation[]} nations - The nations they can come from.
+   * @param {Discrepancy[]} discrepancies - The discrepancies a forged passport may have.
+   * @returns {Traveller[]} The travellers.
    */
   createTravellers (amount, nations, discrepancies) {
     const travellers = []
@@ -55,9 +85,11 @@ export class TravellerGenerator {
   }
 
   /**
+   * Creates people from random nations.
    * 
-   * @param {number} count 
-   * @param {Nation[]} nations 
+   * @param {number} count - How many people to create.
+   * @param {Nation[]} nations - The nations they can come from.
+   * @returns {Person[]} The people.
    */
   #createPeople (count, nations) {
     const people = []
@@ -70,9 +102,10 @@ export class TravellerGenerator {
   }
 
   /**
+   * Creates a random person from a nation.
    * 
-   * @param {Nation} nation 
-   * @returns {Person}
+   * @param {Nation} nation - The nation the person is a citizen of.
+   * @returns {Person} The person.
    */
   #createPerson (nation) {
     const sex = this.#random.pick(Object.values(Sex))
@@ -91,20 +124,9 @@ export class TravellerGenerator {
   }
 
   /**
+   * Returns a random date of birth for someone between MIN_AGE and MAX_AGE years old.
    *
-   * @param {Date} dateOfBirth - The holder's date of birth.
-   * @returns {Date} The issue date.
-   */
-  #randomIssueDate (dateOfBirth) {
-    const earliestStillValid = addDays(addYears(this.#gameDate, -VALIDITY_IN_YEARS), 1)
-    const earliest = dateOfBirth > earliestStillValid ? dateOfBirth : earliestStillValid
-
-    return addDays(earliest, this.#random.integer(0, daysBetween(earliest, this.#gameDate)))
-  }
-
-  /**
-   * 
-   * @returns {Date}
+   * @returns {Date} The date of birth, at midnight UTC.
    */
   #randomDateOfBirth () {
     const youngest = this.#yearsBefore(this.#gameDate, MIN_AGE)
@@ -115,18 +137,12 @@ export class TravellerGenerator {
   }
 
   /**
-   * 
-   * @param {Date} date 
-   * @param {number} years 
-   * @returns {Date}
+   * Creates the data for a genuine passport that matches the 
+   * person and is valid on the current game date.
+   *
+   * @param {Person} person - The passport holder.
+   * @returns {object} The data for new Passport().
    */
-  #yearsBefore (date, years) {
-    const earlier = new Date(date)
-    earlier.setUTCFullYear(earlier.getUTCFullYear() - years)
-
-    return earlier
-  }
-
   #createPassportData (person) {
     const issueDate = this.#randomIssueDate(person.dateOfBirth)
     
