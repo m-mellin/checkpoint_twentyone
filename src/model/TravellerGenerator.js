@@ -4,6 +4,7 @@ import { Nation } from "./Nation.js"
 import { addDays, addYears, daysBetween } from './dates.js'
 import { Passport } from "./Passport.js"
 import { Traveller } from "./Traveller.js"
+import { Discrepancy } from "./Discrepancy.js"
 
 const DAY_IN_MS = 24 * 60 * 60 * 1000
 const MIN_AGE = 10
@@ -16,6 +17,7 @@ export class TravellerGenerator {
   #gameDate
   #random
   #apperances
+  #forgeryProbability
 
   /**
    * 
@@ -23,9 +25,10 @@ export class TravellerGenerator {
    * @param {Record<'M' | 'F', readonly string[]>} apperances
    * @param {Random} random 
    */
-  constructor (gameDate, apperances, random = new Random()) {
+  constructor (gameDate, apperances, forgeryProbability = 0.4, random = new Random()) {
     this.#gameDate = new Date(gameDate)
     this.#apperances = apperances
+    this.#forgeryProbability = forgeryProbability
     this.#random = random
   }
 
@@ -33,14 +36,20 @@ export class TravellerGenerator {
    * 
    * @param {number} amount 
    * @param {Nation[]} nations 
+   * @param {Discrepancy[]} discrepancies
    */
-  createTravellers (amount, nations) {
-    const people = this.#createPeople(amount, nations)
+  createTravellers (amount, nations, discrepancies) {
     const travellers = []
 
-    for (const person of people) {
-      const traveller = new Traveller(person, this.#createPassport(person))
-      travellers.push(traveller)
+    for (const person of this.#createPeople(amount, nations)) {
+      const passportData = this.#createPassportData(person)
+      let discrepancy = null
+
+      if (this.#random.chance(this.#forgeryProbability)) {
+        discrepancy = this.#random.pick(discrepancies)
+        this.#createForgery(passportData, discrepancy.name, nations)
+      }
+      travellers.push(new Traveller(person, new Passport(passportData), discrepancy))
     }
 
     return travellers
@@ -83,29 +92,6 @@ export class TravellerGenerator {
   }
 
   /**
-   * 
-   * @param {Person} person 
-   */
-  #createPassport (person) {
-    const issueDate = this.#randomIssueDate(person.dateOfBirth)
-    
-    return new Passport({
-      firstName: person.firstName,
-      surname: person.surname,
-      heightInCm: person.heightInCm,
-      nationality: person.nationality,
-      dateOfBirth: person.dateOfBirth,
-      sex: person.sex,
-      birthplace: person.birthplace,
-      issuingCity: this.#random.pick(person.nationality.issuingCities),
-      issueDate,
-      expiryDate: addYears(issueDate, VALIDITY_IN_YEARS),
-      number: `${person.nationality.countryCode}_${person.firstName.toUpperCase()}_${person.surname.toUpperCase()}`,
-      photo: person.apperance
-    })
-  }
-
-  /**
    *
    * @param {Date} dateOfBirth - The holder's date of birth.
    * @returns {Date} The issue date.
@@ -140,5 +126,96 @@ export class TravellerGenerator {
     earlier.setUTCFullYear(earlier.getUTCFullYear() - years)
 
     return earlier
+  }
+
+  #createPassportData (person) {
+    const issueDate = this.#randomIssueDate(person.dateOfBirth)
+    
+    return {
+      firstName: person.firstName,
+      surname: person.surname,
+      heightInCm: person.heightInCm,
+      nationality: person.nationality,
+      dateOfBirth: person.dateOfBirth,
+      sex: person.sex,
+      birthplace: person.birthplace,
+      issuingCity: this.#random.pick(person.nationality.issuingCities),
+      issueDate,
+      expiryDate: addYears(issueDate, VALIDITY_IN_YEARS),
+      number: `${person.nationality.countryCode}_${person.firstName.toUpperCase()}_${person.surname.toUpperCase()}`,
+      photo: person.apperance
+    }
+  }
+
+  /**
+   * 
+   * @param {*} data 
+   * @param {string} name 
+   * @param {Nation[]} nations 
+   */
+  #createForgery (data, name, nations) {
+    const randomNation = this.#random.pick(nations.filter((nation) => nation !== data.nationality))
+
+    switch (name) {
+      case 'FIRSTNAME_MISSPELLED':
+        data.firstName = this.#misspell(data.firstName)
+        break
+      case 'SURNAME_MISSPELLED': 
+        data.surname = this.#misspell(data.surname)
+        break
+      case 'FIRSTNAME_MISMATCHES_SEX': {
+        const oppositeSex = data.sex === Sex.MALE ? Sex.FEMALE : Sex.MALE
+        data.firstName = this.#random.pick(this.#firstNameFor(data.nationality, oppositeSex))
+        break
+      }
+      case 'SUSPICIOUS_FIRSTNAME':
+        data.firstName = this.#random.pick(this.#firstNameFor(randomNation, data.sex))
+        break
+      case 'SUSPICIOUS_SURNAME':
+        data.surname = this.#random.pick(randomNation.surnames)
+        break
+      case 'INCORRECT_SEX':
+        data.sex = data.sex === Sex.MALE ? Sex.FEMALE : Sex.MALE
+        break
+      case 'INCORRECT_ISSUING_CITY':
+        data.issuingCity = this.#random.pick(randomNation.issuingCities)
+        break
+      case 'INCORRECT_BIRTHPLACE':
+        data.birthplace = this.#random.pick(randomNation.issuingCities)
+        break
+      case 'INCORRECT_ISSUE_DATE':
+        data.issueDate = addDays(data.dateOfBirth, - this.#random.integer(20, 255))
+        break
+      case 'INCORRECT_EXPIRY_DATE':
+        data.expiryDate = addDays(this.#gameDate, - this.#random.integer(1, 55))
+        data.issueDate = addYears(data.expiryDate, -VALIDITY_IN_YEARS)
+        break
+      case 'INCORRECT_HEIGHT':
+        data.heightInCm += this.#random.integer(5, 25)
+        break
+      case 'INCORRECT_CODE':
+        data.countryCode = randomNation.countryCode
+        break
+    }
+  }
+
+  /**
+   * 
+   * @param {Nation} nation 
+   * @param {'M' | 'F'} sex 
+   * @returns {readonly string[]}
+   */
+  #firstNameFor (nation, sex) {
+    return sex === Sex.MALE ? nation.maleFirstNames : nation.femaleFirstNames
+  }
+
+  /**
+   * 
+   * @param {string} name 
+   * @returns {string}
+   */
+  #misspell (name) {
+    const index = this.#random.integer(1, name.length - 1)
+    return name.slice(0, index) + name.slice(index + 1)
   }
 }
