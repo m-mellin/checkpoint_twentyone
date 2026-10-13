@@ -1,16 +1,72 @@
-import { Nation } from "./Nation"
-import { assertInstanceOf, assertNonEmptyString, assertNumberIsFinite, assertValidDate } from "./validation"
+import { Nation } from './Nation.js'
+import { assertInstanceOf, assertNonEmptyString, assertNumberIsFinite, assertValidDate } from './validation.js'
 
+/**
+ * The possible values for a person's sex.
+ *
+ * @readonly
+ * @enum {'M' | 'F'}
+ */
 export const Sex = Object.freeze({ MALE: 'M', FEMALE: 'F' })
 
+/**
+ * Represents a real person, as they are, regardless of what their documents claim.
+ */
 export class Person {
+  /**
+   * The first name.
+   *
+   * @type {string}
+   */
   #firstName
+
+  /**
+   * The surname.
+   *
+   * @type {string}
+   */
   #surname
+
+  /**
+   * The height in centimetres.
+   *
+   * @type {number}
+   */
   #heightInCm
+
+  /**
+   * The nation the person is a citizen of.
+   *
+   * @type {Nation}
+   */
   #nationality
+
+  /**
+   * The date of birth, at midnight UTC.
+   *
+   * @type {Date}
+   */
   #dateOfBirth
+
+  /**
+   * The city of birth.
+   *
+   * @type {string}
+   */
   #birthplace
+
+  /**
+   * The sex, Sex.MALE or Sex.FEMALE.
+   *
+   * @type {'M' | 'F'}
+   */
   #sex
+
+  /**
+   * The id of the portrait the person looks like, for example "M1".
+   *
+   * @type {string}
+   */
   #apperance
 
   /**
@@ -24,9 +80,9 @@ export class Person {
    * @param {Date} options.dateOfBirth - The date of birth, at midnight UTC.
    * @param {string} options.birthplace - The city of birth.
    * @param {'M' | 'F'} options.sex - Sex.MALE or Sex.FEMALE.
-   * @param {string} options.apperance - The apperance of the Person.
+   * @param {string} options.apperance - The id of the portrait the person looks like, for example "M1".
    * @throws {TypeError} If a value has the wrong type.
-   * @throws {RangeError} If the height or sex is out of range.
+   * @throws {RangeError} If the sex is not Sex.MALE or Sex.FEMALE.
    */
   constructor ({ firstName, surname, heightInCm, nationality, dateOfBirth, birthplace, sex, apperance }) {
     assertNonEmptyString(firstName, 'firstName')
@@ -51,6 +107,8 @@ export class Person {
   }
 
   /**
+   * Returns the first name.
+   *
    * @returns {string} The first name.
    */
   get firstName () {
@@ -58,6 +116,8 @@ export class Person {
   }
 
   /**
+   * Returns the surname.
+   *
    * @returns {string} The surname.
    */
   get surname () {
@@ -65,6 +125,8 @@ export class Person {
   }
 
   /**
+   * Returns the height.
+   *
    * @returns {number} The height in centimetres.
    */
   get heightInCm () {
@@ -72,20 +134,26 @@ export class Person {
   }
 
   /**
-   * @returns {Nation} The nation the person is a citizen of.
+   * Returns the nation the person is a citizen of.
+   *
+   * @returns {Nation} The nationality.
    */
   get nationality () {
     return this.#nationality
   }
 
   /**
-   * @returns {Date} A copy of the date of birth.
+   * Returns the date of birth.
+   *
+   * @returns {Date} A copy of the date of birth, so callers can't change it.
    */
   get dateOfBirth () {
     return new Date(this.#dateOfBirth)
   }
 
   /**
+   * Returns the city of birth.
+   *
    * @returns {string} The city of birth.
    */
   get birthplace () {
@@ -93,12 +161,19 @@ export class Person {
   }
 
   /**
-   * @returns {'M' | 'F'} The sex.
+   * Returns the sex.
+   *
+   * @returns {'M' | 'F'} "M" for male or "F" for female.
    */
   get sex () {
     return this.#sex
   }
 
+  /**
+   * Returns the id of the portrait the person looks like.
+   *
+   * @returns {string} The appearance id, for example "M1".
+   */
   get apperance () {
     return this.#apperance
   }
