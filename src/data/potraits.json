@@ -1,0 +1,5 @@
+[
+  { "id": "M0", "sex": "M", "region": { "x": 31, "y": 0, "width": 240, "height": 187 } },
+  { "id": "M1", "sex": "M", "region": { "x": 527, "y": 0, "width": 228, "height": 186 } },
+  { "id": "F0", "sex": "F", "region": { "x": 292, "y": 0, "width": 220, "height": 186 } }
+]
