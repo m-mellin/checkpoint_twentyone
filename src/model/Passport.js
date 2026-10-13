@@ -1,6 +1,6 @@
 import { Nation } from "./Nation";
 import { Sex } from "./Person";
-import { assertInstanceOf, assertNonEmptyString, assertValidDate } from "./validation";
+import { assertInstanceOf, assertNonEmptyString, assertNumberIsFinite, assertValidDate } from "./validation";
 
 /**
  * A passport with data stored on it. 
@@ -10,6 +10,7 @@ import { assertInstanceOf, assertNonEmptyString, assertValidDate } from "./valid
 export class Passport {
   #firstName
   #surname
+  #heightInCm
   #nationality
   #dateOfBirth
   #sex
@@ -26,6 +27,7 @@ export class Passport {
    * @param {object} data - The data printed in the passport.
    * @param {string} data.firstName - The first name.
    * @param {string} data.surname - The surname.
+   * @param {number} data.heightInCm - The height of the traveller
    * @param {Nation} data.nationality - The issuing nation.
    * @param {Date} data.dateOfBirth - The date of birth.
    * @param {'M' | 'F'} data.sex - The sex.
@@ -41,6 +43,7 @@ export class Passport {
   constructor({
     firstName,
     surname,
+    heightInCm,
     nationality,
     dateOfBirth,
     sex,
@@ -58,6 +61,8 @@ export class Passport {
     for (const [name, value] of Object.entries({ dateOfBirth, issueDate, expiryDate })) {
       assertValidDate(value, name)
     }
+
+    assertNumberIsFinite(heightInCm, 'heightInCm')
 
     assertInstanceOf(nationality, Nation, 'nationality')
 
@@ -82,12 +87,16 @@ export class Passport {
     this.#photo = photo
   }
 
-  get firstName() {
+  get firstName () {
     return this.#firstName
   }
 
-  get surname() {
+  get surname () {
     return this.#surname
+  }
+
+  get heightInCm () {
+    return this.#heightInCm
   }
 
   get nationality () {
