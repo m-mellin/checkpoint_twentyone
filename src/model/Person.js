@@ -11,6 +11,7 @@ export class Person {
   #dateOfBirth
   #birthplace
   #sex
+  #apperance
 
   /**
    * Creates a person.
@@ -23,10 +24,11 @@ export class Person {
    * @param {Date} options.dateOfBirth - The date of birth, at midnight UTC.
    * @param {string} options.birthplace - The city of birth.
    * @param {'M' | 'F'} options.sex - Sex.MALE or Sex.FEMALE.
+   * @param {string} options.apperance - The apperance of the Person.
    * @throws {TypeError} If a value has the wrong type.
    * @throws {RangeError} If the height or sex is out of range.
    */
-  constructor ({ firstName, surname, heightInCm, nationality, dateOfBirth, birthplace, sex }) {
+  constructor ({ firstName, surname, heightInCm, nationality, dateOfBirth, birthplace, sex, apperance }) {
     assertNonEmptyString(firstName, 'firstName')
     assertNonEmptyString(surname, 'surname')
     assertNonEmptyString(birthplace, 'birthplace')
@@ -45,6 +47,7 @@ export class Person {
     this.#dateOfBirth = new Date(dateOfBirth)
     this.#birthplace = birthplace
     this.#sex = sex
+    this.#apperance = apperance
   }
 
   /**
@@ -94,5 +97,9 @@ export class Person {
    */
   get sex () {
     return this.#sex
+  }
+
+  get apperance () {
+    return this.#apperance
   }
 }
