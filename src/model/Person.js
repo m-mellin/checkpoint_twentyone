@@ -1,9 +1,10 @@
 import { Nation } from "./Nation"
 import { assertInstanceOf, assertNonEmptyString, assertNumberIsFinite, assertValidDate } from "./validation"
 
-const SEX_PATTERN = /^[MF]$/
+export const Sex = Object.freeze({ MALE: 'M', FEMALE: 'F' })
 
 export class Person {
+  // #sprite
   #firstName
   #surname
   #heightInCm
@@ -12,6 +13,20 @@ export class Person {
   #birthplace
   #sex
 
+  /**
+   * Creates a person.
+   *
+   * @param {object} options - The person's data.
+   * @param {string} options.firstName - The first name.
+   * @param {string} options.surname - The surname.
+   * @param {number} options.heightInCm - The height in centimetres.
+   * @param {Nation} options.nationality - The nation the person is a citizen of.
+   * @param {Date} options.dateOfBirth - The date of birth, at midnight UTC.
+   * @param {string} options.birthplace - The city of birth.
+   * @param {'M' | 'F'} options.sex - Sex.MALE or Sex.FEMALE.
+   * @throws {TypeError} If a value has the wrong type.
+   * @throws {RangeError} If the height or sex is out of range.
+   */
   constructor ({ firstName, surname, heightInCm, nationality, dateOfBirth, birthplace, sex }) {
     assertNonEmptyString(firstName, 'firstName')
     assertNonEmptyString(surname, 'surname')
@@ -20,8 +35,8 @@ export class Person {
     assertNumberIsFinite(heightInCm, 'heightInCm')
     assertInstanceOf(nationality, Nation, 'nationality')
 
-    if (!SEX_PATTERN.test(sex)) {
-      throw new RangeError('sex must be one capital letter, either "M" for male or "F" for female.')
+    if (!Object.values(Sex).includes(sex)) {
+      throw new RangeError('sex must be Sex.MALE ("M") or Sex.FEMALE ("F")')
     }
 
     this.#firstName = firstName
@@ -81,4 +96,12 @@ export class Person {
   get sex () {
     return this.#sex
   }
+
+  // get sprite () {
+  //   return this.#sprite
+  // }
+
+  // set sprite (sprite) {
+  //   this.#sprite = sprite
+  // }
 }
