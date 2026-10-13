@@ -81,6 +81,6 @@ export class Repository {
    * @returns {Array<T>} all items from list
    */
   getAllItems () {
-    return this.#items
+    return Array.from(this.#items)
   }
 }
