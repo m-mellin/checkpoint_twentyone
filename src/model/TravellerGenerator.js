@@ -193,7 +193,8 @@ export class TravellerGenerator {
    * @param {Nation[]} nations - All nations in play, used to borrow foreign names and cities.
    */
   #createForgery (data, code, nations) {
-    const randomNation = this.#random.pick(nations.filter((nation) => nation !== data.nationality))
+    const otherNations = nations.filter((nation) => nation !== data.nationality)
+    const randomNation = this.#random.pick(otherNations)
 
     switch (code) {
       case 'FIRSTNAME_MISSPELLED':
@@ -202,16 +203,15 @@ export class TravellerGenerator {
       case 'SURNAME_MISSPELLED': 
         data.surname = this.#misspell(data.surname)
         break
-      case 'FIRSTNAME_MISMATCHES_SEX': {
-        const oppositeSex = data.sex === Sex.MALE ? Sex.FEMALE : Sex.MALE
-        data.firstName = this.#random.pick(this.#firstNameFor(data.nationality, oppositeSex))
+      case 'FIRSTNAME_MISMATCHES_SEX':
+        data.firstName = this.#random.pick(this.#firstNamesFor(data.nationality, this.#oppositeSex(data.sex)))
         break
       }
       case 'SUSPICIOUS_FIRSTNAME':
-        data.firstName = this.#random.pick(this.#firstNameFor(randomNation, data.sex))
+        data.firstName = this.#random.pick(this.#foreignValues(data.nationality, otherNations, (nation) => this.#firstNamesFor(nation, data.sex)))
         break
       case 'SUSPICIOUS_SURNAME':
-        data.surname = this.#random.pick(randomNation.surnames)
+        data.surname = this.#random.pick(this.#foreignValues(data.nationality, otherNations, (nation) => nation.surnames))
         break
       case 'INCORRECT_SEX':
         data.sex = this.#oppositeSex(data.sex)
@@ -235,14 +235,32 @@ export class TravellerGenerator {
       case 'INCORRECT_CODE':
         data.countryCode = randomNation.countryCode
         break
+      default:
+        throw new RangeError(`Unknown discrepancy code: ${code}`)
     }
   }
 
   /**
+   * Returns values that other nations use but the given nation 
+   * does not, for example foreign surnames.
    * 
-   * @param {Nation} nation 
-   * @param {'M' | 'F'} sex 
-   * @returns {readonly string[]}
+   * @param {Nation} nation - The nation the values must not belong to.
+   * @param {Nation[]} otherNations - The nations to take the values from.
+   * @param {(nation: Nation) => readonly string[]} valuesOf - Which list to look in.
+   * @returns {string[]} The foreign values.
+   */
+  #foreignValues (nation, otherNations, valuesOf) {
+    const own = valuesOf(nation)
+
+    return otherNations.flatMap(valuesOf).filter((value) => !own.includes(value))
+  }
+
+  /**
+   * Returns the first names a nation uses for one sex.
+   *
+   * @param {Nation} nation - The nation to take the names from.
+   * @param {'M' | 'F'} sex - Sex.MALE or Sex.FEMALE.
+   * @returns {readonly string[]} The first names for that sex.
    */
   #firstNamesFor (nation, sex) {
     return sex === Sex.MALE ? nation.maleFirstNames : nation.femaleFirstNames
