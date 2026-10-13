@@ -31,4 +31,13 @@ export class Random {
   integer (min, max) {
     return min + Math.floor(this.#next() * (max - min + 1))
   }
+
+  /**
+   *
+   * @param {number} probability
+   * @returns {boolean}
+   */
+  chance (probability) {
+    return this.#next() < probability
+  }
 }
