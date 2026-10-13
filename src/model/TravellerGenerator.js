@@ -206,7 +206,6 @@ export class TravellerGenerator {
       case 'FIRSTNAME_MISMATCHES_SEX':
         data.firstName = this.#random.pick(this.#firstNamesFor(data.nationality, this.#oppositeSex(data.sex)))
         break
-      }
       case 'SUSPICIOUS_FIRSTNAME':
         data.firstName = this.#random.pick(this.#foreignValues(data.nationality, otherNations, (nation) => this.#firstNamesFor(nation, data.sex)))
         break
@@ -223,17 +222,17 @@ export class TravellerGenerator {
         data.birthplace = this.#random.pick(randomNation.issuingCities)
         break
       case 'INCORRECT_ISSUE_DATE':
-        data.issueDate = addDays(data.dateOfBirth, - this.#random.integer(20, 255))
+        data.issueDate = addDays(data.dateOfBirth, -this.#random.integer(20, 255))
         break
       case 'INCORRECT_EXPIRY_DATE':
-        data.expiryDate = addDays(this.#gameDate, - this.#random.integer(1, 55))
-        data.issueDate = addYears(data.expiryDate, -VALIDITY_IN_YEARS)
+        data.expiryDate = addDays(this.#gameDate, -this.#random.integer(1, 55))
+        data.issueDate = this.#later(data.dateOfBirth, addYears(data.expiryDate, -VALIDITY_IN_YEARS))
         break
       case 'INCORRECT_HEIGHT':
         data.heightInCm += this.#random.integer(5, 25)
         break
       case 'INCORRECT_CODE':
-        data.countryCode = randomNation.countryCode
+        data.identificationString = data.identificationString.replace(data.nationality.countryCode, randomNation.countryCode)
         break
       default:
         throw new RangeError(`Unknown discrepancy code: ${code}`)
@@ -286,5 +285,16 @@ export class TravellerGenerator {
     const index = this.#random.integer(1, name.length - 1)
 
     return name.slice(0, index) + name.slice(index + 1)
+  }
+
+  /**
+   * Returns the later of two dates.
+   *
+   * @param {Date} first - One date.
+   * @param {Date} second - The other date.
+   * @returns {Date} The date that comes last.
+   */
+  #later (first, second) {
+    return first.getTime() > second.getTime() ? first : second
   }
 }
