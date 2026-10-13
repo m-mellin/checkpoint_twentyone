@@ -1,11 +1,29 @@
+/**
+ * A kind of error a forged passport can have, for example a misspelled surname or an expired date.
+ */
 export class Discrepancy {
-  #name
+  /**
+   * The discrepancy code.
+   *
+   * @type {string}
+   */
+  #code
 
-  constructor (name) {
-    this.#name = name
+  /**
+   * Creates a discrepancy.
+   *
+   * @param {string} code - The discrepancy code, for example "INCORRECT_SEX".
+   */
+  constructor (code) {
+    this.#code = code
   }
 
-  get name () {
-    return this.#name
+  /**
+   * Returns the discrepancy code.
+   *
+   * @returns {string} The code, for example "INCORRECT_SEX".
+   */
+  get code () {
+    return this.#code
   }
 }

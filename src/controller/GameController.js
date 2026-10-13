@@ -58,8 +58,8 @@ export class GameController {
     const forgeryProbability = 0.4
 
     this.#generateNations(difficulty)
-    this.#generateTravellers(gameDate, forgeryProbability)
     this.#generateDiscrepancies(difficulty)
+    this.#generateTravellers(gameDate, forgeryProbability)
 
     console.log(this.#travellers.getAllItems())
     console.log(this.#discrepancies.getAllItems())
@@ -97,7 +97,7 @@ export class GameController {
 
     const generator = new TravellerGenerator(gameDate, apperances, forgeryProbability)
 
-    for (const traveller of generator.createTravellers(10, this.#nations.getAllItems())) {
+    for (const traveller of generator.createTravellers(10, this.#nations.getAllItems(), this.#discrepancies.getAllItems())) {
       this.#travellers.add(traveller)
     }
   }

@@ -47,7 +47,7 @@ export class TravellerGenerator {
 
       if (this.#random.chance(this.#forgeryProbability)) {
         discrepancy = this.#random.pick(discrepancies)
-        this.#createForgery(passportData, discrepancy.name, nations)
+        this.#createForgery(passportData, discrepancy.code, nations)
       }
       travellers.push(new Traveller(person, new Passport(passportData), discrepancy))
     }
@@ -142,7 +142,7 @@ export class TravellerGenerator {
       issuingCity: this.#random.pick(person.nationality.issuingCities),
       issueDate,
       expiryDate: addYears(issueDate, VALIDITY_IN_YEARS),
-      number: `${person.nationality.countryCode}_${person.firstName.toUpperCase()}_${person.surname.toUpperCase()}`,
+      identificationString: `${person.nationality.countryCode}_${person.firstName.toUpperCase()}_${person.surname.toUpperCase()}`,
       photo: person.apperance
     }
   }
@@ -150,13 +150,13 @@ export class TravellerGenerator {
   /**
    * 
    * @param {*} data 
-   * @param {string} name 
+   * @param {string} code 
    * @param {Nation[]} nations 
    */
-  #createForgery (data, name, nations) {
+  #createForgery (data, code, nations) {
     const randomNation = this.#random.pick(nations.filter((nation) => nation !== data.nationality))
 
-    switch (name) {
+    switch (code) {
       case 'FIRSTNAME_MISSPELLED':
         data.firstName = this.#misspell(data.firstName)
         break
