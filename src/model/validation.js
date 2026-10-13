@@ -18,6 +18,6 @@ export function assertNumberIsFinite (value, name) {
 
 export function assertInstanceOf (value, type, name) {
   if (!(value instanceof type)) {
-    throw new TypeError(`${name} must be of ${type}`)
+    throw new TypeError(`${name} must be of ${type.name}`)
   }
 }
