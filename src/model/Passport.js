@@ -76,6 +76,7 @@ export class Passport {
 
     this.#firstName = firstName
     this.#surname = surname
+    this.#heightInCm = heightInCm
     this.#nationality = nationality
     this.#dateOfBirth = new Date(dateOfBirth)
     this.#sex = sex
