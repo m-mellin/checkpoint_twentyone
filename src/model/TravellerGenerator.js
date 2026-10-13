@@ -74,10 +74,11 @@ export class TravellerGenerator {
       const passportData = this.#createPassportData(person)
       let discrepancy = null
 
-      if (this.#random.chance(this.#forgeryProbability)) {
+      if (this.#shouldForge(discrepancies)) {
         discrepancy = this.#random.pick(discrepancies)
         this.#createForgery(passportData, discrepancy.code, nations)
       }
+
       travellers.push(new Traveller(person, new Passport(passportData), discrepancy))
     }
 
@@ -109,10 +110,9 @@ export class TravellerGenerator {
    */
   #createPerson (nation) {
     const sex = this.#random.pick(Object.values(Sex))
-    const firstNames = sex === Sex.MALE ? nation.maleFirstNames : nation.femaleFirstNames
 
     return new Person({
-      firstName: this.#random.pick(firstNames),
+      firstName: this.#random.pick(this.#firstNamesFor(nation, sex)),
       surname: this.#random.pick(nation.surnames),
       heightInCm: this.#random.integer(MIN_HEIGHT_IN_CM, MAX_HEIGHT_IN_CM),
       nationality: nation,
@@ -162,10 +162,35 @@ export class TravellerGenerator {
   }
 
   /**
+   * Returns an issue date no earlier than birth and recent enough 
+   * that the passport is still valid.
    * 
-   * @param {*} data 
-   * @param {string} code 
-   * @param {Nation[]} nations 
+   * @param {Date} dateOfBirth - The holder's date of birth.
+   * @returns {Date} The issue date.
+   */
+  #randomIssueDate (dateOfBirth) {
+    const earliestStillValid = addDays(addYears(this.#gameDate, -VALIDITY_IN_YEARS), 1)
+    const earliest = this.#later(dateOfBirth, earliestStillValid)
+
+    return addDays(earliest, this.#random.integer(0, daysBetween(earliest, this.#gameDate)))
+  }
+
+  /**
+   * Decides whether the next passport is forged.
+   *
+   * @param {Discrepancy[]} discrepancies - The discrepancies available.
+   * @returns {boolean} True if the passport should be forged.
+   */
+  #shouldForge (discrepancies) {
+    return discrepancies.length > 0 && this.#random.chance(this.#forgeryProbability)
+  }
+
+  /**
+   * Changes genuine passport data so that it has the given discrepancy.
+   *
+   * @param {*} data - The passport data to change.
+   * @param {string} code - The discrepancy code, for example "INCORRECT_SEX".
+   * @param {Nation[]} nations - All nations in play, used to borrow foreign names and cities.
    */
   #createForgery (data, code, nations) {
     const randomNation = this.#random.pick(nations.filter((nation) => nation !== data.nationality))
