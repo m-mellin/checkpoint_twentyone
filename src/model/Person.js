@@ -1,5 +1,10 @@
 import { Nation } from './Nation.js'
-import { assertInstanceOf, assertNonEmptyString, assertNumberIsFinite, assertValidDate } from './validation.js'
+import {
+  assertInstanceOf,
+  assertNonEmptyString,
+  assertNumberIsFinite,
+  assertValidDate
+} from './validation.js'
 
 /**
  * The possible values for a person's sex.
@@ -84,11 +89,25 @@ export class Person {
    * @throws {TypeError} If a value has the wrong type.
    * @throws {RangeError} If the sex is not Sex.MALE or Sex.FEMALE.
    */
-  constructor ({ firstName, surname, heightInCm, nationality, dateOfBirth, birthplace, sex, apperance }) {
-    for (const [name, value] of Object.entries({ firstName, surname, birthplace, apperance })) {
+  constructor({
+    firstName,
+    surname,
+    heightInCm,
+    nationality,
+    dateOfBirth,
+    birthplace,
+    sex,
+    apperance
+  }) {
+    for (const [name, value] of Object.entries({
+      firstName,
+      surname,
+      birthplace,
+      apperance
+    })) {
       assertNonEmptyString(value, name)
     }
-    
+
     assertValidDate(dateOfBirth, 'dateOfBirth')
     assertNumberIsFinite(heightInCm, 'heightInCm')
     assertInstanceOf(nationality, Nation, 'nationality')
@@ -112,7 +131,7 @@ export class Person {
    *
    * @returns {string} The first name.
    */
-  get firstName () {
+  get firstName() {
     return this.#firstName
   }
 
@@ -121,7 +140,7 @@ export class Person {
    *
    * @returns {string} The surname.
    */
-  get surname () {
+  get surname() {
     return this.#surname
   }
 
@@ -130,7 +149,7 @@ export class Person {
    *
    * @returns {number} The height in centimetres.
    */
-  get heightInCm () {
+  get heightInCm() {
     return this.#heightInCm
   }
 
@@ -139,7 +158,7 @@ export class Person {
    *
    * @returns {Nation} The nationality.
    */
-  get nationality () {
+  get nationality() {
     return this.#nationality
   }
 
@@ -148,7 +167,7 @@ export class Person {
    *
    * @returns {Date} A copy of the date of birth, so callers can't change it.
    */
-  get dateOfBirth () {
+  get dateOfBirth() {
     return new Date(this.#dateOfBirth)
   }
 
@@ -157,7 +176,7 @@ export class Person {
    *
    * @returns {string} The city of birth.
    */
-  get birthplace () {
+  get birthplace() {
     return this.#birthplace
   }
 
@@ -166,7 +185,7 @@ export class Person {
    *
    * @returns {'M' | 'F'} "M" for male or "F" for female.
    */
-  get sex () {
+  get sex() {
     return this.#sex
   }
 
@@ -175,7 +194,7 @@ export class Person {
    *
    * @returns {string} The appearance id, for example "M1".
    */
-  get apperance () {
+  get apperance() {
     return this.#apperance
   }
 }

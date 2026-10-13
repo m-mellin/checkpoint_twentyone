@@ -1,6 +1,6 @@
 /**
  * Stores items of any one type.
- * 
+ *
  * @template T
  */
 export class Repository {
@@ -16,7 +16,7 @@ export class Repository {
 
   /**
    * Constructor
-   * 
+   *
    * @param {new (...args: any[]) => T} itemType - The class every item must be an instance of.
    */
   constructor(itemType) {
@@ -25,10 +25,10 @@ export class Repository {
 
   /**
    * Add object from repository
-   * 
+   *
    * @param {*} item Any object
    */
-  add (item) {
+  add(item) {
     if (!(item instanceof this.#itemType)) {
       throw new TypeError(`${item} must be a ${this.#itemType.name}`)
     }
@@ -42,17 +42,17 @@ export class Repository {
 
   /**
    * Check if object exists in repository
-   * 
+   *
    * @param {T} item - The item to look for.
    * @returns {boolean} true if the item exists, otherwise false.
    */
-  has (item) {
+  has(item) {
     return this.#items.includes(item)
   }
 
   /**
    * Return index of an item in the list.
-   * 
+   *
    * @param {T} item - The item to find
    * @returns {number} the index of the item
    */
@@ -68,19 +68,19 @@ export class Repository {
 
   /**
    * Remove item from repository
-   * 
+   *
    * @param {T} item Any object
    */
-  remove (item) {
+  remove(item) {
     this.#items.splice(this.#getIndex(item), 1)
   }
 
   /**
    * Returns a copy of the list
-   * 
+   *
    * @returns {Array<T>} all items from list
    */
-  getAllItems () {
+  getAllItems() {
     return Array.from(this.#items)
   }
 }

@@ -30,13 +30,13 @@ export class Traveller {
 
   /**
    * Creates a traveller.
-   * 
+   *
    * @param {Person} person - Who the traveller really is.
    * @param {Passport} passport - The passport the traveller carries.
    * @param {Discrepancy | null} [discrepancy=null] - The error in the passport, or null if it is genuine.
    * @throws {TypeError} If a value has the wrong type.
    */
-  constructor (person, passport, discrepancy = null) {
+  constructor(person, passport, discrepancy = null) {
     assertInstanceOf(person, Person, 'person')
     assertInstanceOf(passport, Passport, 'passport')
 
@@ -54,7 +54,7 @@ export class Traveller {
    *
    * @returns {Person} The person.
    */
-  get person () {
+  get person() {
     return this.#person
   }
 
@@ -63,7 +63,7 @@ export class Traveller {
    *
    * @returns {Passport} The passport.
    */
-  get passport () {
+  get passport() {
     return this.#passport
   }
 
@@ -72,7 +72,7 @@ export class Traveller {
    *
    * @returns {Discrepancy | null} The discrepancy, or null if the passport is genuine.
    */
-  get discrepancy () {
+  get discrepancy() {
     return this.#discrepancy
   }
 }

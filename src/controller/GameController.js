@@ -19,7 +19,11 @@ const FORGERY_PROBABILITY = 0.4
  * @readonly
  * @enum {'easy' | 'medium' | 'hard'}
  */
-export const Difficulties = Object.freeze({ EASY: 'easy', MEDIUM: 'medium', HARD: 'hard' })
+export const Difficulties = Object.freeze({
+  EASY: 'easy',
+  MEDIUM: 'medium',
+  HARD: 'hard'
+})
 
 /**
  * Sets up a game: the nations in play, the discrepancies that can occur and the travellers of the day.
@@ -52,9 +56,11 @@ export class GameController {
    * @param {'easy' | 'medium' | 'hard'} difficulty - Difficulties.EASY, Difficulties.MEDIUM or Difficulties.HARD.
    * @throws {RangeError} If the difficulty is unknown.
    */
-  startGame (difficulty) {
+  startGame(difficulty) {
     if (!Object.values(Difficulties).includes(difficulty)) {
-      throw new RangeError('difficulty must be Difficulties.EASY ("easy"), Difficulties.MEDIUM ("medium") or Difficulties.HARD ("hard")')
+      throw new RangeError(
+        'difficulty must be Difficulties.EASY ("easy"), Difficulties.MEDIUM ("medium") or Difficulties.HARD ("hard")'
+      )
     }
 
     const gameDate = this.#today()
@@ -73,7 +79,7 @@ export class GameController {
    *
    * @returns {Traveller[]} A copy of the list of travellers.
    */
-  get travellers () {
+  get travellers() {
     return this.#travellers.getAllItems()
   }
 
@@ -82,10 +88,12 @@ export class GameController {
    *
    * @returns {Date} The date.
    */
-  #today () {
+  #today() {
     const now = new Date()
 
-    return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
+    return new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+    )
   }
 
   /**
@@ -93,7 +101,7 @@ export class GameController {
    *
    * @param {'easy' | 'medium' | 'hard'} difficulty - The chosen difficulty.
    */
-  #generateNations (difficulty) {
+  #generateNations(difficulty) {
     const countryCodes = difficulties[difficulty]
 
     for (const data of nationData) {
@@ -108,7 +116,7 @@ export class GameController {
    *
    * @param {'easy' | 'medium' | 'hard'} difficulty - The chosen difficulty.
    */
-  #generateDiscrepancies (difficulty) {
+  #generateDiscrepancies(difficulty) {
     for (const code of discrepanciesData[difficulty]) {
       this.#discrepancies.add(new Discrepancy(code))
     }
@@ -119,9 +127,17 @@ export class GameController {
    *
    * @param {Date} gameDate - Today's date in the game, at midnight UTC.
    */
-  #generateTravellers (gameDate) {
-    const generator = new TravellerGenerator(gameDate, this.#appearancesBySex(), FORGERY_PROBABILITY)
-    const travellers = generator.createTravellers(TRAVELLERS_PER_DAY, this.#nations.getAllItems(), this.#discrepancies.getAllItems())
+  #generateTravellers(gameDate) {
+    const generator = new TravellerGenerator(
+      gameDate,
+      this.#appearancesBySex(),
+      FORGERY_PROBABILITY
+    )
+    const travellers = generator.createTravellers(
+      TRAVELLERS_PER_DAY,
+      this.#nations.getAllItems(),
+      this.#discrepancies.getAllItems()
+    )
 
     for (const traveller of travellers) {
       this.#travellers.add(traveller)
@@ -133,7 +149,7 @@ export class GameController {
    *
    * @returns {Record<'M' | 'F', string[]>} The portrait ids, grouped by sex.
    */
-  #appearancesBySex () {
+  #appearancesBySex() {
     return {
       [Sex.MALE]: this.#portraitIdsFor(Sex.MALE),
       [Sex.FEMALE]: this.#portraitIdsFor(Sex.FEMALE)
@@ -146,7 +162,9 @@ export class GameController {
    * @param {'M' | 'F'} sex - Sex.MALE or Sex.FEMALE.
    * @returns {string[]} The portrait ids.
    */
-  #portraitIdsFor (sex) {
-    return portraitData.filter((portrait) => portrait.sex === sex).map((portrait) => portrait.id)
+  #portraitIdsFor(sex) {
+    return portraitData
+      .filter((portrait) => portrait.sex === sex)
+      .map((portrait) => portrait.id)
   }
 }

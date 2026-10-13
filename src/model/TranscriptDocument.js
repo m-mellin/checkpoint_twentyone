@@ -37,7 +37,7 @@ export class TranscriptDocument {
    *
    * @param {number} [distance=60] - The vertical space between two transcripts in pixels.
    */
-  constructor (distance = 60) {
+  constructor(distance = 60) {
     this.#distance = distance
   }
 
@@ -46,7 +46,7 @@ export class TranscriptDocument {
    *
    * @param {Transcript} transcript - The transcript to add.
    */
-  addTranscript (transcript) {
+  addTranscript(transcript) {
     this.#texts.push(transcript)
     this.#setTranscriptPosition()
   }
@@ -56,21 +56,21 @@ export class TranscriptDocument {
    *
    * @returns {Array<Transcript>} The transcripts, from top to bottom.
    */
-  getTranscripts () {
+  getTranscripts() {
     return Array.from(this.#texts)
   }
 
   /**
    * Removes all transcripts from the document.
    */
-  clearTranscript () {
+  clearTranscript() {
     this.#texts = []
   }
 
   /**
    * Places each transcript below the previous one.
    */
-  #setTranscriptPosition () {
+  #setTranscriptPosition() {
     let y = this.#y
 
     for (const transcript of this.#texts) {

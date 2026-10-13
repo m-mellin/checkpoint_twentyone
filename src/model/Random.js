@@ -14,7 +14,7 @@ export class Random {
    *
    * @param {() => number} [next=Math.random] - Returns a number from 0 (inclusive) to 1 (exclusive).
    */
-  constructor (next = Math.random) {
+  constructor(next = Math.random) {
     this.#next = next
   }
 
@@ -26,7 +26,7 @@ export class Random {
    * @returns {T} One of the items.
    * @throws {RangeError} If the list is empty.
    */
-  pick (items) {
+  pick(items) {
     if (items.length === 0) {
       throw new RangeError('Cannot pick from an empty list')
     }
@@ -41,7 +41,7 @@ export class Random {
    * @param {number} max - The largest possible number.
    * @returns {number} The random number.
    */
-  integer (min, max) {
+  integer(min, max) {
     return min + Math.floor(this.#next() * (max - min + 1))
   }
 
@@ -51,7 +51,7 @@ export class Random {
    * @param {number} probability - From 0 (never) to 1 (always).
    * @returns {boolean} True or false.
    */
-  chance (probability) {
+  chance(probability) {
     return this.#next() < probability
   }
 }

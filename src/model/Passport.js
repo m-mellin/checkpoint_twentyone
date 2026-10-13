@@ -1,6 +1,11 @@
 import { Nation } from './Nation.js'
 import { Sex } from './Person.js'
-import { assertInstanceOf, assertNonEmptyString, assertNumberIsFinite, assertValidDate } from './validation.js'
+import {
+  assertInstanceOf,
+  assertNonEmptyString,
+  assertNumberIsFinite,
+  assertValidDate
+} from './validation.js'
 
 /**
  * The data printed in a passport, as passed to new Passport().
@@ -115,7 +120,7 @@ export class Passport {
    * @throws {TypeError} If a value has the wrong type.
    * @throws {RangeError} If the sex is unknown or the passport expires before it is issued.
    */
-  constructor ({
+  constructor({
     firstName,
     surname,
     heightInCm,
@@ -129,11 +134,22 @@ export class Passport {
     identificationString,
     photo
   }) {
-    for (const [name, value] of Object.entries({ firstName, surname, birthplace, issuingCity, identificationString, photo })) {
+    for (const [name, value] of Object.entries({
+      firstName,
+      surname,
+      birthplace,
+      issuingCity,
+      identificationString,
+      photo
+    })) {
       assertNonEmptyString(value, name)
     }
 
-    for (const [name, value] of Object.entries({ dateOfBirth, issueDate, expiryDate })) {
+    for (const [name, value] of Object.entries({
+      dateOfBirth,
+      issueDate,
+      expiryDate
+    })) {
       assertValidDate(value, name)
     }
 
@@ -167,7 +183,7 @@ export class Passport {
    *
    * @returns {string} The first name.
    */
-  get firstName () {
+  get firstName() {
     return this.#firstName
   }
 
@@ -176,7 +192,7 @@ export class Passport {
    *
    * @returns {string} The surname.
    */
-  get surname () {
+  get surname() {
     return this.#surname
   }
 
@@ -185,7 +201,7 @@ export class Passport {
    *
    * @returns {number} The height in centimetres.
    */
-  get heightInCm () {
+  get heightInCm() {
     return this.#heightInCm
   }
 
@@ -194,7 +210,7 @@ export class Passport {
    *
    * @returns {Nation} The issuing nation.
    */
-  get nationality () {
+  get nationality() {
     return this.#nationality
   }
 
@@ -203,7 +219,7 @@ export class Passport {
    *
    * @returns {Date} A copy of the date of birth.
    */
-  get dateOfBirth () {
+  get dateOfBirth() {
     return new Date(this.#dateOfBirth)
   }
 
@@ -212,7 +228,7 @@ export class Passport {
    *
    * @returns {'M' | 'F'} "M" for male or "F" for female.
    */
-  get sex () {
+  get sex() {
     return this.#sex
   }
 
@@ -221,7 +237,7 @@ export class Passport {
    *
    * @returns {string} The city of birth.
    */
-  get birthplace () {
+  get birthplace() {
     return this.#birthplace
   }
 
@@ -230,7 +246,7 @@ export class Passport {
    *
    * @returns {string} The issuing city.
    */
-  get issuingCity () {
+  get issuingCity() {
     return this.#issuingCity
   }
 
@@ -239,7 +255,7 @@ export class Passport {
    *
    * @returns {Date} A copy of the issue date.
    */
-  get issueDate () {
+  get issueDate() {
     return new Date(this.#issueDate)
   }
 
@@ -248,7 +264,7 @@ export class Passport {
    *
    * @returns {Date} A copy of the expiry date.
    */
-  get expiryDate () {
+  get expiryDate() {
     return new Date(this.#expiryDate)
   }
 
@@ -257,7 +273,7 @@ export class Passport {
    *
    * @returns {string} The identification string.
    */
-  get identificationString () {
+  get identificationString() {
     return this.#identificationString
   }
 
@@ -266,7 +282,7 @@ export class Passport {
    *
    * @returns {string} The appearance id, for example "M1".
    */
-  get photo () {
+  get photo() {
     return this.#photo
   }
 }

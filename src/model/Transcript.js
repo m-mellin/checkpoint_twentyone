@@ -39,7 +39,7 @@ export class Transcript {
    * @param {string} textColor - The CSS color of the text.
    * @param {string} [font='16px sans-serif'] - The CSS font of the text.
    */
-  constructor (text, textColor, font = '16px sans-serif') {
+  constructor(text, textColor, font = '16px sans-serif') {
     this.#sprite = new TextSprite(text, { color: textColor, font })
     this.#measureTextAndSetSize()
   }
@@ -49,7 +49,7 @@ export class Transcript {
    *
    * @returns {TextSprite} The sprite.
    */
-  get sprite () {
+  get sprite() {
     return this.#sprite
   }
 
@@ -58,7 +58,7 @@ export class Transcript {
    *
    * @returns {string} The text.
    */
-  get text () {
+  get text() {
     return this.#sprite.text
   }
 
@@ -67,7 +67,7 @@ export class Transcript {
    *
    * @param {string} text - The text to draw.
    */
-  set text (text) {
+  set text(text) {
     this.#sprite.text = text
     this.#measureTextAndSetSize()
   }
@@ -77,7 +77,7 @@ export class Transcript {
    *
    * @returns {string} The CSS color.
    */
-  get textColor () {
+  get textColor() {
     return this.#sprite.color
   }
 
@@ -86,7 +86,7 @@ export class Transcript {
    *
    * @param {string} textColor - The CSS color.
    */
-  set textColor (textColor) {
+  set textColor(textColor) {
     this.#sprite.color = textColor
   }
 
@@ -95,7 +95,7 @@ export class Transcript {
    *
    * @returns {number} The X coordinate in pixels.
    */
-  get x () {
+  get x() {
     return this.#sprite.x
   }
 
@@ -104,7 +104,7 @@ export class Transcript {
    *
    * @param {number} x - The X coordinate in pixels.
    */
-  set x (x) {
+  set x(x) {
     this.#sprite.x = x
   }
 
@@ -113,7 +113,7 @@ export class Transcript {
    *
    * @returns {number} The Y coordinate in pixels.
    */
-  get y () {
+  get y() {
     return this.#sprite.y
   }
 
@@ -122,7 +122,7 @@ export class Transcript {
    *
    * @param {number} y - The Y coordinate in pixels.
    */
-  set y (y) {
+  set y(y) {
     this.#sprite.y = y
   }
 
@@ -131,7 +131,7 @@ export class Transcript {
    *
    * @returns {number} The width in pixels.
    */
-  get width () {
+  get width() {
     return this.#width
   }
 
@@ -140,21 +140,24 @@ export class Transcript {
    *
    * @returns {number} The height in pixels.
    */
-  get height () {
+  get height() {
     return this.#height
   }
 
   /**
    * Measures the text with the sprite's font and stores its width and height.
    */
-  #measureTextAndSetSize () {
+  #measureTextAndSetSize() {
     const context = Transcript.#context
-    if (context === null) throw new Error('Could not create a 2D context for measuring text')
+    if (context === null)
+      throw new Error('Could not create a 2D context for measuring text')
 
     context.font = this.#sprite.font
     const metrics = context.measureText(this.#sprite.text)
 
     this.#width = Math.ceil(metrics.width)
-    this.#height = Math.ceil(metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent)
+    this.#height = Math.ceil(
+      metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent
+    )
   }
 }

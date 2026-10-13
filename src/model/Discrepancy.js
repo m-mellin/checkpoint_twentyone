@@ -16,7 +16,7 @@ export class Discrepancy {
    *
    * @param {string} code - The discrepancy code, for example "INCORRECT_SEX".
    */
-  constructor (code) {
+  constructor(code) {
     assertNonEmptyString(code, 'code')
 
     this.#code = code
@@ -27,7 +27,7 @@ export class Discrepancy {
    *
    * @returns {string} The code, for example "INCORRECT_SEX".
    */
-  get code () {
+  get code() {
     return this.#code
   }
 }

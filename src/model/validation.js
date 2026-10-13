@@ -5,10 +5,10 @@
  * @param {string} name - The name of the value, used in the error message.
  * @throws {TypeError} If the value is not a non-empty string.
  */
-export function assertNonEmptyString (value, name) {
+export function assertNonEmptyString(value, name) {
   if (typeof value !== 'string' || value.trim() === '') {
     throw new TypeError(`${name} must be a non-empty string`)
-  } 
+  }
 }
 
 /**
@@ -18,7 +18,7 @@ export function assertNonEmptyString (value, name) {
  * @param {string} name - The name of the value, used in the error message.
  * @throws {TypeError} If the value is not a valid Date.
  */
-export function assertValidDate (value, name) {
+export function assertValidDate(value, name) {
   if (!(value instanceof Date) || Number.isNaN(value.getTime())) {
     throw new TypeError(`${name} must be a valid Date`)
   }
@@ -31,7 +31,7 @@ export function assertValidDate (value, name) {
  * @param {string} name - The name of the value, used in the error message.
  * @throws {TypeError} If the value is not a finite number.
  */
-export function assertNumberIsFinite (value, name) {
+export function assertNumberIsFinite(value, name) {
   if (!Number.isFinite(value)) {
     throw new TypeError(`${name} must be a finite number`)
   }
@@ -45,7 +45,7 @@ export function assertNumberIsFinite (value, name) {
  * @param {string} name - The name of the value, used in the error message.
  * @throws {TypeError} If the value is not an instance of the class.
  */
-export function assertInstanceOf (value, type, name) {
+export function assertInstanceOf(value, type, name) {
   if (!(value instanceof type)) {
     throw new TypeError(`${name} must be an instance of ${type.name}`)
   }

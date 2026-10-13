@@ -9,7 +9,7 @@ const COUNTRY_CODE_PATTERN = /^[A-Z]{3}$/
 export class Nation {
   /**
    * Name of the nation.
-   * 
+   *
    * @type {string}
    */
   #name
@@ -23,28 +23,28 @@ export class Nation {
 
   /**
    * Cities in the nation that can issue passports.
-   * 
+   *
    * @type {readonly string[]}
    */
   #issuingCities
 
   /**
    * Common male first names in the nation.
-   * 
+   *
    * @type {readonly string[]}
    */
   #maleFirstNames
 
   /**
    * Common female first names in the nation.
-   * 
+   *
    * @type {readonly string[]}
    */
   #femaleFirstNames
 
   /**
    * Common surnames in the nation.
-   * 
+   *
    * @type {readonly string[]}
    */
   #surnames
@@ -62,11 +62,20 @@ export class Nation {
    * @throws {TypeError} If the name is not a non-empty string.
    * @throws {RangeError} If the country code is not three capital letters.
    */
-  constructor ({ name, countryCode, issuingCities = [], maleFirstNames = [], femaleFirstNames = [], surnames = [] }) {
+  constructor({
+    name,
+    countryCode,
+    issuingCities = [],
+    maleFirstNames = [],
+    femaleFirstNames = [],
+    surnames = []
+  }) {
     assertNonEmptyString(name, 'name')
 
     if (!COUNTRY_CODE_PATTERN.test(countryCode)) {
-      throw new RangeError('countryCode must have three capital letters, for example "SWE"')
+      throw new RangeError(
+        'countryCode must have three capital letters, for example "SWE"'
+      )
     }
 
     this.#name = name
@@ -79,55 +88,55 @@ export class Nation {
 
   /**
    * Returns the name of the nation.
-   * 
+   *
    * @returns {string} The name.
    */
-  get name () {
+  get name() {
     return this.#name
   }
 
   /**
    * Returns the country code of the nation.
-   * 
+   *
    * @returns {string} The country code.
    */
-  get countryCode () {
+  get countryCode() {
     return this.#countryCode
   }
 
   /**
    * Returns the cities that can issue passports in the nation.
-   * 
+   *
    * @returns {readonly string[]} The issuing cities.
    */
-  get issuingCities () {
+  get issuingCities() {
     return this.#issuingCities
   }
 
   /**
    * Returns the male first names, common in the nation.
-   * 
+   *
    * @returns {readonly string[]} Male first names.
    */
-  get maleFirstNames () {
+  get maleFirstNames() {
     return this.#maleFirstNames
   }
 
   /**
    * Returns the female first names, common in the nation.
-   * 
+   *
    * @returns {readonly string[]} Female first names.
    */
-  get femaleFirstNames () {
+  get femaleFirstNames() {
     return this.#femaleFirstNames
   }
 
   /**
    * Returns the surnames, common in the nation.
-   * 
+   *
    * @returns {readonly string[]} Surnames.
    */
-  get surnames () {
+  get surnames() {
     return this.#surnames
   }
 }
