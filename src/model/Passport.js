@@ -3,6 +3,24 @@ import { Sex } from './Person.js'
 import { assertInstanceOf, assertNonEmptyString, assertNumberIsFinite, assertValidDate } from './validation.js'
 
 /**
+ * The data printed in a passport, as passed to new Passport().
+ *
+ * @typedef {object} PassportData
+ * @property {string} firstName - The first name.
+ * @property {string} surname - The surname.
+ * @property {number} heightInCm - The height in centimetres.
+ * @property {Nation} nationality - The issuing nation.
+ * @property {Date} dateOfBirth - The date of birth.
+ * @property {'M' | 'F'} sex - Sex.MALE or Sex.FEMALE.
+ * @property {string} birthplace - The city of birth.
+ * @property {string} issuingCity - The city that issued the passport.
+ * @property {Date} issueDate - The date it was issued.
+ * @property {Date} expiryDate - The last day it is valid.
+ * @property {string} identificationString - The passport identification string.
+ * @property {string} photo - The appearance shown in the photo, for example "M1".
+ */
+
+/**
  * The data printed in a passport. It may or may not match the person carrying it.
  */
 export class Passport {
@@ -93,19 +111,7 @@ export class Passport {
   /**
    * Creates a passport.
    *
-   * @param {object} data - The data printed in the passport.
-   * @param {string} data.firstName - The first name.
-   * @param {string} data.surname - The surname.
-   * @param {number} data.heightInCm - The height in centimetres.
-   * @param {Nation} data.nationality - The issuing nation.
-   * @param {Date} data.dateOfBirth - The date of birth.
-   * @param {'M' | 'F'} data.sex - Sex.MALE or Sex.FEMALE.
-   * @param {string} data.birthplace - The city of birth.
-   * @param {string} data.issuingCity - The city that issued the passport.
-   * @param {Date} data.issueDate - The date it was issued.
-   * @param {Date} data.expiryDate - The last day it is valid.
-   * @param {string} data.identificationString - The passport identification string.
-   * @param {string} data.photo - The appearance shown in the photo, for example "M1".
+   * @param {PassportData} data - The data printed in the passport.
    * @throws {TypeError} If a value has the wrong type.
    * @throws {RangeError} If the sex is unknown or the passport expires before it is issued.
    */
