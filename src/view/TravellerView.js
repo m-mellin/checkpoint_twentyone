@@ -160,4 +160,8 @@ export class TravellerView {
     this.#next = null
     this.#targetX = EXIT_X
   }
+
+  get isAtWindow() {
+    return (this.#current !== null && this.#targetX === WINDOW_X && this.#traveller.x === WINDOW_X)
+  }
 }
