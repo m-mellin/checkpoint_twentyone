@@ -51,6 +51,13 @@ export class GameController {
   #travellers = new Repository(Traveller)
 
   /**
+   * Calls the next traveller in the queue forward.
+   *
+   * @returns {Traveller | null} The next traveller, or null if everyone has already been called.
+   */
+  #nextTravellerIndex = 0
+
+  /**
    * Starts a new game. Anything from an earlier game is replaced.
    *
    * @param {'easy' | 'medium' | 'hard'} difficulty - Difficulties.EASY, Difficulties.MEDIUM or Difficulties.HARD.
@@ -69,6 +76,8 @@ export class GameController {
     this.#discrepancies = new Repository(Discrepancy)
     this.#travellers = new Repository(Traveller)
 
+    this.#nextTravellerIndex = 0
+
     this.#generateNations(difficulty)
     this.#generateDiscrepancies(difficulty)
     this.#generateTravellers(gameDate)
@@ -81,6 +90,20 @@ export class GameController {
    */
   get travellers() {
     return this.#travellers.getAllItems()
+  }
+
+  callNextTraveller() {
+    const travellers = this.#travellers.getAllItems()
+
+    // Everyone in today's queue has already been called
+    if (this.#nextTravellerIndex >= travellers.length) {
+      return null
+    }
+
+    const traveller = travellers[this.#nextTravellerIndex]
+    this.#nextTravellerIndex++
+
+    return traveller
   }
 
   /**

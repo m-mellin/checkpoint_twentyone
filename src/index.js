@@ -3,8 +3,8 @@ import './style.css'
 import { GameController } from './controller/GameController.js'
 import { GameView } from './view/GameView'
 
-const GAME_WIDTH = 1920
-const GAME_HEIGHT = 1080
+const GAME_WIDTH = window.innerWidth
+const GAME_HEIGHT = window.innerHeight
 const MAX_DELTA_TIME = 100
 
 const canvas = document.createElement('canvas')
@@ -19,7 +19,6 @@ const renderer = new SpriteRenderer(canvas)
 const gameView = new GameView(renderer)
 const gameController = new GameController()
 gameController.startGame('easy')
-gameView.showTraveller(gameController.travellers[0])
 
 const PIXEL_FONT = '16px "Press Start 2P"'
 
@@ -27,6 +26,25 @@ const PIXEL_FONT = '16px "Press Start 2P"'
  * @type {number | null}
  */
 let previousTimestamp = null
+
+
+function callNextTraveller() {
+  const traveller = gameController.callNextTraveller()
+
+  if (traveller === null) {
+    gameView.travellerLeaves()
+  } else {
+    gameView.showTraveller(traveller)
+  }
+}
+
+callNextTraveller()
+
+window.addEventListener('keydown', (event) => {
+  if (event.key === 'n') {
+    callNextTraveller()
+  }
+})
 
 /**
  * GameLoop

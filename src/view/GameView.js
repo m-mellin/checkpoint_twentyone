@@ -1,6 +1,5 @@
 import { SpriteRenderer } from "2d-sprite-renderer"
 import { Traveller } from "../model/Traveller"
-import { TranscriptView } from "./TranscriptView"
 import { TravellerView } from "./TravellerView"
 import { DeskView } from "./DeskView"
 
@@ -29,7 +28,7 @@ export class GameView {
     this.#travellerView.update(deltaTime)
   }
 
-  move (deltaTime) {
-    this.#travellerView.move(deltaTime)
+  travellerLeaves() {
+    this.#travellerView.leave()
   }
 }
