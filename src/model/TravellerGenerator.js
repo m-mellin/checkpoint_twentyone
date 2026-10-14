@@ -166,7 +166,7 @@ export class TravellerGenerator {
       issuingCity: this.#random.pick(person.nationality.issuingCities),
       issueDate,
       expiryDate: addYears(issueDate, VALIDITY_IN_YEARS),
-      identificationString: `${person.nationality.countryCode}_${person.firstName.toUpperCase()}_${person.surname.toUpperCase()}`,
+      identificationString: `P<${person.nationality.countryCode}<${person.surname.toUpperCase()}<<${person.firstName.toUpperCase()}<<`,
       photo: person.apperance
     }
   }
