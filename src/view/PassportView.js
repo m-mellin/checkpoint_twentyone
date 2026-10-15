@@ -64,15 +64,18 @@ export class PassportView {
   #closedPassport = new Sprite(CLOSED_PASSPORT_SRC)
 
   /**
-   * 
+   * The approve stamp sprite.
    */
   #approveStamp = new Sprite(APPROVE_STAMP_SRC)
 
   /**
-   * 
+   * The deny stamp sprite.
    */
   #denyStamp = new Sprite(DENY_STAMP_SRC)
 
+  /**
+   * If the passport is approved.
+   */
   #approved = false
 
   /**
