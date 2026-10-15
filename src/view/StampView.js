@@ -55,6 +55,24 @@ export class StampView {
   }
 
   /**
+   * Returns the width of the stamp.
+   *
+   * @returns {number} The width in pixels.
+   */
+  get width() {
+    return STAMP_WIDTH
+  }
+
+  /**
+   * Returns the height of the stamp.
+   *
+   * @returns {number} The height in pixels.
+   */
+  get height() {
+    return STAMP_HEIGHT
+  }
+
+  /**
    * -
    * 
    * @param {number} x 
@@ -74,7 +92,11 @@ export class StampView {
    * @returns {boolean} True if the point is on the passport.
    */
   contains(x, y) {
-    return x >= this.#x && x <= this.#x + this.#approveStamp.width &&
-      y >= this.#y && y <= this.#y + this.#approveStamp.height
+    return (
+      x >= this.#x &&
+      x <= this.#x + this.width &&
+      y >= this.#y &&
+      y <= this.#y + this.height
+    )
   }
 }

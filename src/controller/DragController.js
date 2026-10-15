@@ -1,19 +1,59 @@
+
+/**
+ * Something on the screen that can be dragged, for example the passport or a stamp.
+ *
+ * @typedef {object} Draggable
+ * @property {number} x - The x coordinate of the top left corner.
+ * @property {number} y - The y coordinate of the top left corner.
+ * @property {number} width - The current width.
+ * @property {number} height - The current height.
+ * @property {(x: number, y: number) => boolean} contains - Returns whether a point is on it.
+ * @property {(x: number, y: number) => void} moveTo - Moves its top left corner to a point.
+ */
+
+/**
+ * Lets the player drag things on the canvas.
+ * When things overlap, only the one drawn on top is dragged.
+ */
 export class DragController {
-  #canvas
-  #target
   /**
+   * The canvas the game is drawn on, where the pointer events come from.
+   *
+   * @type {HTMLCanvasElement}
+   */
+  #canvas
+
+  /**
+   * Everything that can be dragged, in the order they are drawn. The last one is on top.
+   *
+   * @type {Draggable[]}
+   */
+  #targets
+
+  /**
+   * The target being dragged right now, or null if nothing is.
+   *
+   * @type {Draggable | null}
+   */
+  #dragged = null
+
+  /**
+   * Where on the dragged target the player grabbed it, as a share of its width and height
+   * (0 is the left or top edge, 1 the right or bottom edge). Null if nothing is being dragged.
+   *
    * @type {{x: number, y: number} | null}
    */
   #grabOffset = null
 
   /**
+   * Starts listening for drags on the canvas.
    * 
-   * @param {HTMLCanvasElement} canvas 
-   * @param {*} target 
+   * @param {HTMLCanvasElement} canvas - The canvas the game is drawn on.
+   * @param {Draggable[]} targets - Everything that can be dragged, in the order they are drawn.
    */
-  constructor(canvas, target) {
+  constructor(canvas, targets) {
     this.#canvas = canvas
-    this.#target = target
+    this.#targets = targets
 
     canvas.addEventListener('pointerdown', (event) => this.#grab(event))
     canvas.addEventListener('pointermove', (event) => this.#drag(event))
@@ -22,48 +62,73 @@ export class DragController {
   }
 
   /**
+   * Starts dragging the topmost target under the pointer, if there is one.
+   * Remembers where on the target it was grabbed, so it doesn't jump to the pointer.
    * 
-   * @param {PointerEvent} event 
-   * @returns {void}
+   * @param {PointerEvent} event - The pointer event from the canvas.
    */
   #grab(event) {
     const { x, y } = this.#toCanvasPosition(event)
+    const target = this.#topmostAt(x, y)
 
-    if (!this.#target.contains(x, y)) return
+    if (target === null) return
 
+    this.#dragged = target
     this.#grabOffset = {
-      x: (x - this.#target.x) / this.#target.width,
-      y: (y - this.#target.y) / this.#target.height
+      x: (x - target.x) / target.width,
+      y: (y - target.y) / target.height
     }
+
     this.#canvas.setPointerCapture(event.pointerId)
   }
 
   /**
+   * Returns the target drawn on top at a point. Searches from the last drawn to the first.
    * 
-   * @param {PointerEvent} event 
-   * @returns {void}
+   * @param {number} x - The x coordinate of the point, in canvas pixels.
+   * @param {number} y - The y coordinate of the point, in canvas pixels.
+   * @returns {Draggable | null} The topmost target at the point, or null if there is none.
+   */
+  #topmostAt(x, y) {
+    for (let i = this.#targets.length - 1; i >= 0; i--) {
+      if (this.#targets[i].contains(x, y)) {
+        return this.#targets[i]
+      }
+    }
+
+    return null
+  }
+
+  /**
+   * Moves the dragged target with the pointer, keeping the grab point under the pointer.
+   * Does nothing if nothing is being dragged.
+   *
+   * @param {PointerEvent} event - The pointer event from the canvas.
    */
   #drag(event) {
-    if (this.#grabOffset === null) return
+    if (this.#dragged === null || this.#grabOffset === null) return
 
     const { x, y } = this.#toCanvasPosition(event)
-    this.#target.moveTo(
-      x - this.#grabOffset.x * this.#target.width,
-      y - this.#grabOffset.y * this.#target.height
+    this.#dragged.moveTo(
+      x - this.#grabOffset.x * this.#dragged.width,
+      y - this.#grabOffset.y * this.#dragged.height
     )
   }
 
   /**
-   * -
+   * Stops dragging. The target stays where it was released.
    */
   #release() {
+    this.#dragged = null
     this.#grabOffset = null
   }
 
   /**
+   * Converts the pointer position on the page to coordinates on the canvas.
+   * Needed when the canvas is shown at a different size than it is drawn in.
    * 
-   * @param {PointerEvent} event 
-   * @returns {{x: number, y: number}}
+   * @param {PointerEvent} event - The pointer event.
+   * @returns {{x: number, y: number}} The position in canvas pixels.
    */
   #toCanvasPosition(event) {
     const rect = this.#canvas.getBoundingClientRect()
