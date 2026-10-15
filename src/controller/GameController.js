@@ -57,6 +57,8 @@ export class GameController {
    */
   #nextTravellerIndex = 0
 
+  #gameDate = new Date()
+
   /**
    * Starts a new game. Anything from an earlier game is replaced.
    *
@@ -70,7 +72,7 @@ export class GameController {
       )
     }
 
-    const gameDate = this.#today()
+    this.#gameDate = this.#today()
 
     this.#nations = new Repository(Nation)
     this.#discrepancies = new Repository(Discrepancy)
@@ -80,7 +82,7 @@ export class GameController {
 
     this.#generateNations(difficulty)
     this.#generateDiscrepancies(difficulty)
-    this.#generateTravellers(gameDate)
+    this.#generateTravellers(this.#gameDate)
   }
 
   /**
@@ -189,5 +191,9 @@ export class GameController {
     return portraitData
       .filter((portrait) => portrait.sex === sex)
       .map((portrait) => portrait.id)
+  }
+
+  get gameDate() {
+    return new Date(this.#gameDate)
   }
 }

@@ -38,6 +38,16 @@ const TEXT_DISTANCE = 10
 const TEXT_COLOR = '#2a1a1a'
 
 /**
+ * How far to the right of the stamp marker's left edge the date is printed, in pixels.
+ */
+const STAMP_DATE_OFFSET_X = 40
+
+/**
+ * How far below the stamp marker's top edge the date is printed, in pixels.
+ */
+const STAMP_DATE_OFFSET_Y = 150
+
+/**
  * Shows the passport on the screen. It is hidden until a traveller hands it over, and can be
  * dragged: open with all its details on the inspection desk, and closed and small in the booth.
  */
@@ -133,6 +143,17 @@ export class PassportView {
   }
 
   /**
+   * The date line on the stamps.
+   */
+  #dateStamp = new TextLine('', {color: TEXT_COLOR })
+
+  /**
+   * The current game date.
+   */
+  #gameDate = new Date()
+
+
+  /**
    * The passports x-coordinate.
    *
    * @type {number}
@@ -163,9 +184,19 @@ export class PassportView {
 
     renderer.add(this.#approveStamp)
     renderer.add(this.#denyStamp)
+    renderer.add(this.#dateStamp.sprite)
 
     this.#placeAll()
     this.hide()
+  }
+
+  /**
+   * Sets the current game date. Used for setting the correct date on the stamp.
+   * 
+   * @param {Date} date - The current game date.
+   */
+  set gameDate(date) {
+    this.#gameDate = new Date(date)
   }
 
   /**
@@ -250,6 +281,7 @@ export class PassportView {
     this.#approveStamp.height = 0
     this.#denyStamp.width = 0
     this.#denyStamp.height = 0
+    this.#dateStamp.text = ''
     this.#closedPassport.width = CLOSED_WIDTH
     this.#closedPassport.height = CLOSED_HEIGHT
 
@@ -270,6 +302,7 @@ export class PassportView {
     this.#approveStamp.height = 0
     this.#denyStamp.width = 0
     this.#denyStamp.height = 0
+    this.#dateStamp.text = ''
     this.#stampOffset = null
     this.#passport = null
 
@@ -295,8 +328,9 @@ export class PassportView {
   }
 
   /**
-   * Places the paper, the photo and every text line relative to the passport's position,
-   * so they move together. The text lines are stacked from top to bottom.
+   * Places every part of the passport relative to its position, so they move together:
+   * the open and closed paper, the photo, the stamp marker with its date, and the text lines,
+   * which are stacked from top to bottom.
    */
   #placeAll() {
     this.#openPassport.x = this.#x
@@ -311,6 +345,9 @@ export class PassportView {
         marker.x = this.#x + this.#stampOffset.x
         marker.y = this.#y + this.#stampOffset.y
       }
+
+      this.#dateStamp.x = this.#x + this.#stampOffset.x + STAMP_DATE_OFFSET_X
+      this.#dateStamp.y = this.#y + this.#stampOffset.y + STAMP_DATE_OFFSET_Y
     }
 
     let y = this.#y + TEXT_OFFSET_Y
@@ -480,11 +517,15 @@ export class PassportView {
   }
 
   /**
-   * Shows the marker for the latest stamp and hides the other one.
+   * Shows the marker for the latest stamp and hides the other one. 
+   * Sets the current game date on the stamp and colors it based on the approved status.
    */
   #showStampMarker() {
     const shown = this.#approved ? this.#approveStamp : this.#denyStamp
     const hidden = this.#approved ? this.#denyStamp : this.#approveStamp
+
+    this.#dateStamp.text = this.#formatDate(this.#gameDate)
+    this.#dateStamp.textColor = this.#approved ? '#1a5c1a' : '#8b1a1a'
 
     shown.width = STAMP_WIDTH
     shown.height = STAMP_HEIGHT

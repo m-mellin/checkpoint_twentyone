@@ -61,6 +61,15 @@ export class GameView {
   }
 
   /**
+   * Sets the current game date to the passport view. It is shown on the stamp.
+   * 
+   * @param {Date} date - The current game date.
+   */
+  set gameDate(date) {
+    this.#passportView.gameDate = date
+  } 
+
+  /**
    * Lets a traveller walk up to the window. Their passport is shown on the desk when they arrive.
    * Takes the previous traveller's passport off the desk first.
    *

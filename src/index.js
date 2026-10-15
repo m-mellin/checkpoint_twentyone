@@ -22,6 +22,7 @@ new DragController(canvas, [gameView.passport, ...gameView.stamps], (dropped) =>
 
 const gameController = new GameController()
 gameController.startGame('easy')
+gameView.gameDate = gameController.gameDate
 
 const PIXEL_FONT = '16px "Press Start 2P"'
 
