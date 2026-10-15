@@ -10,6 +10,9 @@ const CLOSED_PASSPORT_SRC = 'assets/passport_small.png'
 const APPROVE_STAMP_SRC = 'assets/approve_stamp_marker.png'
 const DENY_STAMP_SRC = 'assets/deny_stamp_marker.png'
 
+const COUNTER_Y = 700
+const FALL_SPEED = 4
+
 const STAMP_WIDTH = 200
 const STAMP_HEIGHT = 200
 
@@ -64,17 +67,23 @@ export class PassportView {
   #closedPassport = new Sprite(CLOSED_PASSPORT_SRC)
 
   /**
-   * The approve stamp sprite.
+   * The marker shown on the open passport when it has been approved.
+   *
+   * @type {Sprite}
    */
   #approveStamp = new Sprite(APPROVE_STAMP_SRC)
 
   /**
-   * The deny stamp sprite.
+   * The marker shown on the open passport when it has been denied.
+   *
+   * @type {Sprite}
    */
   #denyStamp = new Sprite(DENY_STAMP_SRC)
 
   /**
-   * If the passport is approved.
+   * Whether the latest stamp approves the passport. False if denied or not stamped.
+   *
+   * @type {boolean}
    */
   #approved = false
 
@@ -93,11 +102,18 @@ export class PassportView {
   #passport = null
 
   /**
-   * The passport state, if its open or closed.
+   * Whether the passport is open on the inspection desk (true) or closed in the booth (false).
    *
    * @type {boolean}
    */
   #isOpen = true
+
+  /**
+   * Whether the passport is falling onto the booth counter right now.
+   *
+   * @type {boolean}
+   */
+  #isFalling = false
 
   /**
    * The text lines on the open passport, one per field,
@@ -131,8 +147,8 @@ export class PassportView {
   #y = PASSPORT_Y
 
   /**
-   * Adds the open passport, the closed passport, the photo and the text fields to the renderer,
-   * in the order they are drawn. The passport stays hidden until a traveller hands it over.
+   * Adds the open passport, the closed passport, the photo, the text fields and the stamp markers
+   * to the renderer, in the order they are drawn. The passport stays hidden until a traveller hands it over.
    *
    * @param {SpriteRenderer} renderer - The renderer to draw with.
    */
@@ -153,10 +169,9 @@ export class PassportView {
   }
 
   /**
-   * Shows the passport when traveller is in front of window.
-   * Places the passport in the center of the desk in a closed state.
+   * Shows a new passport, closed on the booth counter and without stamps.
    *
-   * @param {Passport | null} passport - The passport.
+   * @param {Passport} passport - The passport to show.
    */
   show(passport) {
     this.#passport = passport
@@ -251,6 +266,8 @@ export class PassportView {
     this.#passportPhoto.height = 0
     this.#closedPassport.width = 0
     this.#closedPassport.height = 0
+    this.#approveStamp.width = 0
+    this.#approveStamp.height = 0
     this.#denyStamp.width = 0
     this.#denyStamp.height = 0
     this.#stampOffset = null
@@ -260,10 +277,10 @@ export class PassportView {
   }
 
   /**
-   * Retrieves the photo of the traveller and displays it on the passport,
-   * based on the id of the traveller.apperance attribute.
+   * Shows the portrait with the given id in the passport photo.
    *
-   * @param {string} photoId - The photo id of the traveller.
+   * @param {string} photoId - The appearance id printed in the passport, for example "M1".
+   * @throws {RangeError} If there is no portrait with the id.
    */
   #showPhoto(photoId) {
     const portrait = portraitData.find((p) => p.id === photoId)
@@ -306,7 +323,7 @@ export class PassportView {
   }
 
   /**
-   * Formats the date to YEAR-MONTH-DAY format.
+   * Formats a date the way it is printed in the passport, for example "1971.03.12".
    *
    * @param {Date} date - The date to format.
    * @returns {string} The formatted date.
@@ -314,7 +331,7 @@ export class PassportView {
   #formatDate(date) {
     const day = String(date.getUTCDate()).padStart(2, '0')
     const month = String(date.getUTCMonth() + 1).padStart(2, '0')
-    const year = String(date.getUTCFullYear()).slice()
+    const year = String(date.getUTCFullYear())
 
     return `${year}.${month}.${day}`
   }
@@ -356,12 +373,41 @@ export class PassportView {
   }
 
   /**
-   * Moves the passport.
+   * Returns if the passport is stamped.
    *
-   * @param {number} x - The x-coordinate to move.
-   * @param {number} y - The y-coordinate to move.
+   * @returns {boolean} True if the passport has a stamp marker.
+   */
+  get isStamped() {
+    return this.#stampOffset !== null
+  }
+
+  /**
+   * Returns if the passport is approved
+   *
+   * @returns {boolean} True if the latest stamp approves the passport.
+   */
+  get isApproved() {
+    return this.#approved
+  }
+
+  /**
+   * Returns whether a passport is shown and lies closed in the booth.
+   *
+   * @returns {boolean} True if the passport is in the booth.
+   */
+  get isInBooth() {
+    return this.#passport !== null && !this.#isOpen
+  }
+
+  /**
+   * Moves the passport so its top left corner is at the given position, and opens or closes it
+   * depending on which side it is on. Stops it from falling, for example when the player grabs it.
+   *
+   * @param {number} x - The new x coordinate, in canvas pixels.
+   * @param {number} y - The new y coordinate, in canvas pixels.
    */
   moveTo(x, y) {
+    this.#isFalling = false
     this.#x = x
     this.#y = y
     this.#updateMode()
@@ -444,5 +490,32 @@ export class PassportView {
     shown.height = STAMP_HEIGHT
     hidden.width = 0
     hidden.height = 0
+  }
+
+  /**
+   * Set that the passport is currently falling.
+   */
+  fall() {
+    this.#isFalling = true
+  }
+
+  /**
+   * Moves a falling passport towards the booth counter, without falling past it.
+   * Does nothing if the passport is not falling.
+   *
+   * @param {number} deltaTime - Milliseconds since the last frame.
+   */
+  update(deltaTime) {
+    if (!this.#isFalling) return
+
+    const distance = COUNTER_Y - this.#y
+    const step = Math.min(Math.abs(distance), FALL_SPEED * deltaTime)
+
+    this.#y += Math.sign(distance) * step
+    this.#placeAll()
+
+    if (this.#y === COUNTER_Y) {
+      this.#isFalling = false
+    }
   }
 }

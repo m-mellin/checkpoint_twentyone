@@ -88,6 +88,7 @@ export class GameView {
    */
   update(deltaTime) {
     this.#travellerView.update(deltaTime)
+    this.#passportView.update(deltaTime)
 
     if (this.#waitingPassport !== null && this.#travellerView.isAtWindow) {
       this.#passportView.show(this.#waitingPassport)
@@ -96,30 +97,51 @@ export class GameView {
   }
 
   /**
-   * Returns an array of StampViews.
-   * 
-   * @returns {StampView[]} - The array of StampViews.
+   * Returns the stamps on the desk, for example to let the player drag them.
+   *
+   * @returns {StampView[]} The approve stamp and the deny stamp.
    */
   get stamps() {
     return [this.#approveStamp, this.#denyStamp]
   }
 
   /**
-   * Returns the PassportView.
-   * 
-   * @returns {PassportView} - The PassportView.
+   * Returns the passport view, for example to let the player drag it.
+   *
+   * @returns {PassportView} The passport view.
    */
   get passport() {
     return this.#passportView
   }
 
   /**
-   * Stamps the passport if a stamp was dropped on it, centred where the stamp was released.
-   * Does nothing if something other than a stamp was dropped.
+   * Called when a stamped passport is handed back to the traveller, with true if it was approved.
+   *
+   * @type {(approved: boolean) => void}
+   */
+  #onPassportReturned = () => {}
+
+  /**
+   * Sets what happens when a stamped passport is handed back to the traveller.
+   *
+   * @param {(approved: boolean) => void} callback - Called with true if the passport was approved.
+   */
+  set onPassportReturned(callback) {
+    this.#onPassportReturned = callback
+  }
+
+  /**
+   * Handles something the player released: a passport dropped in the booth is handed back or falls
+   * onto the counter, and a stamp dropped on the open passport stamps it where it was released.
    *
    * @param {import('../controller/DragController.js').Draggable} dropped - The thing the player released.
    */
   dropped(dropped) {
+    if (dropped === this.#passportView) {
+      this.#passportDropped()
+      return
+    }
+
     const stamp = this.stamps.find((s) => s === dropped)
 
     if (!stamp) return
@@ -128,5 +150,23 @@ export class GameView {
     const centerY = stamp.y + stamp.height / 2
 
     this.#passportView.stampAt(centerX, centerY, stamp.approves)
+  }
+
+  /**
+   * Hands a stamped passport back if the traveller is at the window, and otherwise lets it fall
+   * onto the counter. Does nothing if the passport was released on the inspection desk.
+   */
+  #passportDropped() {
+    if (!this.#passportView.isInBooth) return
+
+    if (this.#passportView.isStamped && this.#travellerView.isAtWindow) {
+      const approved = this.#passportView.isApproved
+
+      this.#passportView.hide()
+      this.#onPassportReturned(approved)
+      return
+    }
+
+    this.#passportView.fall()
   }
 }
