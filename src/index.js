@@ -43,11 +43,9 @@ function callNextTraveller() {
 
 callNextTraveller()
 
-window.addEventListener('keydown', (event) => {
-  if (event.key === 'n') {
-    callNextTraveller()
-  }
-})
+gameView.onPassportReturned = () => {
+  callNextTraveller()
+}
 
 /**
  * GameLoop
