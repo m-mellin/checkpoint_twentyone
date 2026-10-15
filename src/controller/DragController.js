@@ -27,11 +27,14 @@ export class DragController {
    * @returns {void}
    */
   #grab(event) {
-    const {x, y } = this.#toCanvasPosition(event)
+    const { x, y } = this.#toCanvasPosition(event)
 
     if (!this.#target.contains(x, y)) return
 
-    this.#grabOffset = {x: x - this.#target.x, y: y - this.#target.y}
+    this.#grabOffset = {
+      x: (x - this.#target.x) / this.#target.width,
+      y: (y - this.#target.y) / this.#target.height
+    }
     this.#canvas.setPointerCapture(event.pointerId)
   }
 
@@ -44,7 +47,10 @@ export class DragController {
     if (this.#grabOffset === null) return
 
     const { x, y } = this.#toCanvasPosition(event)
-    this.#target.moveTo(x - this.#grabOffset.x, y - this.#grabOffset.y)  
+    this.#target.moveTo(
+      x - this.#grabOffset.x * this.#target.width,
+      y - this.#grabOffset.y * this.#target.height
+    )
   }
 
   /**
