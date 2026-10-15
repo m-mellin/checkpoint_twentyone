@@ -18,7 +18,7 @@ body?.appendChild(canvas)
 const renderer = new SpriteRenderer(canvas)
 
 const gameView = new GameView(renderer)
-new DragController(canvas, [gameView.passport, ...gameView.stamps])
+new DragController(canvas, [gameView.passport, ...gameView.stamps], (dropped) => gameView.dropped(dropped))
 
 const gameController = new GameController()
 gameController.startGame('easy')
@@ -46,12 +46,6 @@ callNextTraveller()
 window.addEventListener('keydown', (event) => {
   if (event.key === 'n') {
     callNextTraveller()
-  }
-})
-
-window.addEventListener('keydown', (event) => {
-  if (event.key === 'o') {
-    gameView.approvePassport()
   }
 })
 

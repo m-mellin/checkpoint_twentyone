@@ -46,14 +46,23 @@ export class DragController {
   #grabOffset = null
 
   /**
+   * Called with the target when the player releases it.
+   *
+   * @type {(target: Draggable) => void}
+   */
+  #onDrop
+
+  /**
    * Starts listening for drags on the canvas.
    * 
    * @param {HTMLCanvasElement} canvas - The canvas the game is drawn on.
    * @param {Draggable[]} targets - Everything that can be dragged, in the order they are drawn.
+   * @param {(target: Draggable) => void} [onDrop] - Called with the target when the player releases it.
    */
-  constructor(canvas, targets) {
+  constructor(canvas, targets, onDrop = () => {}) {
     this.#canvas = canvas
     this.#targets = targets
+    this.#onDrop = onDrop
 
     canvas.addEventListener('pointerdown', (event) => this.#grab(event))
     canvas.addEventListener('pointermove', (event) => this.#drag(event))
@@ -119,6 +128,10 @@ export class DragController {
    * Stops dragging. The target stays where it was released.
    */
   #release() {
+    if (this.#dragged !== null) {
+      this.#onDrop(this.#dragged)
+    }
+    
     this.#dragged = null
     this.#grabOffset = null
   }

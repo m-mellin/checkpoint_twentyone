@@ -12,8 +12,6 @@ const DENY_STAMP_SRC = 'assets/deny_stamp_marker.png'
 
 const STAMP_WIDTH = 200
 const STAMP_HEIGHT = 200
-const STAMP_OFFSET_X = 100
-const STAMP_OFFSET_Y = 200
 
 const CLOSED_WIDTH = 169
 const CLOSED_HEIGHT = 186
@@ -76,6 +74,13 @@ export class PassportView {
   #denyStamp = new Sprite(DENY_STAMP_SRC)
 
   #approved = false
+
+  /**
+   * Where the stamp marker sits, measured from the passport's top left corner. Null if not stamped.
+   *
+   * @type {{x: number, y: number} | null}
+   */
+  #stampOffset = null
 
   /**
    * The current passport.
@@ -155,6 +160,7 @@ export class PassportView {
     this.#approved = false
     this.#x = DESK_CENTER_X
     this.#y = DESK_CENTER_Y
+    this.#stampOffset = null
     this.#close()
     this.#placeAll()
   }
@@ -169,9 +175,8 @@ export class PassportView {
     this.#openPassport.width = PASSPORT_WIDTH
     this.#openPassport.height = PASSPORT_HEIGHT
 
-    if (this.#approved) {
-      this.#approveStamp.width = STAMP_WIDTH
-      this.#approveStamp.height = STAMP_HEIGHT
+    if (this.#stampOffset !== null) {
+      this.#showStampMarker()
     }
 
     if (this.#passport !== null) {
@@ -225,6 +230,8 @@ export class PassportView {
     this.#passportPhoto.height = 0
     this.#approveStamp.width = 0
     this.#approveStamp.height = 0
+    this.#denyStamp.width = 0
+    this.#denyStamp.height = 0
     this.#closedPassport.width = CLOSED_WIDTH
     this.#closedPassport.height = CLOSED_HEIGHT
 
@@ -241,8 +248,9 @@ export class PassportView {
     this.#passportPhoto.height = 0
     this.#closedPassport.width = 0
     this.#closedPassport.height = 0
-    this.#approveStamp.width = 0
-    this.#approveStamp.height = 0
+    this.#denyStamp.width = 0
+    this.#denyStamp.height = 0
+    this.#stampOffset = null
     this.#passport = null
 
     this.#emptyFields()
@@ -277,8 +285,13 @@ export class PassportView {
     this.#passportPhoto.y = this.#y + PHOTO_OFFSET_Y
     this.#closedPassport.x = this.#x
     this.#closedPassport.y = this.#y
-    this.#approveStamp.x = this.#x + STAMP_OFFSET_X
-    this.#approveStamp.y = this.#y + STAMP_OFFSET_Y
+
+    if (this.#stampOffset !== null) {
+      for (const marker of [this.#approveStamp, this.#denyStamp]) {
+        marker.x = this.#x + this.#stampOffset.x
+        marker.y = this.#y + this.#stampOffset.y
+      }
+    }
 
     let y = this.#y + TEXT_OFFSET_Y
 
@@ -394,12 +407,39 @@ export class PassportView {
     )
   }
 
-  approve() {
-    this.#approved = true
-
-    if (this.#isOpen) {
-      this.#approveStamp.width = STAMP_WIDTH
-      this.#approveStamp.height = STAMP_HEIGHT
+  /**
+   * Puts a stamp marker on the open passport, centred on the given point.
+   * Does nothing if the passport is closed or the point is not on it.
+   *
+   * @param {number} x - The x coordinate of the stamp's centre, in canvas pixels.
+   * @param {number} y - The y coordinate of the stamp's centre, in canvas pixels.
+   * @param {boolean} approves - True for the approve stamp, false for the deny stamp.
+   */
+  stampAt(x, y, approves) {
+    if (!this.#isOpen || !this.contains(x, y)) {
+      return
     }
+
+    this.#approved = approves
+    this.#stampOffset = {
+      x: x - this.#x - STAMP_WIDTH / 2,
+      y: y - this.#y - STAMP_HEIGHT / 2
+    }
+
+    this.#showStampMarker()
+    this.#placeAll()
+  }
+
+  /**
+   * Shows the marker for the latest stamp and hides the other one.
+   */
+  #showStampMarker() {
+    const shown = this.#approved ? this.#approveStamp : this.#denyStamp
+    const hidden = this.#approved ? this.#denyStamp : this.#approveStamp
+
+    shown.width = STAMP_WIDTH
+    shown.height = STAMP_HEIGHT
+    hidden.width = 0
+    hidden.height = 0
   }
 }

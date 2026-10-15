@@ -55,17 +55,37 @@ export class GameView {
   }
 
   /**
-   * @returns {StampView[]}
+   * Returns an array of StampViews.
+   * 
+   * @returns {StampView[]} - The array of StampViews.
    */
   get stamps() {
     return [this.#approveStamp, this.#denyStamp]
   }
 
+  /**
+   * Returns the PassportView.
+   * 
+   * @returns {PassportView} - The PassportView.
+   */
   get passport() {
     return this.#passportView
   }
 
-  approvePassport() {
-    this.#passportView.approve()
+  /**
+   * Stamps the passport if a stamp was dropped on it, centred where the stamp was released.
+   * Does nothing if something other than a stamp was dropped.
+   *
+   * @param {import('../controller/DragController.js').Draggable} dropped - The thing the player released.
+   */
+  dropped(dropped) {
+    const stamp = this.stamps.find((s) => s === dropped)
+
+    if (!stamp) return
+
+    const centerX = stamp.x + stamp.width / 2
+    const centerY = stamp.y + stamp.height / 2
+
+    this.#passportView.stampAt(centerX, centerY, stamp.approves)
   }
 }
