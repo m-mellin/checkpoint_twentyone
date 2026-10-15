@@ -1,54 +1,67 @@
 import { Sprite, SpriteRenderer } from "2d-sprite-renderer";
 
-const APPROVE_STAMP_SRC = 'assets/stamp.png'
-
-const STAMP_WIDTH = 300
-const STAMP_HEIGHT = 300
-
-const STAMP_X = 1400
-const STAMP_Y = 0
+const STAMP_WIDTH = 505 / 2
+const STAMP_HEIGHT = 593 / 2
 
 /**
  * 
  */
 export class StampView {
-  #approveStamp = new Sprite(APPROVE_STAMP_SRC, {x: STAMP_X, y: STAMP_Y, width: STAMP_WIDTH, height: STAMP_HEIGHT})
-  #x = STAMP_X
-  #y = STAMP_Y
+  #sprite
+  #x
+  #y
+  #approves = false
 
   /**
-   * -
-   * 
-   * @param {SpriteRenderer} renderer 
+   * Creates a stamp and adds it to the renderer.
+   *
+   * @param {SpriteRenderer} renderer - The renderer to draw with.
+   * @param {object} options - What makes this stamp different from the others.
+   * @param {string} options.src - The stamp's image.
+   * @param {number} options.x - The x coordinate it starts at.
+   * @param {number} options.y - The y coordinate it starts at.
+   * @param {boolean} options.approves - True for the approve stamp, false for the deny stamp.
    */
-  constructor(renderer) {
-    renderer.add(this.#approveStamp)
+  constructor(renderer, {src, x, y, approves}) {
+    this.#sprite = new Sprite(src, {width: STAMP_WIDTH, height: STAMP_HEIGHT})
+    this.#x = x
+    this.#y = y
+    this.#approves = approves
 
+    renderer.add(this.#sprite)
     this.#placeAll()
   }
 
-  get stamp() {
-    return this.#approveStamp
-  }
-
-  #placeAll() {
-    this.#approveStamp.x = this.#x
-    this.#approveStamp.y = this.#y
+  /**
+   * Returns a boolean if the stamp approves passports.
+   * 
+   * @returns {boolean} True if it approves, else false.
+   */
+  get approves() {
+    return this.#approves
   }
 
   /**
-   * -
-   * 
-   * @returns {number}
+   * Moves the sprite to the stamp's position, so the stamp is drawn where it is.
+   */
+  #placeAll() {
+    this.#sprite.x = this.#x
+    this.#sprite.y = this.#y
+  }
+
+  /**
+   * Returns the x-coordinate of the stamp.
+   *
+   * @returns {number} The x-coordinate.
    */
   get x() {
     return this.#x
   }
 
   /**
-   * -
-   * 
-   * @returns {number}
+   * Returns the y-coordinate of the stamp.
+   *
+   * @returns {number} The y-coordinate.
    */
   get y() {
     return this.#y
@@ -73,10 +86,10 @@ export class StampView {
   }
 
   /**
-   * -
-   * 
-   * @param {number} x 
-   * @param {number} y 
+   * Moves the stamp.
+   *
+   * @param {number} x - The x-coordinate to move.
+   * @param {number} y - The y-coordinate to move.
    */
   moveTo(x, y) {
     this.#x = x
@@ -85,11 +98,11 @@ export class StampView {
   }
 
   /**
-   * -
-   * 
-   * @param {number} x 
-   * @param {number} y 
-   * @returns {boolean} True if the point is on the passport.
+   * Returns whether a point is on the stamp, in its current size.
+   *
+   * @param {number} x - The x coordinate of the point, in canvas pixels.
+   * @param {number} y - The y coordinate of the point, in canvas pixels.
+   * @returns {boolean} True if the point is on the stamp.
    */
   contains(x, y) {
     return (

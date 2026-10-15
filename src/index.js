@@ -18,7 +18,7 @@ body?.appendChild(canvas)
 const renderer = new SpriteRenderer(canvas)
 
 const gameView = new GameView(renderer)
-new DragController(canvas, [gameView.passport, gameView.stamp])
+new DragController(canvas, [gameView.passport, ...gameView.stamps])
 
 const gameController = new GameController()
 gameController.startGame('easy')

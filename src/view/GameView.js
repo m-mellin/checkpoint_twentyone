@@ -10,7 +10,8 @@ export class GameView {
   #travellerView
   #deskView
   #passportView
-  #stampView
+  #approveStamp
+  #denyStamp
   /**
    * @type {Passport | null}
    */
@@ -24,7 +25,8 @@ export class GameView {
     this.#travellerView = new TravellerView(renderer)
     this.#deskView = new DeskView(renderer)
     this.#passportView = new PassportView(renderer)
-    this.#stampView = new StampView(renderer)
+    this.#approveStamp = new StampView(renderer, {src: 'assets/approve_stamp.png', x: 1400, y: 500, approves: true})
+    this.#denyStamp = new StampView(renderer, {src: 'assets/deny_stamp.png', x: 1500, y: 500, approves: false})
   }
 
   /**
@@ -52,8 +54,11 @@ export class GameView {
     }
   }
 
-  get stamp() {
-    return this.#stampView
+  /**
+   * @returns {StampView[]}
+   */
+  get stamps() {
+    return [this.#approveStamp, this.#denyStamp]
   }
 
   get passport() {
