@@ -64,4 +64,8 @@ export class GameView {
   get passport() {
     return this.#passportView
   }
+
+  approvePassport() {
+    this.#passportView.approve()
+  }
 }

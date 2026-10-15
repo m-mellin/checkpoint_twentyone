@@ -7,6 +7,14 @@ import portraitData from '../data/potraits.json'
 const PASSPORT_SRC = 'assets/passport.png'
 const TRAVELLERS_SRC = 'assets/travellers.png'
 const CLOSED_PASSPORT_SRC = 'assets/passport_small.png'
+const APPROVE_STAMP_SRC = 'assets/approve_stamp_marker.png'
+const DENY_STAMP_SRC = 'assets/deny_stamp_marker.png'
+
+const STAMP_WIDTH = 200
+const STAMP_HEIGHT = 200
+const STAMP_OFFSET_X = 100
+const STAMP_OFFSET_Y = 200
+
 const CLOSED_WIDTH = 169
 const CLOSED_HEIGHT = 186
 
@@ -56,6 +64,18 @@ export class PassportView {
    * @type {Sprite}
    */
   #closedPassport = new Sprite(CLOSED_PASSPORT_SRC)
+
+  /**
+   * 
+   */
+  #approveStamp = new Sprite(APPROVE_STAMP_SRC)
+
+  /**
+   * 
+   */
+  #denyStamp = new Sprite(DENY_STAMP_SRC)
+
+  #approved = false
 
   /**
    * The current passport.
@@ -117,6 +137,9 @@ export class PassportView {
       renderer.add(field.sprite)
     }
 
+    renderer.add(this.#approveStamp)
+    renderer.add(this.#denyStamp)
+
     this.#placeAll()
     this.hide()
   }
@@ -129,6 +152,7 @@ export class PassportView {
    */
   show(passport) {
     this.#passport = passport
+    this.#approved = false
     this.#x = DESK_CENTER_X
     this.#y = DESK_CENTER_Y
     this.#close()
@@ -144,6 +168,11 @@ export class PassportView {
     this.#closedPassport.height = 0
     this.#openPassport.width = PASSPORT_WIDTH
     this.#openPassport.height = PASSPORT_HEIGHT
+
+    if (this.#approved) {
+      this.#approveStamp.width = STAMP_WIDTH
+      this.#approveStamp.height = STAMP_HEIGHT
+    }
 
     if (this.#passport !== null) {
       this.#showPhoto(this.#passport.photo)
@@ -194,6 +223,8 @@ export class PassportView {
     this.#openPassport.height = 0
     this.#passportPhoto.width = 0
     this.#passportPhoto.height = 0
+    this.#approveStamp.width = 0
+    this.#approveStamp.height = 0
     this.#closedPassport.width = CLOSED_WIDTH
     this.#closedPassport.height = CLOSED_HEIGHT
 
@@ -210,6 +241,8 @@ export class PassportView {
     this.#passportPhoto.height = 0
     this.#closedPassport.width = 0
     this.#closedPassport.height = 0
+    this.#approveStamp.width = 0
+    this.#approveStamp.height = 0
     this.#passport = null
 
     this.#emptyFields()
@@ -244,6 +277,8 @@ export class PassportView {
     this.#passportPhoto.y = this.#y + PHOTO_OFFSET_Y
     this.#closedPassport.x = this.#x
     this.#closedPassport.y = this.#y
+    this.#approveStamp.x = this.#x + STAMP_OFFSET_X
+    this.#approveStamp.y = this.#y + STAMP_OFFSET_Y
 
     let y = this.#y + TEXT_OFFSET_Y
 
@@ -357,5 +392,14 @@ export class PassportView {
       y >= this.#y &&
       y <= this.#y + this.height
     )
+  }
+
+  approve() {
+    this.#approved = true
+
+    if (this.#isOpen) {
+      this.#approveStamp.width = STAMP_WIDTH
+      this.#approveStamp.height = STAMP_HEIGHT
+    }
   }
 }

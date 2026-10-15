@@ -49,6 +49,12 @@ window.addEventListener('keydown', (event) => {
   }
 })
 
+window.addEventListener('keydown', (event) => {
+  if (event.key === 'o') {
+    gameView.approvePassport()
+  }
+})
+
 /**
  * GameLoop
  *
