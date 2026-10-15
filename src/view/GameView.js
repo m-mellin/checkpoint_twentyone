@@ -4,11 +4,13 @@ import { TravellerView } from "./TravellerView"
 import { DeskView } from "./DeskView"
 import { Passport } from "../model/Passport"
 import { PassportView } from "./PassportView"
+import { StampView } from "./StampView"
 
 export class GameView {
   #travellerView
   #deskView
   #passportView
+  #stampView
   /**
    * @type {Passport | null}
    */
@@ -22,6 +24,7 @@ export class GameView {
     this.#travellerView = new TravellerView(renderer)
     this.#deskView = new DeskView(renderer)
     this.#passportView = new PassportView(renderer)
+    this.#stampView = new StampView(renderer)
   }
 
   /**
@@ -49,5 +52,11 @@ export class GameView {
     }
   }
 
+  get stamp() {
+    return this.#stampView
+  }
 
+  get passport() {
+    return this.#passportView
+  }
 }

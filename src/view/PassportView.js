@@ -13,18 +13,21 @@ const PASSPORT_Y = 0
 const PASSPORT_WIDTH = 1404 / 1.7
 const PASSPORT_HEIGHT = 1120 / 1.7
 
-const PHOTO_X = PASSPORT_X + 450
-const PHOTO_Y = PASSPORT_Y + 100
 const PHOTO_SCALE = 1
+const PHOTO_OFFSET_X = 450
+const PHOTO_OFFSET_Y = 100
 
-const TEXT_X = PASSPORT_X + 450
-const TEXT_Y = PASSPORT_Y + 300
+const TEXT_OFFSET_X = 450
+const TEXT_OFFSET_Y = 300
 const TEXT_DISTANCE = 10
 const TEXT_COLOR = '#2a1a1a'
 
+/**
+ * 
+ */
 export class PassportView {
   #paper = new Sprite(PASSPORT_SRC, {x: PASSPORT_X, y: PASSPORT_Y})
-  #photo = new Sprite(TRAVELLERS_SRC, {x: PHOTO_X, y: PHOTO_Y})
+  #photo = new Sprite(TRAVELLERS_SRC, {x: PHOTO_OFFSET_X, y: PHOTO_OFFSET_Y})
 
   #fields = {
     name: new TextLine('', {color: TEXT_COLOR}),
@@ -38,10 +41,20 @@ export class PassportView {
     expiryDate: new TextLine('', {color: TEXT_COLOR}),
     identification: new TextLine('', {color: TEXT_COLOR})
   }
+
+  /**
+   * @type {number}
+   */
+  #x = PASSPORT_X
+
+  /**
+   * @type {number}
+   */
+  #y = PASSPORT_Y
+
   /**
    * 
    * @param {SpriteRenderer} renderer
-   * @param {Traveller} traveller
    */
   constructor(renderer) {
     renderer.add(this.#paper)
@@ -51,7 +64,7 @@ export class PassportView {
       renderer.add(field.sprite)
     }
 
-    this.#placeFields()
+    this.#placeAll()
     this.hide()
   }
 
@@ -76,6 +89,9 @@ export class PassportView {
     this.#fields.identification.text = `ID: ${passport.identificationString}`
   }
 
+  /**
+   * -
+   */
   hide() {
     this.#paper.width = 0
     this.#paper.height = 0
@@ -88,6 +104,7 @@ export class PassportView {
   }
 
   /**
+   * -
    * 
    * @param {string} photoId 
    */
@@ -106,17 +123,23 @@ export class PassportView {
   /**
    * -
    */
-  #placeFields() {
-    let y = TEXT_Y
+  #placeAll() {
+    this.#paper.x = this.#x
+    this.#paper.y = this.#y
+    this.#photo.x = this.#x + PHOTO_OFFSET_X
+    this.#photo.y = this.#y + PHOTO_OFFSET_Y
+
+    let y = this.#y + TEXT_OFFSET_Y
 
     for (const field of Object.values(this.#fields)) {
-      field.x = TEXT_X
+      field.x = this.#x + TEXT_OFFSET_X
       field.y = y
       y += field.height + TEXT_DISTANCE
     }
   }
 
   /**
+   * -
    * 
    * @param {Date} date
    * @returns {string} 
@@ -127,5 +150,47 @@ export class PassportView {
     const year = String(date.getUTCFullYear()).slice(-2)
 
     return `${day}.${month}.${year}`
+  }
+
+  /**
+   * -
+   * 
+   * @returns {number}
+   */
+  get x() {
+    return this.#x
+  }
+
+  /**
+   * -
+   * 
+   * @returns {number}
+   */
+  get y() {
+    return this.#y
+  }
+
+  /**
+   * -
+   * 
+   * @param {number} x 
+   * @param {number} y 
+   */
+  moveTo(x, y) {
+    this.#x = x
+    this.#y = y
+    this.#placeAll()
+  }
+
+  /**
+   * -
+   * 
+   * @param {number} x 
+   * @param {number} y 
+   * @returns {boolean} True if the point is on the passport.
+   */
+  contains(x, y) {
+    return x >= this.#x && x <= this.#x + this.#paper.width &&
+      y >= this.#y && y <= this.#y + this.#paper.height
   }
 }

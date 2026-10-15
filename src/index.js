@@ -2,6 +2,7 @@ import { SpriteRenderer } from '2d-sprite-renderer'
 import './style.css'
 import { GameController } from './controller/GameController.js'
 import { GameView } from './view/GameView'
+import { DragController } from './controller/DragController'
 
 const GAME_WIDTH = window.innerWidth
 const GAME_HEIGHT = window.innerHeight
@@ -17,6 +18,9 @@ body?.appendChild(canvas)
 const renderer = new SpriteRenderer(canvas)
 
 const gameView = new GameView(renderer)
+new DragController(canvas, gameView.passport)
+new DragController(canvas, gameView.stamp)
+
 const gameController = new GameController()
 gameController.startGame('easy')
 
@@ -52,8 +56,7 @@ window.addEventListener('keydown', (event) => {
  * @param {number} timestamp
  */
 function gameLoop(timestamp) {
-  const deltaTime =
-    previousTimestamp === null ? 0 : timestamp - previousTimestamp
+  const deltaTime = previousTimestamp === null ? 0 : timestamp - previousTimestamp
   previousTimestamp = timestamp
 
   gameView.update(Math.min(deltaTime, MAX_DELTA_TIME))
