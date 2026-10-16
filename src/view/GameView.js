@@ -5,6 +5,7 @@ import { DeskView } from "./DeskView"
 import { Passport } from "../model/Passport"
 import { PassportView } from "./PassportView"
 import { StampView } from "./StampView"
+import { SoundView } from "./SoundView"
 
 /**
  * The whole game screen. Creates every view in the order they are drawn,
@@ -46,18 +47,26 @@ export class GameView {
    */
   #waitingPassport = null
 
+  #soundView
+  #gameWidth = 1920
+  #gameHeight = 1080
+
   /**
    * Creates every view. The order is the drawing order: later views are drawn on top,
    * so the passport lies on the desk and the stamps on top of both.
    *
    * @param {SpriteRenderer} renderer - The renderer to draw with.
    */
-  constructor(renderer) {
+  constructor(renderer, {gameWidth, gameHeight, onVolumeChange}) {
+    this.#gameWidth = gameWidth
+    this.#gameHeight = gameHeight
+
     this.#travellerView = new TravellerView(renderer)
     new DeskView(renderer)
     this.#passportView = new PassportView(renderer)
     this.#approveStamp = new StampView(renderer, {src: 'assets/approve_stamp.png', x: 1400, y: 500, approves: true})
     this.#denyStamp = new StampView(renderer, {src: 'assets/deny_stamp.png', x: 1500, y: 500, approves: false})
+    this.#soundView = new SoundView(renderer, this.#gameWidth, this.#gameHeight, onVolumeChange)
   }
 
   /**
@@ -121,6 +130,10 @@ export class GameView {
    */
   get passport() {
     return this.#passportView
+  }
+
+  get volumeSlider() {
+    return this.#soundView.volumeSlider
   }
 
   /**
