@@ -1,6 +1,6 @@
-import { Sprite, SpriteRegion, SpriteRenderer } from "2d-sprite-renderer"
+import { Sprite, SpriteRegion, SpriteRenderer } from '2d-sprite-renderer'
 import portraitData from '../data/potraits.json'
-import { Traveller } from "../model/Traveller"
+import { Traveller } from '../model/Traveller.js'
 
 /**
  * The image source of the desk, in front of the travellers.
@@ -27,12 +27,12 @@ const PORTRAIT_SCALE = 2
  */
 const TRAVELLER_Y = 260
 
-/** 
- * How slowly the traveller breathes. A higher value gives slower breathing. 
+/**
+ * How slowly the traveller breathes. A higher value gives slower breathing.
  */
 const BOB_SPEED = 400
 
-/** 
+/**
  * How many pixels the traveller moves up and down when breathing.
  */
 const BOB_HEIGHT = 3
@@ -68,21 +68,21 @@ export class TravellerView {
    *
    * @type {Sprite}
    */
-  #background = new Sprite(BG_SRC, {x: 0, y: 0, width: 1367, height: 629})
+  #background = new Sprite(BG_SRC, { x: 0, y: 0, width: 1367, height: 629 })
 
   /**
    * The booth desk in front of the traveller.
    *
    * @type {Sprite}
    */
-  #desk = new Sprite(DESK_SRC, {x: 0, y: 520, width: 1367, height: 511 })
+  #desk = new Sprite(DESK_SRC, { x: 0, y: 520, width: 1367, height: 511 })
 
   /**
    * The traveller's portrait. Its region decides which person is shown.
    *
    * @type {Sprite}
    */
-  #traveller = new Sprite(TRAVELLERS_SRC, {x: START_X, y: TRAVELLER_Y})
+  #traveller = new Sprite(TRAVELLERS_SRC, { x: START_X, y: TRAVELLER_Y })
 
   /**
    * Milliseconds since the view was created. Drives the breathing.
@@ -107,7 +107,7 @@ export class TravellerView {
 
   /**
    * The x coordinate the traveller is walking towards.
-   * 
+   *
    * @type {number}
    */
   #targetX = START_X
@@ -131,10 +131,12 @@ export class TravellerView {
    */
   #walkIn(traveller) {
     // Find the portrait that matches the person's appearance id
-    const portrait = portraitData.find((p) => p.id === traveller.person.apperance)
+    const portrait = portraitData.find(
+      (p) => p.id === traveller.person.apperance
+    )
 
     if (!portrait) return
-    
+
     this.#current = traveller
 
     // Show only this person's part of the sprite sheet
@@ -229,7 +231,8 @@ export class TravellerView {
    * Makes the traveller look like they are breathing.
    */
   #breathEffect() {
-    this.#traveller.y = TRAVELLER_Y + Math.round(Math.sin(this.#elapsed / BOB_SPEED) * BOB_HEIGHT)
+    this.#traveller.y =
+      TRAVELLER_Y + Math.round(Math.sin(this.#elapsed / BOB_SPEED) * BOB_HEIGHT)
   }
 
   /**
@@ -246,6 +249,10 @@ export class TravellerView {
    * @returns {boolean} True if a traveller has arrived at the window.
    */
   get isAtWindow() {
-    return (this.#current !== null && this.#targetX === WINDOW_X && this.#traveller.x === WINDOW_X)
+    return (
+      this.#current !== null &&
+      this.#targetX === WINDOW_X &&
+      this.#traveller.x === WINDOW_X
+    )
   }
 }

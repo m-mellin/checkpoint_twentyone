@@ -1,10 +1,10 @@
-import { Sprite } from "2d-sprite-renderer";
+import { Sprite } from '2d-sprite-renderer'
 
 export class Button {
   #sprite
   #onClick
 
-  constructor(renderer, {src, x, y, width, height, onClick}) {
+  constructor(renderer, { src, x, y, width, height, onClick }) {
     this.#sprite = new Sprite(src, { x, y, width, height })
     this.#onClick = onClick
 

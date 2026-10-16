@@ -1,6 +1,6 @@
-import { BlockSprite, TextSprite } from "2d-sprite-renderer";
-import { TextLine } from "./TextLine";
-import { SliderView } from "./SliderView";
+import { BlockSprite, TextSprite } from '2d-sprite-renderer'
+import { TextLine } from './TextLine.js'
+import { SliderView } from './SliderView.js'
 
 const WINDOW_WIDTH = 1920
 const WINDOW_HEIGHT = 1080
@@ -12,7 +12,10 @@ const TITLE_TEXT = 'SOUND SETTINGS'
 
 export class SoundView {
   #background
-  #title = new TextLine(TITLE_TEXT, {color: 'rgba(255, 255, 255, 1)', font: '18px "Press Start 2P"'})
+  #title = new TextLine(TITLE_TEXT, {
+    color: 'rgba(255, 255, 255, 1)',
+    font: '18px "Press Start 2P"'
+  })
   #gameWidth
   #gameHeight
   #volumeSliders
@@ -22,21 +25,26 @@ export class SoundView {
     this.#gameWidth = gameWidth
     this.#gameHeight = gameHeight
 
-    this.#background = new BlockSprite(gameWidth, gameHeight, { color: 'rgba(0, 0, 0, 0.9)' })
-    
+    this.#background = new BlockSprite(gameWidth, gameHeight, {
+      color: 'rgba(0, 0, 0, 0.9)'
+    })
+
     this.#title.x = (gameWidth - this.#title.width) / 2
     this.#title.y = gameHeight / 4
 
     renderer.add(this.#background)
     renderer.add(this.#title.sprite)
 
-    this.#volumeSliders = volumeSettings.map((setting, index) => new SliderView(renderer, {
-      label: setting.label,
-      x: (gameWidth - SLIDER_WIDTH) / 2,
-      y: gameHeight / 2 + index * SLIDER_DISTANCE,
-      width: SLIDER_WIDTH,
-      onChange: setting.onChange
-    }))
+    this.#volumeSliders = volumeSettings.map(
+      (setting, index) =>
+        new SliderView(renderer, {
+          label: setting.label,
+          x: (gameWidth - SLIDER_WIDTH) / 2,
+          y: gameHeight / 2 + index * SLIDER_DISTANCE,
+          width: SLIDER_WIDTH,
+          onChange: setting.onChange
+        })
+    )
 
     this.hide()
   }

@@ -1,5 +1,5 @@
-import { Sprite, SpriteRenderer } from "2d-sprite-renderer";
-import { TextLine } from "./TextLine";
+import { Sprite, SpriteRenderer } from '2d-sprite-renderer'
+import { TextLine } from './TextLine.js'
 
 const LCD_SRC = '/assets/lcd_panel.png'
 
@@ -13,14 +13,14 @@ const TEXT_OFFSET_Y = 37
 
 export class LcdDisplayView {
   #background
-  #text = new TextLine('', {color: '#fff', font: '18px "Press Start 2P"'})
+  #text = new TextLine('', { color: '#fff', font: '18px "Press Start 2P"' })
 
   /**
-   * 
-   * @param {SpriteRenderer} renderer 
+   *
+   * @param {SpriteRenderer} renderer
    */
-  constructor(renderer, {x = 0, y = 0, width = WIDTH, height = HEIGHT} = {}) {
-    this.#background = new Sprite(LCD_SRC, {x, y, width, height})
+  constructor(renderer, { x = 0, y = 0, width = WIDTH, height = HEIGHT } = {}) {
+    this.#background = new Sprite(LCD_SRC, { x, y, width, height })
     this.#text.x = x + TEXT_OFFSET_X
     this.#text.y = y + TEXT_OFFSET_Y
 

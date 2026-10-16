@@ -1,21 +1,24 @@
-import { TextSprite } from "2d-sprite-renderer"
+import { TextSprite } from '2d-sprite-renderer'
 
 export class TextLine {
   #sprite
   #width = 0
   #height = 0
-  
+
   static #context = document.createElement('canvas').getContext('2d')
 
   /**
    * -
-   * 
-   * @param {string} text 
+   *
+   * @param {string} text
    * @param {object} [options]
-   * @param {string} [options.color] 
+   * @param {string} [options.color]
    * @param {string} [options.font]
    */
-  constructor(text, {color = '#000000', font = '12px "Press Start 2P"'} = {}) {
+  constructor(
+    text,
+    { color = '#000000', font = '12px "Press Start 2P"' } = {}
+  ) {
     this.#sprite = new TextSprite(text, { color, font })
     this.#measureTextAndSetSize()
   }

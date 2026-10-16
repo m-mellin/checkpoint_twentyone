@@ -1,5 +1,5 @@
-import { BlockSprite } from "2d-sprite-renderer"
-import { TextLine } from "./TextLine"
+import { BlockSprite } from '2d-sprite-renderer'
+import { TextLine } from './TextLine.js'
 
 const TRACK_HEIGHT = 8
 const TRACK_COLOR = '#555'
@@ -20,18 +20,33 @@ export class SliderView {
   #onChange
   #isVisible = true
 
-  constructor(renderer, {label, x, y, width, value = 0.1, onChange = () => {} }) {
+  constructor(
+    renderer,
+    { label, x, y, width, value = 0.1, onChange = () => {} }
+  ) {
     this.#trackX = x
     this.#trackWidth = width
     this.#centerY = y
     this.#value = value
     this.#onChange = onChange
 
-    this.#track = new BlockSprite(width, TRACK_HEIGHT, {x, y: y - TRACK_HEIGHT / 2, color: TRACK_COLOR})
-    this.#handle = new BlockSprite(HANDLE_SIZE, HANDLE_SIZE, { color: HANDLE_COLOR })
+    this.#track = new BlockSprite(width, TRACK_HEIGHT, {
+      x,
+      y: y - TRACK_HEIGHT / 2,
+      color: TRACK_COLOR
+    })
+    this.#handle = new BlockSprite(HANDLE_SIZE, HANDLE_SIZE, {
+      color: HANDLE_COLOR
+    })
     this.#labelText = label.toUpperCase()
-    this.#label = new TextLine(this.#labelText.toUpperCase(), {color: '#fff', font: '16px "Press Start 2P"'})
-    this.#procentualLabel = new TextLine(this.#valueAsPercent(), {color: '#fff', font: '16px "Press Start 2P"'})
+    this.#label = new TextLine(this.#labelText.toUpperCase(), {
+      color: '#fff',
+      font: '16px "Press Start 2P"'
+    })
+    this.#procentualLabel = new TextLine(this.#valueAsPercent(), {
+      color: '#fff',
+      font: '16px "Press Start 2P"'
+    })
 
     renderer.add(this.#label.sprite)
     renderer.add(this.#procentualLabel.sprite)
@@ -77,7 +92,10 @@ export class SliderView {
 
   moveTo(x) {
     const centerX = x + HANDLE_SIZE / 2
-    const onTrack = Math.min(Math.max(centerX, this.#trackX), this.#trackX + this.#trackWidth)
+    const onTrack = Math.min(
+      Math.max(centerX, this.#trackX),
+      this.#trackX + this.#trackWidth
+    )
 
     this.#value = (onTrack - this.#trackX) / this.#trackWidth
     this.#placeHandle()
@@ -87,7 +105,8 @@ export class SliderView {
   }
 
   #placeHandle() {
-    this.#handle.x = this.#trackX + this.#value * this.#trackWidth - HANDLE_SIZE / 2
+    this.#handle.x =
+      this.#trackX + this.#value * this.#trackWidth - HANDLE_SIZE / 2
     this.#handle.y = this.#centerY - HANDLE_SIZE / 2
   }
 

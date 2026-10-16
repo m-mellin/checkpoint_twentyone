@@ -1,7 +1,7 @@
-import { TextLine } from './TextLine'
-import { InspectableItemView } from './InspectableItemView'
-import discrepanciesData from '../data/discrepancies.json'
 import { SpriteRenderer } from '2d-sprite-renderer'
+import { TextLine } from './TextLine.js'
+import { InspectableItemView } from './InspectableItemView.js'
+import discrepanciesData from '../data/discrepancies.json'
 
 /**
  * The discrepancy list's images, closed on the counter and open on the inspection desk.
