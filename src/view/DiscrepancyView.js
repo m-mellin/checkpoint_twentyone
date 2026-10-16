@@ -57,6 +57,8 @@ const TEXT_DISTANCE = 16
 
 /**
  * The text shown on the discrepancy list for each discrepancy code.
+ *
+ * @type {Readonly<Record<string, string>>}
  */
 export const DISCREPANCY_TEXTS = Object.freeze({
   SUSPICIOUS_FIRSTNAME: 'FOREIGN FIRST NAME',

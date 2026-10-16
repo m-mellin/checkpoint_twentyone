@@ -149,7 +149,12 @@ export class GameView {
       y: 0,
       width: 60,
       height: 60,
-      onClick: () => this.#soundView.toggle()
+      /**
+       * Opens the sound settings if they are closed, and closes them if they are open.
+       */
+      onClick: () => {
+        this.#soundView.toggle()
+      }
     })
   }
 

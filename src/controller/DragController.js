@@ -1,4 +1,3 @@
-
 /**
  * Something on the screen that can be dragged, for example the passport or a stamp.
  *
@@ -54,7 +53,7 @@ export class DragController {
 
   /**
    * Starts listening for drags on the canvas.
-   * 
+   *
    * @param {HTMLCanvasElement} canvas - The canvas the game is drawn on.
    * @param {Draggable[]} targets - Everything that can be dragged, in the order they are drawn.
    * @param {(target: Draggable) => void} [onDrop] - Called with the target when the player releases it.
@@ -73,7 +72,7 @@ export class DragController {
   /**
    * Starts dragging the topmost target under the pointer, if there is one.
    * Remembers where on the target it was grabbed, so it doesn't jump to the pointer.
-   * 
+   *
    * @param {PointerEvent} event - The pointer event from the canvas.
    */
   #grab(event) {
@@ -93,7 +92,7 @@ export class DragController {
 
   /**
    * Returns the target drawn on top at a point. Searches from the last drawn to the first.
-   * 
+   *
    * @param {number} x - The x coordinate of the point, in canvas pixels.
    * @param {number} y - The y coordinate of the point, in canvas pixels.
    * @returns {Draggable | null} The topmost target at the point, or null if there is none.
@@ -131,7 +130,7 @@ export class DragController {
     if (this.#dragged !== null) {
       this.#onDrop(this.#dragged)
     }
-    
+
     this.#dragged = null
     this.#grabOffset = null
   }
@@ -139,7 +138,7 @@ export class DragController {
   /**
    * Converts the pointer position on the page to coordinates on the canvas.
    * Needed when the canvas is shown at a different size than it is drawn in.
-   * 
+   *
    * @param {PointerEvent} event - The pointer event.
    * @returns {{x: number, y: number}} The position in canvas pixels.
    */

@@ -1,19 +1,46 @@
 import { TextSprite } from '2d-sprite-renderer'
 
+/**
+ * A line of text that knows its own size. Wraps a TextSprite and measures the text
+ * whenever it changes, so it can be centred or stacked under other lines.
+ */
 export class TextLine {
+  /**
+   * The sprite that draws the text.
+   *
+   * @type {TextSprite}
+   */
   #sprite
+
+  /**
+   * The width of the text, in pixels.
+   *
+   * @type {number}
+   */
   #width = 0
+
+  /**
+   * The height of the text, in pixels.
+   *
+   * @type {number}
+   */
   #height = 0
 
+  /**
+   * A canvas context shared by every text line, used only for measuring text.
+   *
+   * @type {CanvasRenderingContext2D | null}
+   */
   static #context = document.createElement('canvas').getContext('2d')
 
   /**
-   * -
+   * Creates a line of text and measures it.
    *
-   * @param {string} text
-   * @param {object} [options]
-   * @param {string} [options.color]
-   * @param {string} [options.font]
+   * @param {string} text - The text to draw.
+   * @param {object} [options] - How the text looks.
+   * @param {string} [options.color="#000000"] - The CSS color of the text.
+   * @param {string} [options.font='12px "Press Start 2P"'] - The CSS font of the text.
+   * @throws {Error} If the browser cannot create a context for measuring text.
    */
   constructor(
     text,
@@ -125,12 +152,15 @@ export class TextLine {
 
   /**
    * Measures the text with the sprite's font and stores its width and height.
+   *
+   * @throws {Error} If the browser cannot create a context for measuring text.
    */
   #measureTextAndSetSize() {
     const context = TextLine.#context
 
-    if (context === null)
+    if (context === null) {
       throw new Error('Could not create a 2D context for measuring text')
+    }
 
     context.font = this.#sprite.font
     const metrics = context.measureText(this.#sprite.text)

@@ -10,7 +10,14 @@ import { TravellerGenerator } from '../model/TravellerGenerator.js'
 import { Traveller } from '../model/Traveller.js'
 import { Discrepancy } from '../model/Discrepancy.js'
 
+/**
+ * How many travellers come to the checkpoint each day.
+ */
 const TRAVELLERS_PER_DAY = 10
+
+/**
+ * The share of passports that are forged, from 0 to 1.
+ */
 const FORGERY_PROBABILITY = 0.4
 
 /**
@@ -51,15 +58,25 @@ export class GameController {
   #travellers = new Repository(Traveller)
 
   /**
-   * Calls the next traveller in the queue forward.
+   * The position in the queue of the next traveller to call forward.
    *
-   * @returns {Traveller | null} The next traveller, or null if everyone has already been called.
+   * @type {number}
    */
   #nextTravellerIndex = 0
 
+  /**
+   * Today's date in the game, at midnight UTC.
+   *
+   * @type {Date}
+   */
   #gameDate = new Date()
 
-  #gameDifficulty
+  /**
+   * The difficulty the game was started at.
+   *
+   * @type {'easy' | 'medium' | 'hard'}
+   */
+  #gameDifficulty = Difficulties.EASY
 
   /**
    * Starts a new game. Anything from an earlier game is replaced.
@@ -98,10 +115,29 @@ export class GameController {
     return this.#travellers.getAllItems()
   }
 
+  /**
+   * Returns the difficulty the game was started at.
+   *
+   * @returns {'easy' | 'medium' | 'hard'} The difficulty.
+   */
   get difficulty() {
     return this.#gameDifficulty
   }
+  
+  /**
+   * Returns today's date in the game.
+   *
+   * @returns {Date} A copy of the game date.
+   */
+  get gameDate() {
+    return new Date(this.#gameDate)
+  }
 
+  /**
+   * Calls the next traveller in the queue forward.
+   *
+   * @returns {Traveller | null} The next traveller, or null if everyone has already been called.
+   */
   callNextTraveller() {
     const travellers = this.#travellers.getAllItems()
 
@@ -199,9 +235,5 @@ export class GameController {
     return portraitData
       .filter((portrait) => portrait.sex === sex)
       .map((portrait) => portrait.id)
-  }
-
-  get gameDate() {
-    return new Date(this.#gameDate)
   }
 }
