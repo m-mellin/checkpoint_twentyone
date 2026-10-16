@@ -1,94 +1,131 @@
 import { Sprite, SpriteRegion, SpriteRenderer } from '2d-sprite-renderer'
 import { TextLine } from './TextLine.js'
 import { Passport } from '../model/Passport.js'
+import { InspectableItemView } from './InspectableItemView.js'
 import { formatDate } from './formatDate.js'
 import portraitData from '../data/potraits.json'
 
-const PASSPORT_SRC = 'assets/passport.png'
+/**
+ * Images of the passport in its open and closed variants.
+ */
+const OPEN_SRC = 'assets/passport.png'
+const CLOSED_SRC = 'assets/passport_small.png'
+
+/**
+ * The spritesheet used for the passport portrait photo.
+ */
 const TRAVELLERS_SRC = 'assets/travellers.png'
-const CLOSED_PASSPORT_SRC = 'assets/passport_small.png'
-const APPROVE_STAMP_SRC = 'assets/approve_stamp_marker.png'
-const DENY_STAMP_SRC = 'assets/deny_stamp_marker.png'
 
-const COUNTER_Y = 700
-const FALL_SPEED = 4
+/**
+ * The approve and deny markers, when a user stamps the passport.
+ */
+const APPROVE_MARKER_SRC = 'assets/approve_stamp_marker.png'
+const DENY_MARKER_SRC = 'assets/deny_stamp_marker.png'
 
-const STAMP_WIDTH = 200
-const STAMP_HEIGHT = 200
+/**
+ * The width and height of the open passport.
+ */
+const OPEN_WIDTH = 1404 / 1.7
+const OPEN_HEIGHT = 1120 / 1.7
 
+/**
+ * The width and height of the closed passport.
+ */
 const CLOSED_WIDTH = 169
 const CLOSED_HEIGHT = 186
 
-const DESK_LEFT_X = 1370
-const DESK_CENTER_X = 600
-const DESK_CENTER_Y = 700
+/**
+ * The starting positions of the passport.
+ */
+const START_X = 600
+const START_Y = 700
 
-const PASSPORT_X = 1400
-const PASSPORT_Y = 0
-const PASSPORT_WIDTH = 1404 / 1.7
-const PASSPORT_HEIGHT = 1120 / 1.7
-
+/**
+ * The scale of the passports portrait photo.
+ */
 const PHOTO_SCALE = 1
+
+/**
+ * The offset of the passport portrait photo from
+ * the passports top-left corner.
+ */
 const PHOTO_OFFSET_X = 450
 const PHOTO_OFFSET_Y = 100
 
+/**
+ * The color of the text on the passport.
+ */
+const TEXT_COLOR = '#2a1a1a'
+
+/**
+ * The offset of the text from the passports top-left corner.
+ */
 const TEXT_OFFSET_X = 450
 const TEXT_OFFSET_Y = 300
+
+/**
+ * The distance between TextLine objects.
+ */
 const TEXT_DISTANCE = 10
-const TEXT_COLOR = '#2a1a1a'
+
+/**
+ * The markers width and height.
+ */
+const MARKER_WIDTH = 200
+const MARKER_HEIGHT = 200
 
 /**
  * How far to the right of the stamp marker's left edge the date is printed, in pixels.
  */
-const STAMP_DATE_OFFSET_X = 40
+const MARKER_DATE_OFFSET_X = 40
 
 /**
  * How far below the stamp marker's top edge the date is printed, in pixels.
  */
-const STAMP_DATE_OFFSET_Y = 150
+const MARKER_DATE_OFFSET_Y = 150
+
+const APPROVED_COLOR = '#1a5c1a'
+const DENIED_COLOR = '#8b1a1a'
 
 /**
  * Shows the passport on the screen. It is hidden until a traveller hands it over, and can be
  * dragged: open with all its details on the inspection desk, and closed and small in the booth.
  */
-export class PassportView {
+export class PassportView extends InspectableItemView {
   /**
-   * The open passport sprite.
+   * The photo on the open passport.
    *
    * @type {Sprite}
    */
-  #openPassport = new Sprite(PASSPORT_SRC, { x: PASSPORT_X, y: PASSPORT_Y })
-
-  /**
-   * The open passport photo sprite.
-   *
-   * @type {Sprite}
-   */
-  #passportPhoto = new Sprite(TRAVELLERS_SRC, {
-    x: PHOTO_OFFSET_X,
-    y: PHOTO_OFFSET_Y
-  })
-
-  /**
-   * The closed passport sprite.
-   *
-   * @type {Sprite}
-   */
-  #closedPassport = new Sprite(CLOSED_PASSPORT_SRC)
+  #passportPhoto = new Sprite(TRAVELLERS_SRC)
 
   /**
    * The marker shown on the open passport when it has been approved.
    *
    * @type {Sprite}
    */
-  #approveStamp = new Sprite(APPROVE_STAMP_SRC)
+  #approveMarker = new Sprite(APPROVE_MARKER_SRC)
 
   /**
    * The marker shown on the open passport when it has been denied.
    *
    * @type {Sprite}
    */
-  #denyStamp = new Sprite(DENY_STAMP_SRC)
+  #denyMarker = new Sprite(DENY_MARKER_SRC)
+
+  /**
+   * The date printed on the stamp marker.
+   *
+   * @type {TextLine}
+   */
+  #markerDate = new TextLine('', { color: TEXT_COLOR })
+
+  /**
+   * The passport being shown, or null if none.
+   *
+   * @type {Passport | null}
+   */
+  #passport = null
 
   /**
    * Whether the latest stamp approves the passport. False if denied or not stamped.
@@ -105,25 +142,11 @@ export class PassportView {
   #stampOffset = null
 
   /**
-   * The current passport.
+   * Today's date in the game, printed on new stamps.
    *
-   * @type {Passport | null}
+   * @type {Date}
    */
-  #passport = null
-
-  /**
-   * Whether the passport is open on the inspection desk (true) or closed in the booth (false).
-   *
-   * @type {boolean}
-   */
-  #isOpen = true
-
-  /**
-   * Whether the passport is falling onto the booth counter right now.
-   *
-   * @type {boolean}
-   */
-  #isFalling = false
+  #gameDate = new Date()
 
   /**
    * The text lines on the open passport, one per field,
@@ -143,58 +166,35 @@ export class PassportView {
   }
 
   /**
-   * The date line on the stamps.
-   */
-  #dateStamp = new TextLine('', {color: TEXT_COLOR })
-
-  /**
-   * The current game date.
-   * 
-   * @type {Date}
-   */
-  #gameDate = new Date()
-
-
-  /**
-   * The passports x-coordinate.
-   *
-   * @type {number}
-   */
-  #x = PASSPORT_X
-
-  /**
-   * The passports y-coordinate.
-   *
-   * @type {number}
-   */
-  #y = PASSPORT_Y
-
-  /**
-   * Adds the open passport, the closed passport, the photo, the text fields and the stamp markers
-   * to the renderer, in the order they are drawn. The passport stays hidden until a traveller hands it over.
+   * Adds the photo, the text fields and the stamp markers to the renderer, on top of the passport
+   * images the base class adds. The passport stays hidden until a traveller hands it over.
    *
    * @param {SpriteRenderer} renderer - The renderer to draw with.
    */
   constructor(renderer) {
-    renderer.add(this.#openPassport)
-    renderer.add(this.#closedPassport)
+    super(renderer, {
+      counter: { src: CLOSED_SRC, width: CLOSED_WIDTH, height: CLOSED_HEIGHT },
+      inspectionDesk: { src: OPEN_SRC, width: OPEN_WIDTH, height: OPEN_HEIGHT },
+      x: START_X,
+      y: START_Y
+    })
+
     renderer.add(this.#passportPhoto)
 
     for (const field of Object.values(this.#fields)) {
       renderer.add(field.sprite)
     }
 
-    renderer.add(this.#approveStamp)
-    renderer.add(this.#denyStamp)
-    renderer.add(this.#dateStamp.sprite)
+    renderer.add(this.#approveMarker)
+    renderer.add(this.#denyMarker)
+    renderer.add(this.#markerDate.sprite)
 
-    this.#placeAll()
     this.hide()
   }
 
   /**
    * Sets the current game date. Used for setting the correct date on the stamp.
-   * 
+   *
    * @param {Date} date - The current game date.
    */
   set gameDate(date) {
@@ -202,113 +202,152 @@ export class PassportView {
   }
 
   /**
+   * Returns if the passport is stamped.
+   *
+   * @returns {boolean} True if the passport has a stamp marker.
+   */
+  get isStamped() {
+    return this.#stampOffset !== null
+  }
+
+  /**
+   * Returns if the passport is approved.
+   *
+   * @returns {boolean} True if the latest stamp approves the passport.
+   */
+  get isApproved() {
+    return this.#approved
+  }
+
+  /**
    * Shows a new passport, closed on the booth counter and without stamps.
    *
    * @param {Passport} passport - The passport to show.
    */
-  show(passport) {
+  showPassport(passport) {
     this.#passport = passport
     this.#approved = false
-    this.#x = DESK_CENTER_X
-    this.#y = DESK_CENTER_Y
     this.#stampOffset = null
-    this.#close()
-    this.#placeAll()
+    this.moveTo(START_X, START_Y)
+    this.show()
   }
 
   /**
-   * Changes the passport from the closed variant to the open variant.
-   */
-  #open() {
-    this.#isOpen = true
-    this.#closedPassport.width = 0
-    this.#closedPassport.height = 0
-    this.#openPassport.width = PASSPORT_WIDTH
-    this.#openPassport.height = PASSPORT_HEIGHT
-
-    if (this.#stampOffset !== null) {
-      this.#showStampMarker()
-    }
-
-    if (this.#passport !== null) {
-      this.#showPhoto(this.#passport.photo)
-    }
-
-    this.#setFields()
-  }
-
-  /**
-   * Sets the text fields of the passport if the passport exists.
-   */
-  #setFields() {
-    if (this.#passport !== null) {
-      this.#fields.name.text =
-        `NAME: ${this.#passport.surname} ${this.#passport.firstName}`.toUpperCase()
-      this.#fields.dateOfBirth.text = `BORN: ${formatDate(this.#passport.dateOfBirth)}`
-      this.#fields.sex.text = `SEX: ${this.#passport.sex}`
-      this.#fields.nationality.text =
-        `NATIONALITY: ${this.#passport.nationality.name}`.toUpperCase()
-      this.#fields.birthplace.text =
-        `BIRTHPLACE: ${this.#passport.birthplace}`.toUpperCase()
-      this.#fields.height.text = `HEIGHT: ${this.#passport.heightInCm} CM`
-      this.#fields.issuingCity.text =
-        `ISSUED IN: ${this.#passport.issuingCity}`.toUpperCase()
-      this.#fields.issueDate.text = `ISSUED: ${formatDate(this.#passport.issueDate)}`
-      this.#fields.expiryDate.text = `EXPIRES: ${formatDate(this.#passport.expiryDate)}`
-      this.#fields.identification.text = `ID: ${this.#passport.identificationString}`
-    }
-  }
-
-  /**
-   * Empties all text fields in the passport.
-   *
-   * Used when either the passport is in its closed state or when hiding the passport.
-   */
-  #emptyFields() {
-    for (const field of Object.values(this.#fields)) {
-      field.text = ''
-    }
-  }
-
-  /**
-   * Changes the passport from the open variant to the closed variant.
-   */
-  #close() {
-    this.#isOpen = false
-    this.#openPassport.width = 0
-    this.#openPassport.height = 0
-    this.#passportPhoto.width = 0
-    this.#passportPhoto.height = 0
-    this.#approveStamp.width = 0
-    this.#approveStamp.height = 0
-    this.#denyStamp.width = 0
-    this.#denyStamp.height = 0
-    this.#dateStamp.text = ''
-    this.#closedPassport.width = CLOSED_WIDTH
-    this.#closedPassport.height = CLOSED_HEIGHT
-
-    this.#emptyFields()
-  }
-
-  /**
-   * Hides passport, both open and closed. Used when travellers are changing.
+   * Hides the passport and forgets it and its stamp, for example when the traveller leaves.
    */
   hide() {
-    this.#openPassport.width = 0
-    this.#openPassport.height = 0
-    this.#passportPhoto.width = 0
-    this.#passportPhoto.height = 0
-    this.#closedPassport.width = 0
-    this.#closedPassport.height = 0
-    this.#approveStamp.width = 0
-    this.#approveStamp.height = 0
-    this.#denyStamp.width = 0
-    this.#denyStamp.height = 0
-    this.#dateStamp.text = ''
     this.#stampOffset = null
     this.#passport = null
 
-    this.#emptyFields()
+    super.hide()
+  }
+
+  /**
+   * Puts a stamp marker on the open passport, centred on the given point.
+   * Does nothing if the passport is not on the inspection desk.
+   *
+   * @param {number} x - The x coordinate of the stamp's centre, in canvas pixels.
+   * @param {number} y - The y coordinate of the stamp's centre, in canvas pixels.
+   * @param {boolean} approves - True for the approve stamp, false for the deny stamp.
+   * @returns {boolean} True if the passport was stamped.
+   */
+  stampAt(x, y, approves) {
+    if (!this.isOnInspectionDesk || !this.contains(x, y)) {
+      return false
+    }
+
+    this.#approved = approves
+    this.#stampOffset = {
+      x: x - this.x - MARKER_WIDTH / 2,
+      y: y - this.y - MARKER_HEIGHT / 2
+    }
+
+    this.updateContent()
+    this.placeContent()
+
+    return true
+  }
+
+  /**
+   * Places the photo, the text lines and the stamp marker relative to the passport's position.
+   *
+   * @protected
+   */
+  placeContent() {
+    this.#passportPhoto.x = this.x + PHOTO_OFFSET_X
+    this.#passportPhoto.y = this.y + PHOTO_OFFSET_Y
+
+    let y = this.y + TEXT_OFFSET_Y
+
+    for (const field of Object.values(this.#fields)) {
+      field.x = this.x + TEXT_OFFSET_X
+      field.y = y
+      y += field.height + TEXT_DISTANCE
+    }
+
+    if (this.#stampOffset !== null) {
+      for (const marker of [this.#approveMarker, this.#denyMarker]) {
+        marker.x = this.x + this.#stampOffset.x
+        marker.y = this.y + this.#stampOffset.y
+      }
+
+      this.#markerDate.x = this.x + this.#stampOffset.x + MARKER_DATE_OFFSET_X
+      this.#markerDate.y = this.y + this.#stampOffset.y + MARKER_DATE_OFFSET_Y
+    }
+  }
+
+  /**
+   * Shows the photo, details and stamp on the inspection desk, and hides them everywhere else.
+   *
+   * @protected
+   */
+  updateContent() {
+    if (this.isOnInspectionDesk && this.#passport !== null) {
+      this.#showDetails(this.#passport)
+      this.#showStampMarker()
+    } else {
+      this.#hideDetails()
+    }
+  }
+
+  /**
+   * Shows the photo and fills in every text line from the passport.
+   *
+   * @param {Passport} passport - The passport to show.
+   */
+  #showDetails(passport) {
+    this.#showPhoto(passport.photo)
+
+    this.#fields.name.text =
+      `NAME: ${passport.surname} ${passport.firstName}`.toUpperCase()
+    this.#fields.dateOfBirth.text = `BORN: ${formatDate(passport.dateOfBirth)}`
+    this.#fields.sex.text = `SEX: ${passport.sex}`
+    this.#fields.nationality.text =
+      `NATIONALITY: ${passport.nationality.name}`.toUpperCase()
+    this.#fields.birthplace.text =
+      `BIRTHPLACE: ${passport.birthplace}`.toUpperCase()
+    this.#fields.height.text = `HEIGHT: ${passport.heightInCm} CM`
+    this.#fields.issuingCity.text =
+      `ISSUED IN: ${passport.issuingCity}`.toUpperCase()
+    this.#fields.issueDate.text = `ISSUED: ${formatDate(passport.issueDate)}`
+    this.#fields.expiryDate.text = `EXPIRES: ${formatDate(passport.expiryDate)}`
+    this.#fields.identification.text = `ID: ${passport.identificationString}`
+  }
+
+  /**
+   * Hides the photo, the text lines and the stamp marker.
+   */
+  #hideDetails() {
+    this.#passportPhoto.width = 0
+    this.#passportPhoto.height = 0
+
+    for (const field of Object.values(this.#fields)) {
+      field.text = ''
+    }
+
+    this.#resizeMarker(this.#approveMarker, false)
+    this.#resizeMarker(this.#denyMarker, false)
+    this.#markerDate.text = ''
   }
 
   /**
@@ -330,224 +369,27 @@ export class PassportView {
   }
 
   /**
-   * Places every part of the passport relative to its position, so they move together:
-   * the open and closed paper, the photo, the stamp marker with its date, and the text lines,
-   * which are stacked from top to bottom.
-   */
-  #placeAll() {
-    this.#openPassport.x = this.#x
-    this.#openPassport.y = this.#y
-    this.#passportPhoto.x = this.#x + PHOTO_OFFSET_X
-    this.#passportPhoto.y = this.#y + PHOTO_OFFSET_Y
-    this.#closedPassport.x = this.#x
-    this.#closedPassport.y = this.#y
-
-    if (this.#stampOffset !== null) {
-      for (const marker of [this.#approveStamp, this.#denyStamp]) {
-        marker.x = this.#x + this.#stampOffset.x
-        marker.y = this.#y + this.#stampOffset.y
-      }
-
-      this.#dateStamp.x = this.#x + this.#stampOffset.x + STAMP_DATE_OFFSET_X
-      this.#dateStamp.y = this.#y + this.#stampOffset.y + STAMP_DATE_OFFSET_Y
-    }
-
-    let y = this.#y + TEXT_OFFSET_Y
-
-    for (const field of Object.values(this.#fields)) {
-      field.x = this.#x + TEXT_OFFSET_X
-      field.y = y
-      y += field.height + TEXT_DISTANCE
-    }
-  }
-
-  /**
-   * Returns the x-coordinate of the passport.
-   *
-   * @returns {number} The x-coordinate.
-   */
-  get x() {
-    return this.#x
-  }
-
-  /**
-   * Returns the y-coordinate of the passport.
-   *
-   * @returns {number} The y-coordinate.
-   */
-  get y() {
-    return this.#y
-  }
-
-  /**
-   * Returns the width of the passport based on if its open or closed.
-   *
-   * @returns {number} The width of the passport.
-   */
-  get width() {
-    return this.#isOpen ? PASSPORT_WIDTH : CLOSED_WIDTH
-  }
-
-  /**
-   * Returns the height of the passport based on if its open or closed.
-   *
-   * @returns {number} The height of the passport.
-   */
-  get height() {
-    return this.#isOpen ? PASSPORT_HEIGHT : CLOSED_HEIGHT
-  }
-
-  /**
-   * Returns if the passport is stamped.
-   *
-   * @returns {boolean} True if the passport has a stamp marker.
-   */
-  get isStamped() {
-    return this.#stampOffset !== null
-  }
-
-  /**
-   * Returns if the passport is approved
-   *
-   * @returns {boolean} True if the latest stamp approves the passport.
-   */
-  get isApproved() {
-    return this.#approved
-  }
-
-  /**
-   * Returns whether a passport is shown and lies closed in the booth.
-   *
-   * @returns {boolean} True if the passport is in the booth.
-   */
-  get isInBooth() {
-    return this.#passport !== null && !this.#isOpen
-  }
-
-  /**
-   * Moves the passport so its top left corner is at the given position, and opens or closes it
-   * depending on which side it is on. Stops it from falling, for example when the player grabs it.
-   *
-   * @param {number} x - The new x coordinate, in canvas pixels.
-   * @param {number} y - The new y coordinate, in canvas pixels.
-   */
-  moveTo(x, y) {
-    this.#isFalling = false
-    this.#x = x
-    this.#y = y
-    this.#updateMode()
-    this.#placeAll()
-  }
-
-  /**
-   * Opens the passport when its centre is on the inspection desk, and closes it when it is in the booth.
-   * Does nothing if no passport is shown, or if it is already in the right mode.
-   *
-   * @returns {void}
-   */
-  #updateMode() {
-    if (this.#passport === null) {
-      return
-    }
-
-    const centerX = this.#x + this.width / 2
-    const shouldBeOpen = centerX >= DESK_LEFT_X
-
-    if (shouldBeOpen && !this.#isOpen) {
-      this.#open()
-    } else if (!shouldBeOpen && this.#isOpen) {
-      this.#close()
-    }
-  }
-
-  /**
-   * Returns whether a point is on the passport, in its current size.
-   * Always false when no passport is shown.
-   *
-   * @param {number} x - The x coordinate of the point, in canvas pixels.
-   * @param {number} y - The y coordinate of the point, in canvas pixels.
-   * @returns {boolean} True if the point is on the passport.
-   */
-  contains(x, y) {
-    if (this.#passport === null) {
-      return false
-    }
-
-    return (
-      x >= this.#x &&
-      x <= this.#x + this.width &&
-      y >= this.#y &&
-      y <= this.#y + this.height
-    )
-  }
-
-  /**
-   * Puts a stamp marker on the open passport, centred on the given point.
-   * Does nothing if the passport is closed or the point is not on it.
-   *
-   * @param {number} x - The x coordinate of the stamp's centre, in canvas pixels.
-   * @param {number} y - The y coordinate of the stamp's centre, in canvas pixels.
-   * @param {boolean} approves - True for the approve stamp, false for the deny stamp.
-   * @returns {boolean} True if the passport was stamped.
-   */
-  stampAt(x, y, approves) {
-    if (!this.#isOpen || !this.contains(x, y)) {
-      return false
-    }
-
-    this.#approved = approves
-    this.#stampOffset = {
-      x: x - this.#x - STAMP_WIDTH / 2,
-      y: y - this.#y - STAMP_HEIGHT / 2
-    }
-
-    this.#showStampMarker()
-    this.#placeAll()
-
-    return true
-  }
-
-  /**
-   * Shows the marker for the latest stamp and hides the other one. 
-   * Sets the current game date on the stamp and colors it based on the approved status.
+   * Shows the marker and date for the latest stamp, or nothing if the passport is not stamped.
+   * The date is coloured after whether the passport was approved or denied.
    */
   #showStampMarker() {
-    const shown = this.#approved ? this.#approveStamp : this.#denyStamp
-    const hidden = this.#approved ? this.#denyStamp : this.#approveStamp
+    const isStamped = this.#stampOffset !== null
 
-    this.#dateStamp.text = formatDate(this.#gameDate)
-    this.#dateStamp.textColor = this.#approved ? '#1a5c1a' : '#8b1a1a'
+    this.#resizeMarker(this.#approveMarker, isStamped && this.#approved)
+    this.#resizeMarker(this.#denyMarker, isStamped && !this.#approved)
 
-    shown.width = STAMP_WIDTH
-    shown.height = STAMP_HEIGHT
-    hidden.width = 0
-    hidden.height = 0
+    this.#markerDate.text = isStamped ? formatDate(this.#gameDate) : ''
+    this.#markerDate.textColor = this.#approved ? APPROVED_COLOR : DENIED_COLOR
   }
 
   /**
-   * Set that the passport is currently falling.
-   */
-  fall() {
-    this.#isFalling = true
-  }
-
-  /**
-   * Moves a falling passport towards the booth counter, without falling past it.
-   * Does nothing if the passport is not falling.
+   * Shows or hides a stamp marker.
    *
-   * @param {number} deltaTime - Milliseconds since the last frame.
+   * @param {Sprite} marker - The marker to show or hide.
+   * @param {boolean} isShown - True to show it.
    */
-  update(deltaTime) {
-    if (!this.#isFalling) return
-
-    const distance = COUNTER_Y - this.#y
-    const step = Math.min(Math.abs(distance), FALL_SPEED * deltaTime)
-
-    this.#y += Math.sign(distance) * step
-    this.#placeAll()
-
-    if (this.#y === COUNTER_Y) {
-      this.#isFalling = false
-    }
+  #resizeMarker(marker, isShown) {
+    marker.width = isShown ? MARKER_WIDTH : 0
+    marker.height = isShown ? MARKER_HEIGHT : 0
   }
 }

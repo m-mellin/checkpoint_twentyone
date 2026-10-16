@@ -1,39 +1,63 @@
-import { Sprite } from "2d-sprite-renderer"
-import { TextLine } from "./TextLine"
+import { TextLine } from './TextLine'
+import { InspectableItemView } from './InspectableItemView'
 import discrepanciesData from '../data/discrepancies.json'
+import { SpriteRenderer } from '2d-sprite-renderer'
 
-const DISCREPANCY_SRC = '/assets/discrepancy_open.png'
-const CLOSED_DISCREPANCY_SRC = '/assets/discrepancy_closed.png'
+/**
+ * The discrepancy list's images, closed on the counter and open on the inspection desk.
+ */
+const OPEN_SRC = '/assets/discrepancy_open.png'
+const CLOSED_SRC = '/assets/discrepancy_closed.png'
 
-const COUNTER_Y = 700
-const COUNTER_X = 600
-const FALL_SPEED = 2
-
-const DESK_CENTER_X = 600
-const DESK_CENTER_Y = 700
-
-const DESK_LEFT_X = 1370
-
+/**
+ * How much smaller than the image files the discrepancy list is drawn.
+ */
 const DOCUMENT_SCALE = 0.5
 
-const CLOSED_WIDTH = 1047 / 2 * DOCUMENT_SCALE
-const CLOSED_HEIGHT = 1502 / 2 * DOCUMENT_SCALE
-
+/**
+ * The size of the open and the closed discrepancy list, in pixels.
+ */
 const OPEN_WIDTH = 1047 * DOCUMENT_SCALE
 const OPEN_HEIGHT = 1502 * DOCUMENT_SCALE
+const CLOSED_WIDTH = (1047 / 2) * DOCUMENT_SCALE
+const CLOSED_HEIGHT = (1502 / 2) * DOCUMENT_SCALE
 
+/**
+ * Where the discrepancy list lies on the counter when the game starts, in pixels.
+ */
+const START_X = 600
+const START_Y = 700
+
+/**
+ * The colour of the title and the possible discrepancies.
+ */
 const TEXT_COLOR = '#fff'
 
+/**
+ * The heading above the possible discrepancies on the open list.
+ */
+const TITLE_TEXT = 'POSSIBLE DISCREPANCIES'
+
+/**
+ * Where the title is printed, measured from the list's top left corner, in pixels.
+ */
+const TITLE_OFFSET_X = 60
+const TITLE_OFFSET_Y = 200
+
+/**
+ * Where the first possible discrepancy is printed, measured from the list's top left corner, in pixels.
+ */
 const TEXT_OFFSET_X = 60
 const TEXT_OFFSET_Y = 250
 
+/**
+ * The space between two possible discrepancies, in pixels.
+ */
 const TEXT_DISTANCE = 16
 
-const TITLE_X = 60
-const TITLE_Y = 200
-
-const TITLE_TEXT = 'POSSIBLE DISCREPANCIES'
-
+/**
+ * The text shown on the discrepancy list for each discrepancy code.
+ */
 export const DISCREPANCY_TEXTS = Object.freeze({
   SUSPICIOUS_FIRSTNAME: 'FOREIGN FIRST NAME',
   SUSPICIOUS_SURNAME: 'FOREIGN SURNAME',
@@ -49,23 +73,50 @@ export const DISCREPANCY_TEXTS = Object.freeze({
   SURNAME_MISSPELLED: 'MISSPELLED SURNAME'
 })
 
-export class DiscrepancyView {
-  #openPaper = new Sprite(DISCREPANCY_SRC)
-  #closedPaper = new Sprite(CLOSED_DISCREPANCY_SRC)
-  #title = new TextLine('', { color: TEXT_COLOR, font: '16px "Press Start 2P"'})
+/**
+ * The discrepancy list, showing every discrepancy a passport can have at the current difficulty.
+ * Closed on the counter, and open with every possible discrepancy on the inspection desk.
+ */
+export class DiscrepancyView extends InspectableItemView {
+  /**
+   * The heading above the possible discrepancies.
+   *
+   * @type {TextLine}
+   */
+  #title = new TextLine('', {
+    color: TEXT_COLOR,
+    font: '16px "Press Start 2P"'
+  })
 
-  #x = COUNTER_X
-  #y = COUNTER_Y
-
-  #isOpen = true
-  #isFalling = false
-
+  /**
+   * One text line per possible discrepancy, in the order they are shown from top to bottom.
+   *
+   * @type {TextLine[]}
+   */
   #fields = []
+
+  /**
+   * The text for each possible discrepancy, in the same order as the text lines.
+   *
+   * @type {string[]}
+   */
   #texts = []
 
+  /**
+   * Creates the discrepancy list with every discrepancy that can occur at the difficulty,
+   * and adds it to the renderer, closed on the counter.
+   *
+   * @param {SpriteRenderer} renderer - The renderer to draw with.
+   * @param {'easy' | 'medium' | 'hard'} difficulty - Decides which discrepancies are listed.
+   */
   constructor(renderer, difficulty) {
-    renderer.add(this.#openPaper)
-    renderer.add(this.#closedPaper)
+    super(renderer, {
+      counter: { src: CLOSED_SRC, width: CLOSED_WIDTH, height: CLOSED_HEIGHT },
+      inspectionDesk: { src: OPEN_SRC, width: OPEN_WIDTH, height: OPEN_HEIGHT },
+      x: START_X,
+      y: START_Y
+    })
+
     renderer.add(this.#title.sprite)
 
     for (const code of discrepanciesData[difficulty]) {
@@ -76,157 +127,40 @@ export class DiscrepancyView {
       renderer.add(field.sprite)
     }
 
-    this.#placeAll()
-    this.#show()
+    this.show()
   }
 
-  #show() {
-    this.#x = DESK_CENTER_X
-    this.#y = DESK_CENTER_Y
-    this.#close()
-    this.#placeAll()
-  }
+  /**
+   * Places the title and the possible discrepancies on the list, stacked from top to bottom.
+   *
+   * @protected
+   */
+  placeContent() {
+    this.#title.x = this.x + TITLE_OFFSET_X
+    this.#title.y = this.y + TITLE_OFFSET_Y
 
-  #open() {
-    this.#isOpen = true
-    this.#closedPaper.width = 0
-    this.#closedPaper.height = 0
-    this.#openPaper.width = OPEN_WIDTH
-    this.#openPaper.height = OPEN_HEIGHT
-    this.#title.text = TITLE_TEXT
-
-    this.#fields.forEach((field, index) => {
-      field.text = this.#texts[index]
-    })
-  }
-
-  #close() {
-    this.#isOpen = false
-    this.#openPaper.width = 0
-    this.#openPaper.height = 0
-    this.#closedPaper.width = CLOSED_WIDTH
-    this.#closedPaper.height = CLOSED_HEIGHT
-    this.#title.text = ''
+    let y = this.y + TEXT_OFFSET_Y
 
     for (const field of this.#fields) {
-      field.text = ''
-    }
-  }
-
-  #placeAll() {
-    this.#openPaper.x = this.#x
-    this.#openPaper.y = this.#y
-    this.#closedPaper.x = this.#x
-    this.#closedPaper.y = this.#y
-    this.#title.x = this.#x + TITLE_X
-    this.#title.y = this.#y + TITLE_Y
-
-    let y = this.#y + TEXT_OFFSET_Y
-
-    for (const field of this.#fields) {
-      field.x = this.#x + TEXT_OFFSET_X
+      field.x = this.x + TEXT_OFFSET_X
       field.y = y
       y += field.height + TEXT_DISTANCE
     }
   }
 
   /**
-   * Returns the x-coordinate of the document.
+   * Shows the title and the possible discrepancies on the inspection desk, and hides them
+   * on the counter, where the list is too small for text.
    *
-   * @returns {number} The x-coordinate.
+   * @protected
    */
-  get x() {
-    return this.#x
-  }
+  updateContent() {
+    const isOpen = this.isOnInspectionDesk
 
-  /**
-   * Returns the y-coordinate of the document.
-   *
-   * @returns {number} The y-coordinate.
-   */
-  get y() {
-    return this.#y
-  }
+    this.#title.text = isOpen ? TITLE_TEXT : ''
 
-  /**
-   * Returns the width of the document based on if its open or closed.
-   *
-   * @returns {number} The width of the document.
-   */
-  get width() {
-    return this.#isOpen ? OPEN_WIDTH : CLOSED_WIDTH
-  }
-
-  /**
-   * Returns the height of the document based on if its open or closed.
-   *
-   * @returns {number} The height of the document.
-   */
-  get height() {
-    return this.#isOpen ? OPEN_HEIGHT : CLOSED_HEIGHT
-  }
-
-  /**
-   * Returns whether a passport is shown and lies closed in the booth.
-   *
-   * @returns {boolean} True if the passport is in the booth.
-   */
-  get isInBooth() {
-    return !this.#isOpen
-  }
-
-  moveTo(x, y) {
-    this.#isFalling = false
-    this.#x = x
-    this.#y = y
-    this.#updateMode()
-    this.#placeAll()
-  }
-
-  #updateMode() {
-    const centerX = this.#x + this.width / 2
-    const shouldBeOpen = centerX >= DESK_LEFT_X
-
-    if (shouldBeOpen && !this.#isOpen) {
-      this.#open()
-    } else if (!shouldBeOpen && this.#isOpen) {
-      this.#close()
-    }
-  }
-
-  contains(x, y) {
-    return (
-      x >= this.#x &&
-      x <= this.#x + this.width &&
-      y >= this.#y &&
-      y <= this.#y + this.height
-    )
-  }
-
-  /**
-   * Set that the document is currently falling.
-   */
-  fall() {
-    this.#isFalling = true
-  }
-
-  /**
-   * Moves a falling document towards the booth counter, without falling past it.
-   * Does nothing if the document is not falling.
-   *
-   * @param {number} deltaTime - Milliseconds since the last frame.
-   */
-  update(deltaTime) {
-    if (!this.#isFalling) return
-
-    const distance = COUNTER_Y - this.#y
-    const step = Math.min(Math.abs(distance), FALL_SPEED * deltaTime)
-
-    this.#y += Math.sign(distance) * step
-    this.#placeAll()
-
-    if (this.#y === COUNTER_Y) {
-      this.#isFalling = false
-    }
+    this.#fields.forEach((field, index) => {
+      field.text = isOpen ? this.#texts[index] : ''
+    })
   }
 }
