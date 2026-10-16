@@ -1,15 +1,17 @@
-import { SpriteRenderer } from "2d-sprite-renderer"
-import { Traveller } from "../model/Traveller"
-import { TravellerView } from "./TravellerView"
-import { DeskView } from "./DeskView"
-import { Passport } from "../model/Passport"
-import { PassportView } from "./PassportView"
-import { StampView } from "./StampView"
-import { SoundView } from "./SoundView"
-import { Button } from "./Button"
-import { DiscrepancyView } from "./DiscrepancyView"
-import { LcdDisplayView } from "./LcdDisplayView"
-import { formatDate } from "./formatDate"
+import { SpriteRenderer } from '2d-sprite-renderer'
+import { Traveller } from '../model/Traveller'
+import { TravellerView } from './TravellerView'
+import { DeskView } from './DeskView'
+import { Passport } from '../model/Passport'
+import { PassportView } from './PassportView'
+import { StampView } from './StampView'
+import { SoundView } from './SoundView'
+import { Button } from './Button'
+import { DiscrepancyView } from './DiscrepancyView'
+import { LcdDisplayView } from './LcdDisplayView'
+import { formatDate } from './formatDate'
+import { SliderView } from './SliderView'
+import { InspectableItemView } from './InspectableItemView'
 
 /**
  * The whole game screen. Creates every view in the order they are drawn,
@@ -30,10 +32,33 @@ export class GameView {
    */
   #passportView
 
+  /**
+   * The list of discrepancies a passport can have.
+   *
+   * @type {DiscrepancyView}
+   */
   #discrepancyView
 
-  #lcdDisplayLength
-  #lcdDisplayDate
+  /**
+   * The display showing the traveller's real height.
+   *
+   * @type {LcdDisplayView}
+   */
+  #heightDisplay
+
+  /**
+   * The display showing today's date in the game.
+   *
+   * @type {LcdDisplayView}
+   */
+  #dateDisplay
+
+  /**
+   * The sound settings, drawn on top of everything else.
+   *
+   * @type {SoundView}
+   */
+  #soundView
 
   /**
    * The stamp that approves the passport.
@@ -49,6 +74,11 @@ export class GameView {
    */
   #denyStamp
 
+  /**
+   * The button that opens and closes the sound settings.
+   *
+   * @type {Button}
+   */
   #settingsButton
 
   /**
@@ -58,26 +88,61 @@ export class GameView {
    */
   #waitingPassport = null
 
-  #soundView
-  #gameWidth = 1920
-  #gameHeight = 1080
+  /**
+   * Called when a stamp lands on the open passport.
+   *
+   * @type {() => void}
+   */
+  #onStamp = () => {}
 
   /**
-   * Creates every view. The order is the drawing order: later views are drawn on top,
-   * so the passport lies on the desk and the stamps on top of both.
+   * Called when a stamped passport is handed back to the traveller, with true if it was approved.
+   *
+   * @type {(approved: boolean) => void}
+   */
+  #onPassportReturned = () => {}
+
+  /**
+   * Creates every view. The order is the drawing order: later views are drawn on top, so the items
+   * lie on the desk, and the sound settings and their button cover everything else.
    *
    * @param {SpriteRenderer} renderer - The renderer to draw with.
+   * @param {object} options - The size of the game, its difficulty and the volume settings.
+   * @param {number} options.gameWidth - The width of the canvas.
+   * @param {number} options.gameHeight - The height of the canvas.
+   * @param {'easy' | 'medium' | 'hard'} options.difficulty - Decides which discrepancies are listed.
+   * @param {import('./SoundView.js').VolumeSetting[]} options.volumeSettings - One slider per setting.
    */
-  constructor(renderer, {gameWidth, gameHeight, difficulty, volumeSettings}) {
-    this.#gameWidth = gameWidth
-    this.#gameHeight = gameHeight
-
+  constructor(renderer, { gameWidth, gameHeight, difficulty, volumeSettings }) {
     this.#travellerView = new TravellerView(renderer)
     new DeskView(renderer)
+
     this.#passportView = new PassportView(renderer)
-    this.#approveStamp = new StampView(renderer, {src: 'assets/approve_stamp.png', x: 1400, y: 500, approves: true})
-    this.#denyStamp = new StampView(renderer, {src: 'assets/deny_stamp.png', x: 1500, y: 500, approves: false})
-    this.#soundView = new SoundView(renderer, this.#gameWidth, this.#gameHeight, volumeSettings)
+    this.#discrepancyView = new DiscrepancyView(renderer, difficulty)
+    this.#approveStamp = new StampView(renderer, {
+      counterSrc: 'assets/approve_stamp.png',
+      inspectionDeskSrc: 'assets/approve_stamp.png',
+      x: 1400,
+      y: 500,
+      approves: true
+    })
+    this.#denyStamp = new StampView(renderer, {
+      counterSrc: 'assets/deny_stamp.png',
+      inspectionDeskSrc: 'assets/deny_stamp.png',
+      x: 1500,
+      y: 500,
+      approves: false
+    })
+
+    this.#dateDisplay = new LcdDisplayView(renderer, { x: 0, y: 1040 })
+    this.#heightDisplay = new LcdDisplayView(renderer, { x: 1100, y: 1040 })
+
+    this.#soundView = new SoundView(
+      renderer,
+      gameWidth,
+      gameHeight,
+      volumeSettings
+    )
     this.#settingsButton = new Button(renderer, {
       src: 'assets/settings_button.png',
       x: 0,
@@ -86,35 +151,82 @@ export class GameView {
       height: 60,
       onClick: () => this.#soundView.toggle()
     })
-    this.#discrepancyView = new DiscrepancyView(renderer, difficulty)
-    this.#lcdDisplayLength = new LcdDisplayView(renderer, {x: 1100, y: 1040})
-    this.#lcdDisplayDate = new LcdDisplayView(renderer, {x: 0, y: 1040})
   }
 
+  /**
+   * Sets the current game date to the passport view. It is shown on the stamp.
+   *
+   * @param {Date} date - The current game date.
+   */
+  set gameDate(date) {
+    this.#dateDisplay.value = formatDate(date)
+    this.#passportView.gameDate = date
+  }
+
+  /**
+   * Sets what happens when a stamped passport is handed back to the traveller.
+   *
+   * @param {(approved: boolean) => void} callback - Called with true if the passport was approved.
+   */
+  set onPassportReturned(callback) {
+    this.#onPassportReturned = callback
+  }
+
+  /**
+   * Returns the passport view, for example to let the player drag it.
+   *
+   * @returns {PassportView} The passport view.
+   */
+  get passport() {
+    return this.#passportView
+  }
+
+  /**
+   * Returns the discrepancy list, for example to let the player drag it.
+   *
+   * @returns {DiscrepancyView} The discrepancy list.
+   */
+  get discrepancyList() {
+    return this.#discrepancyView
+  }
+
+  /**
+   * Returns the stamps on the desk, for example to let the player drag them.
+   *
+   * @returns {StampView[]} The approve stamp and the deny stamp.
+   */
+  get stamps() {
+    return [this.#approveStamp, this.#denyStamp]
+  }
+
+  /**
+   * Returns the sliders in the sound settings, for example to let the player drag them.
+   *
+   * @returns {SliderView[]} One slider per volume setting.
+   */
+  get volumeSliders() {
+    return this.#soundView.volumeSliders
+  }
+
+  /**
+   * Returns the buttons on the screen, for example to let the player click them.
+   *
+   * @returns {Button[]} The buttons.
+   */
   get buttons() {
     return [this.#settingsButton]
   }
 
   /**
-   * Sets the current game date to the passport view. It is shown on the stamp.
-   * 
-   * @param {Date} date - The current game date.
-   */
-  set gameDate(date) {
-    this.#lcdDisplayDate.value = formatDate(date)
-    this.#passportView.gameDate = date
-  } 
-
-  /**
-   * Lets a traveller walk up to the window. Their passport is shown on the desk when they arrive.
-   * Takes the previous traveller's passport off the desk first.
+   * Lets a traveller walk up to the window, and shows their real height on the display.
+   * Their passport is shown when they arrive. Takes the previous traveller's passport away first.
    *
    * @param {Traveller} traveller - The traveller to show.
    */
   showTraveller(traveller) {
     this.#passportView.hide()
     this.#travellerView.show(traveller)
-    this.#lcdDisplayLength.value = `${traveller.person.heightInCm} cm`
+    this.#heightDisplay.value = `${traveller.person.heightInCm} cm`
     this.#waitingPassport = traveller.passport
   }
 
@@ -134,111 +246,89 @@ export class GameView {
    */
   update(deltaTime) {
     this.#travellerView.update(deltaTime)
-    this.#passportView.update(deltaTime)
-    this.#discrepancyView.update(deltaTime)
-    
+
+    for (const item of this.#items()) {
+      item.update(deltaTime)
+    }
+
     if (this.#waitingPassport !== null && this.#travellerView.isAtWindow) {
-      this.#passportView.show(this.#waitingPassport)
+      this.#passportView.showPassport(this.#waitingPassport)
       this.#waitingPassport = null
     }
   }
 
   /**
-   * Returns the stamps on the desk, for example to let the player drag them.
-   *
-   * @returns {StampView[]} The approve stamp and the deny stamp.
-   */
-  get stamps() {
-    return [this.#approveStamp, this.#denyStamp]
-  }
-
-  /**
-   * Returns the passport view, for example to let the player drag it.
-   *
-   * @returns {PassportView} The passport view.
-   */
-  get passport() {
-    return this.#passportView
-  }
-
-  get discrepancyDocument() {
-    return this.#discrepancyView
-  }
-
-  get volumeSliders() {
-    return this.#soundView.volumeSliders
-  }
-
-  #onStamp = () => {}
-
-  set onStamp(callback) {
-    this.#onStamp = callback
-  }
-
-  /**
-   * Called when a stamped passport is handed back to the traveller, with true if it was approved.
-   *
-   * @type {(approved: boolean) => void}
-   */
-  #onPassportReturned = () => {}
-
-  /**
-   * Sets what happens when a stamped passport is handed back to the traveller.
-   *
-   * @param {(approved: boolean) => void} callback - Called with true if the passport was approved.
-   */
-  set onPassportReturned(callback) {
-    this.#onPassportReturned = callback
-  }
-
-  /**
-   * Handles something the player released: a passport dropped in the booth is handed back or falls
-   * onto the counter, and a stamp dropped on the open passport stamps it where it was released.
+   * Handles something the player released. A stamp dropped on the open passport stamps it, and a
+   * stamped passport dropped in the booth is handed back. Any other item released on the counter
+   * falls down onto it.
    *
    * @param {import('../controller/DragController.js').Draggable} dropped - The thing the player released.
    */
   dropped(dropped) {
-    if (dropped === this.#discrepancyView) {
-      if (this.#discrepancyView.isInBooth) {
-        this.#discrepancyView.fall()
-      }
+    const item = this.#items().find((i) => i === dropped)
+
+    if (!item) return
+
+    if (this.#tryToStamp(item) || this.#tryToHandBack(item)) {
       return
     }
 
-    if (dropped === this.#passportView) {
-      this.#passportDropped()
-      return
+    if (item.isOnCounter) {
+      item.fall()
     }
+  }
 
-    const stamp = this.stamps.find((s) => s === dropped)
+  /**
+   * Stamps the passport if the item is a stamp released on the open passport.
+   *
+   * @param {InspectableItemView} item - The released item.
+   * @returns {boolean} True if the passport was stamped.
+   */
+  #tryToStamp(item) {
+    const stamp = this.stamps.find((s) => s === item)
 
-    if (!stamp) return
+    if (!stamp) return false
 
     const centerX = stamp.x + stamp.width / 2
     const centerY = stamp.y + stamp.height / 2
-
     const stamped = this.#passportView.stampAt(centerX, centerY, stamp.approves)
 
     if (stamped) {
       this.#onStamp()
     }
+
+    return stamped
   }
 
   /**
-   * Hands a stamped passport back if the traveller is at the window, and otherwise lets it fall
-   * onto the counter. Does nothing if the passport was released on the inspection desk.
+   * Hands the passport back if it is stamped, released in the booth, and the traveller is at the window.
+   *
+   * @param {InspectableItemView} item - The released item.
+   * @returns {boolean} True if the passport was handed back.
    */
-  #passportDropped() {
-    if (!this.#passportView.isInBooth) return
+  #tryToHandBack(item) {
+    const canHandBack =
+      item === this.#passportView &&
+      this.#passportView.isOnCounter &&
+      this.#passportView.isStamped &&
+      this.#travellerView.isAtWindow
 
-    if (this.#passportView.isStamped && this.#travellerView.isAtWindow) {
-      const approved = this.#passportView.isApproved
+    if (!canHandBack) return false
 
-      this.#passportView.hide()
-      this.#onPassportReturned(approved)
-      return
-    }
+    const approved = this.#passportView.isApproved
 
-    this.#passportView.fall()
+    this.#passportView.hide()
+    this.#onPassportReturned(approved)
+
+    return true
+  }
+
+  /**
+   * Returns every item the player can move between the counter and the inspection desk.
+   *
+   * @returns {InspectableItemView[]} The passport, the discrepancy list and the stamps.
+   */
+  #items() {
+    return [this.#passportView, this.#discrepancyView, ...this.stamps]
   }
 }
