@@ -4,6 +4,7 @@ import { GameController } from './controller/GameController.js'
 import { GameView } from './view/GameView'
 import { DragController } from './controller/DragController'
 import { SoundController } from './controller/SoundController'
+import { ClickController } from './controller/ClickController'
 
 const GAME_WIDTH = window.innerWidth
 const GAME_HEIGHT = window.innerHeight
@@ -45,6 +46,8 @@ const gameView = new GameView(renderer, {
     }
   ]
 })
+
+const clickController = new ClickController(canvas, gameView.buttons)
 
 new DragController(
   canvas,
