@@ -9,6 +9,7 @@ const HANDLE_COLOR = '#ddd'
 
 export class SliderView {
   #label
+  #labelText
   #procentualLabel
   #track
   #handle
@@ -19,7 +20,7 @@ export class SliderView {
   #onChange
   #isVisible = true
 
-  constructor(renderer, {label, x, y, width, value = 1, onChange = () => {} }) {
+  constructor(renderer, {label, x, y, width, value = 0.4, onChange = () => {} }) {
     this.#trackX = x
     this.#trackWidth = width
     this.#centerY = y
@@ -28,7 +29,8 @@ export class SliderView {
 
     this.#track = new BlockSprite(width, TRACK_HEIGHT, {x, y: y - TRACK_HEIGHT / 2, color: TRACK_COLOR})
     this.#handle = new BlockSprite(HANDLE_SIZE, HANDLE_SIZE, { color: HANDLE_COLOR })
-    this.#label = new TextLine(label.toUpperCase(), {color: '#fff', font: '16px "Press Start 2P"'})
+    this.#labelText = label.toUpperCase()
+    this.#label = new TextLine(this.#labelText.toUpperCase(), {color: '#fff', font: '16px "Press Start 2P"'})
     this.#procentualLabel = new TextLine(this.#valueAsPercent(), {color: '#fff', font: '16px "Press Start 2P"'})
 
     renderer.add(this.#label.sprite)
@@ -107,7 +109,7 @@ export class SliderView {
     this.#track.height = TRACK_HEIGHT
     this.#handle.width = HANDLE_SIZE
     this.#handle.height = HANDLE_SIZE
-    this.#label.text = this.#label
+    this.#label.text = this.#labelText
     this.#procentualLabel.text = this.#valueAsPercent()
   }
 
