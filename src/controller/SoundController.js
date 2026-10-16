@@ -26,6 +26,10 @@ export class SoundController {
     this.#findSound(name).play()
   }
 
+  loop(name) {
+    this.#findSound(name).loop()
+  }
+
   /**
    * 
    * @param {string} name 

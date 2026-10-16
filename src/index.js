@@ -23,9 +23,13 @@ const soundController = new SoundController()
 soundController.createSound('Ambient_Talking', '/assets/ambient_talking.wav')
 soundController.createSound('Ambient_Music', '/assets/ambient.wav')
 soundController.createSound('Document', '/assets/dokument_tack.wav')
+soundController.createSound('Stamp', '/assets/stamp.mp3')
 
 soundController.play('Ambient_Talking')
+soundController.loop('Ambient_Talking')
+
 soundController.play('Ambient_Music')
+soundController.loop('Ambient_Music')
 
 const gameView = new GameView(renderer, {
   gameWidth: GAME_WIDTH,
@@ -77,7 +81,10 @@ callNextTraveller()
 gameView.onPassportReturned = () => {
   callNextTraveller()
   setTimeout(() => soundController.play('Document'), 4500)
-  
+}
+
+gameView.onStamp = () => {
+  soundController.play('Stamp')
 }
 
 

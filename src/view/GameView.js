@@ -136,6 +136,12 @@ export class GameView {
     return this.#soundView.volumeSliders
   }
 
+  #onStamp = () => {}
+
+  set onStamp(callback) {
+    this.#onStamp = callback
+  }
+
   /**
    * Called when a stamped passport is handed back to the traveller, with true if it was approved.
    *
@@ -171,7 +177,11 @@ export class GameView {
     const centerX = stamp.x + stamp.width / 2
     const centerY = stamp.y + stamp.height / 2
 
-    this.#passportView.stampAt(centerX, centerY, stamp.approves)
+    const stamped = this.#passportView.stampAt(centerX, centerY, stamp.approves)
+
+    if (stamped) {
+      this.#onStamp()
+    }
   }
 
   /**

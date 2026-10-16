@@ -500,10 +500,11 @@ export class PassportView {
    * @param {number} x - The x coordinate of the stamp's centre, in canvas pixels.
    * @param {number} y - The y coordinate of the stamp's centre, in canvas pixels.
    * @param {boolean} approves - True for the approve stamp, false for the deny stamp.
+   * @returns {boolean} True if the passport was stamped.
    */
   stampAt(x, y, approves) {
     if (!this.#isOpen || !this.contains(x, y)) {
-      return
+      return false
     }
 
     this.#approved = approves
@@ -514,6 +515,8 @@ export class PassportView {
 
     this.#showStampMarker()
     this.#placeAll()
+
+    return true
   }
 
   /**
