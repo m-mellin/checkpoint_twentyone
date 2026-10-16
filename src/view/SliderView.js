@@ -64,7 +64,7 @@ export class SliderView {
     if (!this.#isVisible) {
       return false
     }
-    
+
     return (
       x >= this.x &&
       x <= this.x + this.width &&
@@ -107,7 +107,7 @@ export class SliderView {
     this.#track.height = TRACK_HEIGHT
     this.#handle.width = HANDLE_SIZE
     this.#handle.height = HANDLE_SIZE
-    this.#label.text = this.#labelText
+    this.#label.text = this.#label
     this.#procentualLabel.text = this.#valueAsPercent()
   }
 

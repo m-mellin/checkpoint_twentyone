@@ -3,6 +3,8 @@ import './style.css'
 import { GameController } from './controller/GameController.js'
 import { GameView } from './view/GameView'
 import { DragController } from './controller/DragController'
+import { SoundController } from './controller/SoundController'
+import { Sound } from './model/Sound'
 
 const GAME_WIDTH = window.innerWidth
 const GAME_HEIGHT = window.innerHeight
@@ -17,12 +19,46 @@ body?.appendChild(canvas)
 
 const renderer = new SpriteRenderer(canvas)
 
-const gameView = new GameView(renderer)
-new DragController(canvas, [gameView.passport, ...gameView.stamps], (dropped) => gameView.dropped(dropped))
+const soundController = new SoundController()
+
+const ambientSound = new Sound('Ambient', new Audio('/assets/ambient_talking.wav'))
+soundController.add(ambientSound)
+
+const ambientSoundTwo = new Sound('Ambient Two', new Audio('/assets/ambient_talking.wav'))
+soundController.add(ambientSoundTwo)
+
+soundController.play(ambientSound)
+soundController.play(ambientSoundTwo)
+
+const documentSound = new Sound('Voices', new Audio('/assets/dokument_tack.wav'))
+soundController.add(documentSound)
+
+const gameView = new GameView(renderer, {
+  gameWidth: GAME_WIDTH,
+  gameHeight: GAME_HEIGHT,
+  volumeSettings: [
+    {
+      label: 'Ambient volume',
+      onChange: (value) => soundController.setVolume(ambientSound, value) + soundController.setVolume(ambientSoundTwo, value)
+    },
+    {
+      label: 'Voice volume',
+      onChange: (value) => soundController.setVolume(documentSound, value)
+    }
+  ]
+})
+
+new DragController(
+  canvas,
+  [gameView.passport, ...gameView.stamps, ...gameView.volumeSliders],
+  (dropped) => gameView.dropped(dropped)
+)
 
 const gameController = new GameController()
 gameController.startGame('easy')
 gameView.gameDate = gameController.gameDate
+
+
 
 const PIXEL_FONT = '16px "Press Start 2P"'
 
@@ -46,7 +82,9 @@ callNextTraveller()
 
 gameView.onPassportReturned = () => {
   callNextTraveller()
+  documentSound.play()
 }
+
 
 /**
  * GameLoop

@@ -57,7 +57,7 @@ export class GameView {
    *
    * @param {SpriteRenderer} renderer - The renderer to draw with.
    */
-  constructor(renderer, {gameWidth, gameHeight, onVolumeChange}) {
+  constructor(renderer, {gameWidth, gameHeight, volumeSettings}) {
     this.#gameWidth = gameWidth
     this.#gameHeight = gameHeight
 
@@ -66,7 +66,7 @@ export class GameView {
     this.#passportView = new PassportView(renderer)
     this.#approveStamp = new StampView(renderer, {src: 'assets/approve_stamp.png', x: 1400, y: 500, approves: true})
     this.#denyStamp = new StampView(renderer, {src: 'assets/deny_stamp.png', x: 1500, y: 500, approves: false})
-    this.#soundView = new SoundView(renderer, this.#gameWidth, this.#gameHeight, onVolumeChange)
+    this.#soundView = new SoundView(renderer, this.#gameWidth, this.#gameHeight, volumeSettings)
   }
 
   /**
@@ -132,8 +132,8 @@ export class GameView {
     return this.#passportView
   }
 
-  get volumeSlider() {
-    return this.#soundView.volumeSlider
+  get volumeSliders() {
+    return this.#soundView.volumeSliders
   }
 
   /**
