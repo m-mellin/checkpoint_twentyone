@@ -6,42 +6,42 @@ export class SoundController {
    */
   #sounds = []
 
+  createSound(name, sound) {
+    this.#add(new Sound(name, new Audio(sound)))
+  }
+
   /**
    * 
    * @param {Sound} sound 
    */
-  add(sound) {
+  #add(sound) {
     this.#sounds.push(sound)
   }
 
   /**
    * 
-   * @param {Sound} sound 
+   * @param {string} name 
    */
-  remove(sound) {
-    const index = this.#sounds.indexOf(sound)
-
-    if (index === -1) {
-      throw new RangeError('Sound not found')
-    }
-
-    this.#sounds.splice(index, 1)
+  play(name) {
+    this.#findSound(name).play()
   }
 
   /**
    * 
-   * @param {Sound} sound 
-   */
-  play(sound) {
-    sound.play()
-  }
-
-  /**
-   * 
-   * @param {Sound} sound 
+   * @param {string} name 
    * @param {number} volume 
    */
-  setVolume(sound, volume) {
-    sound.volume = volume
+  setVolume(name, volume) {
+    this.#findSound(name).volume = volume
+  }
+
+  #findSound(name) {
+    const sound = this.#sounds.find((s) => s.name === name)
+
+    if (!sound) {
+      throw new TypeError(`${name} does not exists as a sound`)
+    }
+
+    return sound
   }
 }

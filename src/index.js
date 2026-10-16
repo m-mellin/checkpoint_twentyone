@@ -4,7 +4,6 @@ import { GameController } from './controller/GameController.js'
 import { GameView } from './view/GameView'
 import { DragController } from './controller/DragController'
 import { SoundController } from './controller/SoundController'
-import { Sound } from './model/Sound'
 
 const GAME_WIDTH = window.innerWidth
 const GAME_HEIGHT = window.innerHeight
@@ -21,17 +20,12 @@ const renderer = new SpriteRenderer(canvas)
 
 const soundController = new SoundController()
 
-const ambientSound = new Sound('Ambient', new Audio('/assets/ambient_talking.wav'))
-soundController.add(ambientSound)
+soundController.createSound('Ambient_Talking', '/assets/ambient_talking.wav')
+soundController.createSound('Ambient_Music', '/assets/ambient.wav')
+soundController.createSound('Document', '/assets/dokument_tack.wav')
 
-const ambientSoundTwo = new Sound('Ambient Two', new Audio('/assets/ambient_talking.wav'))
-soundController.add(ambientSoundTwo)
-
-soundController.play(ambientSound)
-soundController.play(ambientSoundTwo)
-
-const documentSound = new Sound('Voices', new Audio('/assets/dokument_tack.wav'))
-soundController.add(documentSound)
+soundController.play('Ambient_Talking')
+soundController.play('Ambient_Music')
 
 const gameView = new GameView(renderer, {
   gameWidth: GAME_WIDTH,
@@ -39,11 +33,11 @@ const gameView = new GameView(renderer, {
   volumeSettings: [
     {
       label: 'Ambient volume',
-      onChange: (value) => soundController.setVolume(ambientSound, value) + soundController.setVolume(ambientSoundTwo, value)
+      onChange: (value) => soundController.setVolume('Ambient_Talking', value) + soundController.setVolume('Ambient_Music', value)
     },
     {
       label: 'Voice volume',
-      onChange: (value) => soundController.setVolume(documentSound, value)
+      onChange: (value) => soundController.setVolume('Document', value)
     }
   ]
 })
@@ -77,12 +71,13 @@ function callNextTraveller() {
     gameView.showTraveller(traveller)
   }
 }
-
+setTimeout(() => soundController.play('Document'), 2100)
 callNextTraveller()
 
 gameView.onPassportReturned = () => {
   callNextTraveller()
-  documentSound.play()
+  setTimeout(() => soundController.play('Document'), 4500)
+  
 }
 
 
