@@ -8,6 +8,8 @@ import { StampView } from "./StampView"
 import { SoundView } from "./SoundView"
 import { Button } from "./Button"
 import { DiscrepancyView } from "./DiscrepancyView"
+import { LcdDisplayView } from "./LcdDisplayView"
+import { formatDate } from "./formatDate"
 
 /**
  * The whole game screen. Creates every view in the order they are drawn,
@@ -29,6 +31,9 @@ export class GameView {
   #passportView
 
   #discrepancyView
+
+  #lcdDisplayLength
+  #lcdDisplayDate
 
   /**
    * The stamp that approves the passport.
@@ -82,6 +87,8 @@ export class GameView {
       onClick: () => this.#soundView.toggle()
     })
     this.#discrepancyView = new DiscrepancyView(renderer, difficulty)
+    this.#lcdDisplayLength = new LcdDisplayView(renderer, {x: 1100, y: 1040})
+    this.#lcdDisplayDate = new LcdDisplayView(renderer, {x: 0, y: 1040})
   }
 
   get buttons() {
@@ -94,6 +101,7 @@ export class GameView {
    * @param {Date} date - The current game date.
    */
   set gameDate(date) {
+    this.#lcdDisplayDate.value = formatDate(date)
     this.#passportView.gameDate = date
   } 
 
@@ -106,6 +114,7 @@ export class GameView {
   showTraveller(traveller) {
     this.#passportView.hide()
     this.#travellerView.show(traveller)
+    this.#lcdDisplayLength.value = `${traveller.person.heightInCm} cm`
     this.#waitingPassport = traveller.passport
   }
 
@@ -195,7 +204,7 @@ export class GameView {
       }
       return
     }
-    
+
     if (dropped === this.#passportView) {
       this.#passportDropped()
       return

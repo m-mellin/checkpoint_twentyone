@@ -1,7 +1,7 @@
 import { Sprite, SpriteRegion, SpriteRenderer } from '2d-sprite-renderer'
-import { TextLine } from './TextLine'
-import { Passport } from '../model/Passport'
-
+import { TextLine } from './TextLine.js'
+import { Passport } from '../model/Passport.js'
+import { formatDate } from './formatDate.js'
 import portraitData from '../data/potraits.json'
 
 const PASSPORT_SRC = 'assets/passport.png'
@@ -149,6 +149,8 @@ export class PassportView {
 
   /**
    * The current game date.
+   * 
+   * @type {Date}
    */
   #gameDate = new Date()
 
@@ -196,7 +198,7 @@ export class PassportView {
    * @param {Date} date - The current game date.
    */
   set gameDate(date) {
-    this.#gameDate = new Date(date)
+    this.#gameDate = date
   }
 
   /**
@@ -242,7 +244,7 @@ export class PassportView {
     if (this.#passport !== null) {
       this.#fields.name.text =
         `NAME: ${this.#passport.surname} ${this.#passport.firstName}`.toUpperCase()
-      this.#fields.dateOfBirth.text = `BORN: ${this.#formatDate(this.#passport.dateOfBirth)}`
+      this.#fields.dateOfBirth.text = `BORN: ${formatDate(this.#passport.dateOfBirth)}`
       this.#fields.sex.text = `SEX: ${this.#passport.sex}`
       this.#fields.nationality.text =
         `NATIONALITY: ${this.#passport.nationality.name}`.toUpperCase()
@@ -251,8 +253,8 @@ export class PassportView {
       this.#fields.height.text = `HEIGHT: ${this.#passport.heightInCm} CM`
       this.#fields.issuingCity.text =
         `ISSUED IN: ${this.#passport.issuingCity}`.toUpperCase()
-      this.#fields.issueDate.text = `ISSUED: ${this.#formatDate(this.#passport.issueDate)}`
-      this.#fields.expiryDate.text = `EXPIRES: ${this.#formatDate(this.#passport.expiryDate)}`
+      this.#fields.issueDate.text = `ISSUED: ${formatDate(this.#passport.issueDate)}`
+      this.#fields.expiryDate.text = `EXPIRES: ${formatDate(this.#passport.expiryDate)}`
       this.#fields.identification.text = `ID: ${this.#passport.identificationString}`
     }
   }
@@ -357,20 +359,6 @@ export class PassportView {
       field.y = y
       y += field.height + TEXT_DISTANCE
     }
-  }
-
-  /**
-   * Formats a date the way it is printed in the passport, for example "1971.03.12".
-   *
-   * @param {Date} date - The date to format.
-   * @returns {string} The formatted date.
-   */
-  #formatDate(date) {
-    const day = String(date.getUTCDate()).padStart(2, '0')
-    const month = String(date.getUTCMonth() + 1).padStart(2, '0')
-    const year = String(date.getUTCFullYear())
-
-    return `${year}.${month}.${day}`
   }
 
   /**
@@ -527,7 +515,7 @@ export class PassportView {
     const shown = this.#approved ? this.#approveStamp : this.#denyStamp
     const hidden = this.#approved ? this.#denyStamp : this.#approveStamp
 
-    this.#dateStamp.text = this.#formatDate(this.#gameDate)
+    this.#dateStamp.text = formatDate(this.#gameDate)
     this.#dateStamp.textColor = this.#approved ? '#1a5c1a' : '#8b1a1a'
 
     shown.width = STAMP_WIDTH

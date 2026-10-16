@@ -20,7 +20,7 @@ export class SliderView {
   #onChange
   #isVisible = true
 
-  constructor(renderer, {label, x, y, width, value = 0.4, onChange = () => {} }) {
+  constructor(renderer, {label, x, y, width, value = 0.1, onChange = () => {} }) {
     this.#trackX = x
     this.#trackWidth = width
     this.#centerY = y
