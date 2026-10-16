@@ -6,6 +6,7 @@ import { Passport } from "../model/Passport"
 import { PassportView } from "./PassportView"
 import { StampView } from "./StampView"
 import { SoundView } from "./SoundView"
+import { Button } from "./Button"
 
 /**
  * The whole game screen. Creates every view in the order they are drawn,
@@ -40,6 +41,8 @@ export class GameView {
    */
   #denyStamp
 
+  #settingsButton
+
   /**
    * The passport to show when the traveller reaches the window, or null if there is none.
    *
@@ -67,6 +70,18 @@ export class GameView {
     this.#approveStamp = new StampView(renderer, {src: 'assets/approve_stamp.png', x: 1400, y: 500, approves: true})
     this.#denyStamp = new StampView(renderer, {src: 'assets/deny_stamp.png', x: 1500, y: 500, approves: false})
     this.#soundView = new SoundView(renderer, this.#gameWidth, this.#gameHeight, volumeSettings)
+    this.#settingsButton = new Button(renderer, {
+      src: 'assets/settings_button.png',
+      x: 0,
+      y: 0,
+      width: 60,
+      height: 60,
+      onClick: () => this.#soundView.toggle()
+    })
+  }
+
+  get buttons() {
+    return [this.#settingsButton]
   }
 
   /**
