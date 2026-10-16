@@ -52,7 +52,7 @@ const clickController = new ClickController(canvas, gameView.buttons)
 
 new DragController(
   canvas,
-  [gameView.passport, ...gameView.stamps, ...gameView.volumeSliders],
+  [gameView.passport, ...gameView.stamps, ...gameView.volumeSliders, gameView.discrepancyDocument],
   (dropped) => gameView.dropped(dropped)
 )
 

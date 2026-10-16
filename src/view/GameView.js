@@ -7,6 +7,7 @@ import { PassportView } from "./PassportView"
 import { StampView } from "./StampView"
 import { SoundView } from "./SoundView"
 import { Button } from "./Button"
+import { DiscrepancyView } from "./DiscrepancyView"
 
 /**
  * The whole game screen. Creates every view in the order they are drawn,
@@ -26,6 +27,8 @@ export class GameView {
    * @type {PassportView}
    */
   #passportView
+
+  #discrepancyView
 
   /**
    * The stamp that approves the passport.
@@ -78,6 +81,7 @@ export class GameView {
       height: 60,
       onClick: () => this.#soundView.toggle()
     })
+    this.#discrepancyView = new DiscrepancyView(renderer)
   }
 
   get buttons() {
@@ -145,6 +149,10 @@ export class GameView {
    */
   get passport() {
     return this.#passportView
+  }
+
+  get discrepancyDocument() {
+    return this.#discrepancyView
   }
 
   get volumeSliders() {
