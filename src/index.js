@@ -33,9 +33,13 @@ soundController.loop('Ambient_Talking')
 soundController.play('Ambient_Music')
 soundController.loop('Ambient_Music')
 
+const gameController = new GameController()
+gameController.startGame('hard')
+
 const gameView = new GameView(renderer, {
   gameWidth: GAME_WIDTH,
   gameHeight: GAME_HEIGHT,
+  difficulty: gameController.difficulty,
   volumeSettings: [
     {
       label: 'Ambient volume',
@@ -52,12 +56,10 @@ const clickController = new ClickController(canvas, gameView.buttons)
 
 new DragController(
   canvas,
-  [gameView.passport, ...gameView.stamps, ...gameView.volumeSliders, gameView.discrepancyDocument],
+  [gameView.passport, gameView.discrepancyDocument, ...gameView.stamps, ...gameView.volumeSliders],
   (dropped) => gameView.dropped(dropped)
 )
 
-const gameController = new GameController()
-gameController.startGame('easy')
 gameView.gameDate = gameController.gameDate
 
 

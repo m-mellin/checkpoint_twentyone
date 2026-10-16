@@ -63,7 +63,7 @@ export class GameView {
    *
    * @param {SpriteRenderer} renderer - The renderer to draw with.
    */
-  constructor(renderer, {gameWidth, gameHeight, volumeSettings}) {
+  constructor(renderer, {gameWidth, gameHeight, difficulty, volumeSettings}) {
     this.#gameWidth = gameWidth
     this.#gameHeight = gameHeight
 
@@ -81,7 +81,7 @@ export class GameView {
       height: 60,
       onClick: () => this.#soundView.toggle()
     })
-    this.#discrepancyView = new DiscrepancyView(renderer)
+    this.#discrepancyView = new DiscrepancyView(renderer, difficulty)
   }
 
   get buttons() {
@@ -126,7 +126,8 @@ export class GameView {
   update(deltaTime) {
     this.#travellerView.update(deltaTime)
     this.#passportView.update(deltaTime)
-
+    this.#discrepancyView.update(deltaTime)
+    
     if (this.#waitingPassport !== null && this.#travellerView.isAtWindow) {
       this.#passportView.show(this.#waitingPassport)
       this.#waitingPassport = null
@@ -188,6 +189,13 @@ export class GameView {
    * @param {import('../controller/DragController.js').Draggable} dropped - The thing the player released.
    */
   dropped(dropped) {
+    if (dropped === this.#discrepancyView) {
+      if (this.#discrepancyView.isInBooth) {
+        this.#discrepancyView.fall()
+      }
+      return
+    }
+    
     if (dropped === this.#passportView) {
       this.#passportDropped()
       return

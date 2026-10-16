@@ -1,18 +1,18 @@
 import { Sprite } from "2d-sprite-renderer"
+import { TextLine } from "./TextLine"
+import discrepanciesData from '../data/discrepancies.json'
 
 const DISCREPANCY_SRC = '/assets/discrepancy_open.png'
 const CLOSED_DISCREPANCY_SRC = '/assets/discrepancy_closed.png'
 
 const COUNTER_Y = 700
-const FALL_SPEED = 4
+const COUNTER_X = 600
+const FALL_SPEED = 2
 
 const DESK_CENTER_X = 600
 const DESK_CENTER_Y = 700
 
 const DESK_LEFT_X = 1370
-
-const DOCUMENT_X = 1400
-const DOCUMENT_Y = 0
 
 const DOCUMENT_SCALE = 0.5
 
@@ -22,19 +22,59 @@ const CLOSED_HEIGHT = 1502 / 2 * DOCUMENT_SCALE
 const OPEN_WIDTH = 1047 * DOCUMENT_SCALE
 const OPEN_HEIGHT = 1502 * DOCUMENT_SCALE
 
+const TEXT_COLOR = '#fff'
+
+const TEXT_OFFSET_X = 60
+const TEXT_OFFSET_Y = 250
+
+const TEXT_DISTANCE = 16
+
+const TITLE_X = 60
+const TITLE_Y = 200
+
+const TITLE_TEXT = 'POSSIBLE DISCREPANCIES'
+
+export const DISCREPANCY_TEXTS = Object.freeze({
+  SUSPICIOUS_FIRSTNAME: 'FOREIGN FIRST NAME',
+  SUSPICIOUS_SURNAME: 'FOREIGN SURNAME',
+  INCORRECT_SEX: 'WRONG SEX',
+  INCORRECT_ISSUING_CITY: 'WRONG ISSUING CITY',
+  INCORRECT_BIRTHPLACE: 'WRONG BIRTHPLACE',
+  INCORRECT_ISSUE_DATE: 'INVALID ISSUE DATE',
+  FIRSTNAME_MISMATCHES_SEX: 'NAME DOES NOT MATCH SEX',
+  INCORRECT_EXPIRY_DATE: 'PASSPORT EXPIRED',
+  INCORRECT_HEIGHT: 'WRONG HEIGHT',
+  INCORRECT_CODE: 'WRONG COUNTRY CODE',
+  FIRSTNAME_MISSPELLED: 'MISSPELLED FIRST NAME',
+  SURNAME_MISSPELLED: 'MISSPELLED SURNAME'
+})
+
 export class DiscrepancyView {
   #openPaper = new Sprite(DISCREPANCY_SRC)
   #closedPaper = new Sprite(CLOSED_DISCREPANCY_SRC)
+  #title = new TextLine('', { color: TEXT_COLOR, font: '16px "Press Start 2P"'})
 
-  #x = DOCUMENT_X
-  #y = DOCUMENT_Y
+  #x = COUNTER_X
+  #y = COUNTER_Y
 
   #isOpen = true
   #isFalling = false
 
-  constructor(renderer) {
+  #fields = []
+  #texts = []
+
+  constructor(renderer, difficulty) {
     renderer.add(this.#openPaper)
     renderer.add(this.#closedPaper)
+    renderer.add(this.#title.sprite)
+
+    for (const code of discrepanciesData[difficulty]) {
+      this.#texts.push(DISCREPANCY_TEXTS[code] ?? code)
+
+      const field = new TextLine('', { color: TEXT_COLOR })
+      this.#fields.push(field)
+      renderer.add(field.sprite)
+    }
 
     this.#placeAll()
     this.#show()
@@ -53,6 +93,11 @@ export class DiscrepancyView {
     this.#closedPaper.height = 0
     this.#openPaper.width = OPEN_WIDTH
     this.#openPaper.height = OPEN_HEIGHT
+    this.#title.text = TITLE_TEXT
+
+    this.#fields.forEach((field, index) => {
+      field.text = this.#texts[index]
+    })
   }
 
   #close() {
@@ -61,6 +106,11 @@ export class DiscrepancyView {
     this.#openPaper.height = 0
     this.#closedPaper.width = CLOSED_WIDTH
     this.#closedPaper.height = CLOSED_HEIGHT
+    this.#title.text = ''
+
+    for (const field of this.#fields) {
+      field.text = ''
+    }
   }
 
   #placeAll() {
@@ -68,6 +118,16 @@ export class DiscrepancyView {
     this.#openPaper.y = this.#y
     this.#closedPaper.x = this.#x
     this.#closedPaper.y = this.#y
+    this.#title.x = this.#x + TITLE_X
+    this.#title.y = this.#y + TITLE_Y
+
+    let y = this.#y + TEXT_OFFSET_Y
+
+    for (const field of this.#fields) {
+      field.x = this.#x + TEXT_OFFSET_X
+      field.y = y
+      y += field.height + TEXT_DISTANCE
+    }
   }
 
   /**
@@ -151,8 +211,8 @@ export class DiscrepancyView {
   }
 
   /**
-   * Moves a falling passport towards the booth counter, without falling past it.
-   * Does nothing if the passport is not falling.
+   * Moves a falling document towards the booth counter, without falling past it.
+   * Does nothing if the document is not falling.
    *
    * @param {number} deltaTime - Milliseconds since the last frame.
    */

@@ -59,6 +59,8 @@ export class GameController {
 
   #gameDate = new Date()
 
+  #gameDifficulty
+
   /**
    * Starts a new game. Anything from an earlier game is replaced.
    *
@@ -71,6 +73,8 @@ export class GameController {
         'difficulty must be Difficulties.EASY ("easy"), Difficulties.MEDIUM ("medium") or Difficulties.HARD ("hard")'
       )
     }
+
+    this.#gameDifficulty = difficulty
 
     this.#gameDate = this.#today()
 
@@ -92,6 +96,10 @@ export class GameController {
    */
   get travellers() {
     return this.#travellers.getAllItems()
+  }
+
+  get difficulty() {
+    return this.#gameDifficulty
   }
 
   callNextTraveller() {
