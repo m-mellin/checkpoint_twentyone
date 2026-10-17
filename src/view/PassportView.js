@@ -84,9 +84,15 @@ const MARKER_DATE_OFFSET_X = 30
  */
 const MARKER_DATE_OFFSET_Y = 112.5
 
+/**
+ * The color for the approved and deny stamp.
+ */
 const APPROVED_COLOR = '#1a5c1a'
 const DENIED_COLOR = '#8b1a1a'
 
+/**
+ * The font used for the date on the marker.
+ */
 const MARKER_FONT = '9px "Press Start 2P"'
 
 /**
