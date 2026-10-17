@@ -4,8 +4,8 @@ import { InspectableItemView } from './InspectableItemView.js'
 /**
  * The size of the stamp on the inspection desk, in pixels. On the counter it is half as big.
  */
-const STAMP_WIDTH = 505 / 2
-const STAMP_HEIGHT = 593 / 2
+const STAMP_WIDTH = 505 / 3
+const STAMP_HEIGHT = 593 / 3
 
 /**
  * A stamp the player drags onto the open passport to approve or deny it.

@@ -71,21 +71,23 @@ const TEXT_DISTANCE = 10
 /**
  * The markers width and height.
  */
-const MARKER_WIDTH = 200
-const MARKER_HEIGHT = 200
+const MARKER_WIDTH = 150
+const MARKER_HEIGHT = 150
 
 /**
  * How far to the right of the stamp marker's left edge the date is printed, in pixels.
  */
-const MARKER_DATE_OFFSET_X = 40
+const MARKER_DATE_OFFSET_X = 30
 
 /**
  * How far below the stamp marker's top edge the date is printed, in pixels.
  */
-const MARKER_DATE_OFFSET_Y = 150
+const MARKER_DATE_OFFSET_Y = 112.5
 
 const APPROVED_COLOR = '#1a5c1a'
 const DENIED_COLOR = '#8b1a1a'
+
+const MARKER_FONT = '9px "Press Start 2P"'
 
 /**
  * Shows the passport on the screen. It is hidden until a traveller hands it over, and can be
@@ -118,7 +120,7 @@ export class PassportView extends InspectableItemView {
    *
    * @type {TextLine}
    */
-  #markerDate = new TextLine('', { color: TEXT_COLOR })
+  #markerDate = new TextLine('', { color: TEXT_COLOR, font: MARKER_FONT })
 
   /**
    * The passport being shown, or null if none.
@@ -318,17 +320,13 @@ export class PassportView extends InspectableItemView {
   #showDetails(passport) {
     this.#showPhoto(passport.photo)
 
-    this.#fields.name.text =
-      `NAME: ${passport.surname} ${passport.firstName}`.toUpperCase()
+    this.#fields.name.text = `NAME: ${passport.surname} ${passport.firstName}`.toUpperCase()
     this.#fields.dateOfBirth.text = `BORN: ${formatDate(passport.dateOfBirth)}`
     this.#fields.sex.text = `SEX: ${passport.sex}`
-    this.#fields.nationality.text =
-      `NATIONALITY: ${passport.nationality.name}`.toUpperCase()
-    this.#fields.birthplace.text =
-      `BIRTHPLACE: ${passport.birthplace}`.toUpperCase()
+    this.#fields.nationality.text = `NATIONALITY: ${passport.nationality.name}`.toUpperCase()
+    this.#fields.birthplace.text = `BIRTHPLACE: ${passport.birthplace}`.toUpperCase()
     this.#fields.height.text = `HEIGHT: ${passport.heightInCm} CM`
-    this.#fields.issuingCity.text =
-      `ISSUED IN: ${passport.issuingCity}`.toUpperCase()
+    this.#fields.issuingCity.text = `ISSUED IN: ${passport.issuingCity}`.toUpperCase()
     this.#fields.issueDate.text = `ISSUED: ${formatDate(passport.issueDate)}`
     this.#fields.expiryDate.text = `EXPIRES: ${formatDate(passport.expiryDate)}`
     this.#fields.identification.text = `ID: ${passport.identificationString}`
