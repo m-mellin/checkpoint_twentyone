@@ -63,6 +63,11 @@ export class GameView {
    */
   #soundView
 
+  /**
+   * The citation slips. Hidden until a mistake prints one.
+   *
+   * @type {CitationView[]}
+   */
   #citations = []
 
   /**
@@ -186,6 +191,15 @@ export class GameView {
   }
 
   /**
+   * Sets what happens when a stamp lands on the open passport.
+   *
+   * @param {() => void} callback - Called each time a stamp lands on the passport.
+   */
+  set onStamp(callback) {
+    this.#onStamp = callback
+  }
+
+  /**
    * Returns the passport view, for example to let the player drag it.
    *
    * @returns {PassportView} The passport view.
@@ -230,6 +244,11 @@ export class GameView {
     return [this.#settingsButton]
   }
 
+  /**
+   * Returns the citations, for example to let the player drag them.
+   *
+   * @returns {CitationView[]} Every citation slip.
+   */
   get citations() {
     return this.#citations
   }
@@ -296,9 +315,9 @@ export class GameView {
   }
 
   /**
-   * Creates a citation
+   * Prints a citation for a mistake on the next unused slip. Does nothing if every slip is used.
    * 
-   * @param {string} reason  - The reason of the citation.
+   * @param {string} reason - What the player missed, for example "WRONG ISSUING CITY".
    */
   addCitation(reason) {
     const citatonSlip = this.#citations.find((citation) => !citation.isInUse)

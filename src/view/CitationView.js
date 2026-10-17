@@ -136,7 +136,7 @@ export class CitationView extends InspectableItemView {
     this.#reasonLine.x = this.x + REASON_OFFSET_X
     this.#reasonLine.y = this.y + REASON_OFFSET_Y
   }
-
+  
   /**
    * Shows the title and the reason on the inspection desk, and hides them on the counter.
    *
