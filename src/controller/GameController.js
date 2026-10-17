@@ -9,6 +9,7 @@ import { Sex } from '../model/Person.js'
 import { TravellerGenerator } from '../model/TravellerGenerator.js'
 import { Traveller } from '../model/Traveller.js'
 import { Discrepancy } from '../model/Discrepancy.js'
+import { addDays } from '../model/dates'
 
 /**
  * How many travellers come to the checkpoint each day.
@@ -126,6 +127,19 @@ export class GameController {
 
     this.#generateNations(difficulty)
     this.#generateDiscrepancies(difficulty)
+    this.#generateTravellers(this.#gameDate)
+  }
+  
+  /**
+   * Starts the next day: moves the game date one day forward and lets a new queue of travellers in.
+   * The nations, the discrepancies and the score are kept.
+   */
+  startNextDay() {
+    this.#gameDate = addDays(this.#gameDate, 1)
+    this.#travellers = new Repository(Traveller)
+    this.#nextTravellerIndex = 0
+    this.#currentTraveller = null
+    
     this.#generateTravellers(this.#gameDate)
   }
 

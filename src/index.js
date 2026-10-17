@@ -268,7 +268,9 @@ function callNextTraveller() {
   const traveller = gameController.callNextTraveller()
 
   if (traveller === null) {
-    gameView.travellerLeaves()
+    gameController.startNextDay()
+    gameView.gameDate = gameController.gameDate
+    callNextTraveller()
     return
   }
 
