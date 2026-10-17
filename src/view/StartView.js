@@ -1,18 +1,22 @@
-import { BlockSprite, SpriteRenderer } from '2d-sprite-renderer'
-import { TextLine } from './TextLine.js'
+import { BlockSprite, Sprite, SpriteRenderer } from '2d-sprite-renderer'
 import { TextButton } from './TextButton.js'
 import { Difficulties } from '../controller/GameController.js'
 
 /**
  * The colour of the background that covers the whole screen.
  */
-const BACKGROUND_COLOR = '#111'
+const BACKGROUND_COLOR = '#03090c'
+
 /**
- * The game's title and how it is written.
+ * The image on the StartView.
  */
-const TITLE_TEXT = 'CHECKPOINT TWENTYONE'
-const TITLE_FONT = '32px "Press Start 2P"'
-const TITLE_COLOR = '#fff'
+const IMAGE_SRC = '/assets/start_game.png'
+
+/**
+ * The size of the StartView image.
+ */
+const WIDTH = 1536
+const HEIGHT = 1024
 
 /**
  * The space between two difficulty buttons, in pixels.
@@ -42,17 +46,17 @@ export class StartView {
   constructor(renderer, { gameWidth, gameHeight, onStart }) {
     renderer.add(new BlockSprite(gameWidth, gameHeight, { color: BACKGROUND_COLOR }))
 
-    const title = new TextLine(TITLE_TEXT, { color: TITLE_COLOR, font: TITLE_FONT })
-    title.x = (gameWidth - title.width) / 2
-    title.y = gameHeight / 4
-    renderer.add(title.sprite)
+    const image = new Sprite(IMAGE_SRC, {width: WIDTH, height: HEIGHT})
+    image.x = (gameWidth - image.width) / 2
+    image.y = 0
+    renderer.add(image)
 
     this.#buttons = Object.values(Difficulties).map(
       (difficulty, index) =>
         new TextButton(renderer, {
           text: difficulty.toUpperCase(),
           centerX: gameWidth / 2,
-          y: gameHeight / 2 + index * BUTTON_DISTANCE,
+          y: gameHeight / 1.4 + index * BUTTON_DISTANCE,
           /**
            * Starts the game at this button's difficulty.
            */
