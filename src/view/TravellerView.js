@@ -23,7 +23,7 @@ const TRAVELLERS_SRC = 'assets/travellers.png'
 const PORTRAIT_SCALE = 2
 
 /**
- * The y coordinate of the traveller's top edge when standin still, in pixels.
+ * The y coordinate of the traveller's top edge when standing still, in pixels.
  */
 const TRAVELLER_Y = 260
 
@@ -55,7 +55,7 @@ const WINDOW_X = 480
 const EXIT_X = 1400
 
 /**
- * How fast the traveller moves, in pixels per miliseconds.
+ * How fast the traveller moves, in pixels per milisecond.
  */
 const WALK_SPEED = 0.4
 
