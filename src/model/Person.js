@@ -72,7 +72,7 @@ export class Person {
    *
    * @type {string}
    */
-  #apperance
+  #appearance
 
   /**
    * Creates a person.
@@ -85,7 +85,7 @@ export class Person {
    * @param {Date} options.dateOfBirth - The date of birth, at midnight UTC.
    * @param {string} options.birthplace - The city of birth.
    * @param {'M' | 'F'} options.sex - Sex.MALE or Sex.FEMALE.
-   * @param {string} options.apperance - The id of the portrait the person looks like, for example "M1".
+   * @param {string} options.appearance - The id of the portrait the person looks like, for example "M1".
    * @throws {TypeError} If a value has the wrong type.
    * @throws {RangeError} If the sex is not Sex.MALE or Sex.FEMALE.
    */
@@ -97,13 +97,13 @@ export class Person {
     dateOfBirth,
     birthplace,
     sex,
-    apperance
+    appearance
   }) {
     for (const [name, value] of Object.entries({
       firstName,
       surname,
       birthplace,
-      apperance
+      appearance
     })) {
       assertNonEmptyString(value, name)
     }
@@ -123,7 +123,7 @@ export class Person {
     this.#dateOfBirth = new Date(dateOfBirth)
     this.#birthplace = birthplace
     this.#sex = sex
-    this.#apperance = apperance
+    this.#appearance = appearance
   }
 
   /**
@@ -194,7 +194,7 @@ export class Person {
    *
    * @returns {string} The appearance id, for example "M1".
    */
-  get apperance() {
-    return this.#apperance
+  get appearance() {
+    return this.#appearance
   }
 }

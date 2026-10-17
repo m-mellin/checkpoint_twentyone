@@ -132,7 +132,7 @@ export class TravellerView {
   #walkIn(traveller) {
     // Find the portrait that matches the person's appearance id
     const portrait = portraitData.find(
-      (p) => p.id === traveller.person.apperance
+      (p) => p.id === traveller.person.appearance
     )
 
     if (!portrait) return
