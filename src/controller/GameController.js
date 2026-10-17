@@ -90,14 +90,14 @@ export class GameController {
    *
    * @type {number}
    */
-  #correctDesisions = 0
+  #correctDecisions = 0
   
   /**
    * How many decisions the player has got wrong today.
    *
    * @type {number}
    */
-  #mistakes = 0
+  #incorrectDecisions = 0
 
   /**
    * Starts a new game. Anything from an earlier game is replaced.
@@ -113,7 +113,6 @@ export class GameController {
     }
 
     this.#gameDifficulty = difficulty
-
     this.#gameDate = this.#today()
 
     this.#nations = new Repository(Nation)
@@ -121,6 +120,9 @@ export class GameController {
     this.#travellers = new Repository(Traveller)
 
     this.#nextTravellerIndex = 0
+    this.#currentTraveller = null
+    this.#correctDecisions = 0
+    this.#incorrectDecisions = 0
 
     this.#generateNations(difficulty)
     this.#generateDiscrepancies(difficulty)
@@ -152,6 +154,24 @@ export class GameController {
    */
   get gameDate() {
     return new Date(this.#gameDate)
+  }
+
+  /**
+   * Returns how many decisions the player has got right today.
+   *
+   * @returns {number} The number of correct decisions.
+   */
+  get correctDecisions() {
+    return this.#correctDecisions
+  }
+  
+  /**
+   * Returns how many decisions the player has got wrong today.
+   *
+   * @returns {number} The number of mistakes.
+   */
+  get incorrectDecisions() {
+    return this.#incorrectDecisions
   }
 
   /**
@@ -192,9 +212,9 @@ export class GameController {
     const isCorrect = approved === this.#currentTraveller.hasGenuinePassport
 
     if (isCorrect) {
-      this.#correctDesisions++
+      this.#correctDecisions++
     } else {
-      this.#mistakes++
+      this.#incorrectDecisions++
     }
 
     return { isCorrect, discrepancy }
