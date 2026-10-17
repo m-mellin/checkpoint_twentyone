@@ -79,6 +79,27 @@ export class GameController {
   #gameDifficulty = Difficulties.EASY
 
   /**
+   * The traveller at the window right now, or null if nobody has been called yet.
+   *
+   * @type {Traveller | null}
+   */
+  #currentTraveller = null
+
+  /**
+   * How many decisions the player has got right today.
+   *
+   * @type {number}
+   */
+  #correctDesisions = 0
+  
+  /**
+   * How many decisions the player has got wrong today.
+   *
+   * @type {number}
+   */
+  #mistakes = 0
+
+  /**
    * Starts a new game. Anything from an earlier game is replaced.
    *
    * @param {'easy' | 'medium' | 'hard'} difficulty - Difficulties.EASY, Difficulties.MEDIUM or Difficulties.HARD.
@@ -149,7 +170,34 @@ export class GameController {
     const traveller = travellers[this.#nextTravellerIndex]
     this.#nextTravellerIndex++
 
+    this.#currentTraveller = traveller
+
     return traveller
+  }
+
+  /**
+   * Judges the player's decision for the traveller at the window, and counts it.
+   *
+   * @param {boolean} approved - True if the player approved the passport.
+   * @returns {{isCorrect: boolean, discrepancy: Discrepancy | null}} Whether the decision was right,
+   *   and the error in the passport, if it had one.
+   * @throws {Error} If no traveller is at the window.
+   */
+  judge(approved) {
+    if (this.#currentTraveller === null) {
+      throw new Error('There is no current traveller to judge.')
+    }
+
+    const discrepancy = this.#currentTraveller.discrepancy
+    const isCorrect = approved === this.#currentTraveller.hasGenuinePassport
+
+    if (isCorrect) {
+      this.#correctDesisions++
+    } else {
+      this.#mistakes++
+    }
+
+    return { isCorrect, discrepancy }
   }
 
   /**

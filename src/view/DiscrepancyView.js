@@ -39,6 +39,11 @@ const TEXT_COLOR = '#fff'
 const TITLE_TEXT = 'POSSIBLE DISCREPANCIES'
 
 /**
+ * The font of the title.
+ */
+const TITLE_FONT = '16px "Press Start 2P"'
+
+/**
  * Where the title is printed, measured from the list's top left corner, in pixels.
  */
 const TITLE_OFFSET_X = 60
@@ -87,7 +92,7 @@ export class DiscrepancyView extends InspectableItemView {
    */
   #title = new TextLine('', {
     color: TEXT_COLOR,
-    font: '16px "Press Start 2P"'
+    font: TITLE_FONT
   })
 
   /**

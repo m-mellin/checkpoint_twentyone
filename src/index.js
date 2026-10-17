@@ -5,6 +5,7 @@ import { GameView } from './view/GameView'
 import { DragController } from './controller/DragController'
 import { SoundController } from './controller/SoundController'
 import { ClickController } from './controller/ClickController'
+import { DISCREPANCY_TEXTS } from './view/DiscrepancyView'
 
 const PIXEL_FONT = '16px "Press Start 2P"'
 await document.fonts.load(PIXEL_FONT)
@@ -69,6 +70,7 @@ new DragController(
     gameView.passport,
     gameView.discrepancyList,
     ...gameView.stamps,
+    ...gameView.citations,
     ...gameView.volumeSliders
   ],
   (dropped) => gameView.dropped(dropped)
@@ -93,7 +95,14 @@ function callNextTraveller() {
 setTimeout(() => soundController.play('Document'), 2100)
 callNextTraveller()
 
-gameView.onPassportReturned = () => {
+gameView.onPassportReturned = (approved) => {
+  const { isCorrect, discrepancy } = gameController.judge(approved)
+  if (!isCorrect) {
+    console.log('Incorrect')
+    const reason = discrepancy ? DISCREPANCY_TEXTS[discrepancy.code] : 'DENIED A VALID PASSPORT'
+    gameView.addCitation(reason)
+  }
+
   callNextTraveller()
   setTimeout(() => soundController.play('Next'), 1000)
   setTimeout(() => soundController.play('Document'), 4000)
@@ -102,6 +111,7 @@ gameView.onPassportReturned = () => {
 gameView.onStamp = () => {
   soundController.play('Stamp')
 }
+
 
 /**
  * GameLoop

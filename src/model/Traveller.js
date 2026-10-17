@@ -75,4 +75,13 @@ export class Traveller {
   get discrepancy() {
     return this.#discrepancy
   }
+
+  /**
+   * Returns true if the traveller has a genuine passport.
+   * 
+   * @returns {boolean} True if genuine, false if not.
+   */
+  get hasGenuinePassport() {
+    return this.#discrepancy === null
+  }
 }

@@ -12,6 +12,9 @@ import { LcdDisplayView } from './LcdDisplayView.js'
 import { formatDate } from './formatDate.js'
 import { SliderView } from './SliderView.js'
 import { InspectableItemView } from './InspectableItemView.js'
+import { CitationView } from './CitationView.js'
+
+const MAX_CITATIONS = 10
 
 /**
  * The whole game screen. Creates every view in the order they are drawn,
@@ -59,6 +62,8 @@ export class GameView {
    * @type {SoundView}
    */
   #soundView
+
+  #citations = []
 
   /**
    * The stamp that approves the passport.
@@ -134,6 +139,8 @@ export class GameView {
       approves: false
     })
 
+    this.#citations = Array.from({ length: MAX_CITATIONS }, () => new CitationView(renderer))
+
     this.#dateDisplay = new LcdDisplayView(renderer, { x: 0, y: 1040 })
     this.#heightDisplay = new LcdDisplayView(renderer, { x: 1100, y: 1040 })
 
@@ -143,6 +150,7 @@ export class GameView {
       gameHeight,
       volumeSettings
     )
+
     this.#settingsButton = new Button(renderer, {
       src: 'assets/settings_button.png',
       x: 0,
@@ -222,6 +230,10 @@ export class GameView {
     return [this.#settingsButton]
   }
 
+  get citations() {
+    return this.#citations
+  }
+
   /**
    * Lets a traveller walk up to the window, and shows their real height on the display.
    * Their passport is shown when they arrive. Takes the previous traveller's passport away first.
@@ -284,6 +296,17 @@ export class GameView {
   }
 
   /**
+   * Creates a citation
+   * 
+   * @param {string} reason  - The reason of the citation.
+   */
+  addCitation(reason) {
+    const citatonSlip = this.#citations.find((citation) => !citation.isInUse)
+
+    citatonSlip?.print(reason)
+  }
+
+  /**
    * Stamps the passport if the item is a stamp released on the open passport.
    *
    * @param {InspectableItemView} item - The released item.
@@ -334,6 +357,6 @@ export class GameView {
    * @returns {InspectableItemView[]} The passport, the discrepancy list and the stamps.
    */
   #items() {
-    return [this.#passportView, this.#discrepancyView, ...this.stamps]
+    return [this.#passportView, this.#discrepancyView, ...this.stamps, ...this.#citations]
   }
 }
