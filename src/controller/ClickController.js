@@ -1,4 +1,10 @@
-import { Button } from '../view/Button.js'
+/**
+ * Something on the canvas the player can click, for example a Button or a TextButton.
+ *
+ * @typedef {object} Clickable
+ * @property {(x: number, y: number) => boolean} contains - Returns true if the point is on it.
+ * @property {() => void} click - Does what it is for.
+ */
 
 /**
  * Lets the player click buttons on the canvas.
@@ -12,25 +18,27 @@ export class ClickController {
   #canvas
 
   /**
-   * The buttons that can be clicked.
+   * Returns the buttons that can be clicked right now.
    *
-   * @type {Button[]}
+   * @type {() => Clickable[]}
    */
-  #buttons
+  #getButtons
 
   /**
    * Starts listening for clicks on the canvas.
    *
    * @param {HTMLCanvasElement} canvas - The canvas the game is drawn on.
-   * @param {Button[]} buttons - The buttons that can be clicked.
+   * @param {() => Clickable[]} getButtons - Returns the buttons that can be clicked right now.
    */
-  constructor(canvas, buttons) {
+  constructor(canvas, getButtons) {
     this.#canvas = canvas
-    this.#buttons = buttons
+    this.#getButtons = getButtons
 
-    canvas.addEventListener('click', (event) => this.#click(event))
+    canvas.addEventListener('click', (event) => {
+      this.#click(event)
+    })
   }
-  
+
   /**
    * Clicks the button under the pointer, if there is one.
    *
@@ -41,7 +49,7 @@ export class ClickController {
     const x = (event.clientX - rect.left) * (this.#canvas.width / rect.width)
     const y = (event.clientY - rect.top) * (this.#canvas.height / rect.height)
 
-    const button = this.#buttons.find((b) => b.contains(x, y))
+    const button = this.#getButtons().find((b) => b.contains(x, y))
 
     if (button) {
       button.click()
