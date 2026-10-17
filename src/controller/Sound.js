@@ -55,6 +55,14 @@ export class Sound {
   }
 
   /**
+   * Pauses the sound from playing and resets it to the start of the track.
+   */
+  stop() {
+    this.#sound.pause()
+    this.#sound.currentTime = 0
+  }
+
+  /**
    * Makes the sound start over each time it ends.
    */
   loop() {

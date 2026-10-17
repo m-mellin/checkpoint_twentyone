@@ -1,12 +1,13 @@
 import { SpriteRenderer } from '2d-sprite-renderer'
 import './style.css'
 import { GameController } from './controller/GameController.js'
-import { GameView } from './view/GameView'
-import { DragController } from './controller/DragController'
-import { SoundController } from './controller/SoundController'
-import { ClickController } from './controller/ClickController'
-import { DISCREPANCY_TEXTS } from './view/DiscrepancyView'
-import { StartView } from './view/StartView'
+import { GameView } from './view/GameView.js'
+import { DragController } from './controller/DragController.js'
+import { SoundController } from './controller/SoundController.js'
+import { ClickController } from './controller/ClickController.js'
+import { DISCREPANCY_TEXTS } from './view/DiscrepancyView.js'
+import { StartView } from './view/StartView.js'
+import { EndView } from './view/EndView.js'
 
 /**
  * The pixel font used for all text. It must be loaded before any text is measured.
@@ -77,7 +78,12 @@ const soundController = createSounds()
  */
 let gameView = null
 
-const startView = new StartView(renderer, {
+/**
+ * The screen whose buttons can be clicked right now: the start screen, the game or the end screen.
+ *
+ * @type {StartView | GameView | EndView}
+ */
+let currentScreen = new StartView(renderer, {
   gameWidth: GAME_WIDTH,
   gameHeight: GAME_HEIGHT,
   /**
@@ -91,8 +97,30 @@ const startView = new StartView(renderer, {
 })
 
 new ClickController(canvas, () => {
-  return gameView ? gameView.buttons : startView.buttons
+  return currentScreen.buttons
 })
+
+/**
+ * Stops the game and shows the end screen, where the player can start a new game.
+ */
+function gameOver() {
+  renderer.clear()
+  soundController.stopAllSounds()
+  gameView = null
+
+  currentScreen = new EndView(renderer, {
+    gameWidth: GAME_WIDTH,
+    gameHeight: GAME_HEIGHT,
+    /**
+     * Starts a new game at the difficulty the player chose.
+     *
+     * @param {'easy' | 'medium' | 'hard'} difficulty - The chosen difficulty.
+     */
+    onRestart: (difficulty) => {
+      startGame(difficulty)
+    }
+  })
+}
 
 /**
  * Creates every sound and sets its start volume.
@@ -191,6 +219,7 @@ function startGame(difficulty) {
   }
 
   gameView = view
+  currentScreen = view
 
   startAmbientSounds()
   callNextTraveller()
@@ -215,6 +244,8 @@ function judgeDecision(approved) {
      soundController.play(SOUNDS.NEXT)
     }, NEXT_SOUND_DELAY)
     callNextTraveller()
+  } else {
+    gameOver()
   }
 }
 

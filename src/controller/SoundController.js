@@ -56,6 +56,15 @@ export class SoundController {
   setVolume(name, volume) {
     this.#findSound(name).volume = volume
   }
+
+  /**
+   * Stops all sounds from playing.
+   */
+  stopAllSounds() {
+    for (const sound of this.#sounds) {
+      sound.stop()
+    }
+  }
   
   /**
    * Returns the sound with the given name.
