@@ -115,10 +115,10 @@ export class SliderView {
    * @param {number} options.x - The x coordinate of the track's left end.
    * @param {number} options.y - The y coordinate of the track's centre line.
    * @param {number} options.width - The length of the track.
-   * @param {number} [options.value=0.1] - The start value, from 0 to 1.
+   * @param {number} [options.value=0.4] - The start value, from 0 to 1.
    * @param {(value: number) => void} [options.onChange] - Called with the new value when the handle moves.
    */
-  constructor(renderer, { label, x, y, width, value = 0.1, onChange = () => {} }) {
+  constructor(renderer, { label, x, y, width, value = 0.4, onChange = () => {} }) {
     this.#trackX = x
     this.#trackWidth = width
     this.#centerY = y
