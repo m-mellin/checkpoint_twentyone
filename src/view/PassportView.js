@@ -3,7 +3,7 @@ import { TextLine } from './TextLine.js'
 import { Passport } from '../model/Passport.js'
 import { InspectableItemView } from './InspectableItemView.js'
 import { formatDate } from './formatDate.js'
-import portraitData from '../data/potraits.json'
+import portraitData from '../data/portraits.json'
 
 /**
  * Images of the passport in its open and closed variants.

@@ -1,5 +1,5 @@
 import { Sprite, SpriteRegion, SpriteRenderer } from '2d-sprite-renderer'
-import portraitData from '../data/potraits.json'
+import portraitData from '../data/portraits.json'
 import { Traveller } from '../model/Traveller.js'
 
 /**

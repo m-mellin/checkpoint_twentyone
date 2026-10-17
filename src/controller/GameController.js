@@ -1,6 +1,6 @@
 import nationData from '../data/nations.json'
 import difficulties from '../data/difficulties.json'
-import portraitData from '../data/potraits.json'
+import portraitData from '../data/portraits.json'
 import discrepanciesData from '../data/discrepancies.json'
 
 import { Nation } from '../model/Nation.js'
