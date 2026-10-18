@@ -23,7 +23,7 @@ const LINE_DISTANCE = 40
  * How long the screen takes to fade in, stays, and takes to fade out, in milliseconds.
  */
 const FADE_IN_TIME = 800
-const SHOW_TIME = 2500
+const SHOW_TIME = 4000
 const FADE_OUT_TIME = 1000
 
 /**
@@ -136,14 +136,16 @@ export class NextDayView {
 
   /**
    * Fades in the screen with the new day and date, then fades it out again.
+   * It fades in first, unless it should start by covering the game.
    *
    * @param {number} day - The number of the new day, starting at 1.
    * @param {Date} date - The new game date.
-   * @param {object} callbacks - What happens during the animation.
-   * @param {() => void} callbacks.onCovered - Called when the screen fully covers the game.
-   * @param {() => void} callbacks.onFinished - Called when the screen has faded out.
+   * @param {object} options - What happens during the animation.
+   * @param {() => void} options.onCovered - Called when the screen fully covers the game.
+   * @param {() => void} options.onFinished - Called when the screen has faded out.
+   * @param {boolean} [options.startCovered=false] - True to skip the fade in, for example when the game starts.
    */
-  play(day, date, { onCovered, onFinished }) {
+  play(day, date, { onCovered, onFinished, startCovered = false }) {
     this.#titleText = `DAY ${day}`
     this.#centre(this.#title, this.#titleText, this.#gameSize.height / 2 - LINE_DISTANCE)
     this.#title.text = ''
@@ -152,9 +154,11 @@ export class NextDayView {
 
     this.#onCovered = onCovered
     this.#onFinished = onFinished
-    this.#elapsed = 0
+    this.#elapsed = startCovered ? FADE_IN_TIME : 0
     this.#hasCovered = false
     this.#isPlaying = true
+
+    this.#setOpacity(startCovered ? 1 : 0)
   }
 
   /**
@@ -167,11 +171,7 @@ export class NextDayView {
     if (!this.#isPlaying) return
 
     this.#elapsed += deltaTime
-    const opacity = this.#opacity()
-
-    this.#background.color = `rgba(${BACKGROUND_RGB}, ${opacity})`
-    this.#title.textColor = `rgba(${TEXT_RGB}, ${opacity})`
-    this.#dateLine.textColor = `rgba(${TEXT_RGB}, ${opacity})`
+    this.#setOpacity(this.#opacity())
 
     // The day is typed one letter at a time once the screen has faded in
     const letters = Math.floor((this.#elapsed - FADE_IN_TIME) / LETTER_TIME)
@@ -207,6 +207,17 @@ export class NextDayView {
     }
 
     return Math.max(0, 1 - (this.#elapsed - fadeOutStart) / FADE_OUT_TIME)
+  }
+
+  /**
+   * Makes the screen and its text as visible as the opacity says.
+   *
+   * @param {number} opacity - From 0 (invisible) to 1 (covers the game).
+   */
+  #setOpacity(opacity) {
+    this.#background.color = `rgba(${BACKGROUND_RGB}, ${opacity})`
+    this.#title.textColor = `rgba(${TEXT_RGB}, ${opacity})`
+    this.#dateLine.textColor = `rgba(${TEXT_RGB}, ${opacity})`
   }
 
   /**

@@ -222,7 +222,15 @@ function startGame(difficulty) {
   currentScreen = view
 
   startAmbientSounds()
+  
+  view.startNextDay(
+    gameController.day,
+    gameController.gameDate,
+    () => {
   callNextTraveller()
+    },
+    true
+  )
 }
 
 /**

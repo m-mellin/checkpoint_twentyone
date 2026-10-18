@@ -246,11 +246,40 @@ export class GameView {
   }
 
   /**
-   * Returns the buttons on the screen, for example to let the player click them.
+   * Returns whether the day screen is shown. The player can't use the booth meanwhile.
+   *
+   * @returns {boolean} True while the day screen is shown.
+   */
+  get isShowingDay() {
+    return this.#nextDayView.isPlaying
+  }
+
+  /**
+   * Returns everything the player can drag right now, in the order they are drawn.
+   * Nothing can be dragged while the day screen is shown.
+   *
+   * @returns {import('../controller/DragController.js').Draggable[]} The items and the volume sliders.
+   */
+  get draggables() {
+    if (this.isShowingDay) return []
+
+    return [
+      this.#passportView,
+      this.#discrepancyView,
+      ...this.stamps,
+      ...this.#citations,
+      ...this.volumeSliders
+    ]
+  }
+
+  /**
+   * Returns the buttons the player can click right now. None while the day screen is shown.
    *
    * @returns {Button[]} The buttons.
    */
   get buttons() {
+    if (this.isShowingDay) return []
+
     return [this.#settingsButton]
   }
 
@@ -286,25 +315,27 @@ export class GameView {
   }
 
   /**
-   * Ends the day: the traveller leaves and the next day screen fades in. While it covers the game,
-   * the citations are removed, the items go back to where they started, and the new date is shown.
+   * Starts a day: the traveller leaves and the day screen is shown. While it covers the game,
+   * the citations are removed, the items go back to where they started, and the date is shown.
    *
-   * @param {number} day - The number of the new day, starting at 1.
-   * @param {Date} date - The new game date.
+   * @param {number} day - The number of the day, starting at 1.
+   * @param {Date} date - The game date of the day.
    * @param {() => void} onFinished - Called when the screen has faded out and the day can begin.
+   * @param {boolean} [startCovered=false] - True to skip the fade in, for example when the game starts.
    */
-  startNextDay(day, date, onFinished) {
+  startNextDay(day, date, onFinished, startCovered = false) {
     this.travellerLeaves()
 
     this.#nextDayView.play(day, date, {
       /**
-       * Clears the desk for the new day while nobody can see it.
+       * Clears the desk for the day while nobody can see it.
        */
       onCovered: () => {
         this.#clearDesk()
         this.gameDate = date
       },
-      onFinished
+      onFinished,
+      startCovered
     })
   }
 
