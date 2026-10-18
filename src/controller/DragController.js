@@ -23,11 +23,11 @@ export class DragController {
   #canvas
 
   /**
-   * Everything that can be dragged, in the order they are drawn. The last one is on top.
+   * Returns everything that can be dragged right now, in the order they are drawn. The last one is on top.
    *
-   * @type {Draggable[]}
+   * @type {() => Draggable[]}
    */
-  #targets
+  #getTargets
 
   /**
    * The target being dragged right now, or null if nothing is.
@@ -55,12 +55,12 @@ export class DragController {
    * Starts listening for drags on the canvas.
    *
    * @param {HTMLCanvasElement} canvas - The canvas the game is drawn on.
-   * @param {Draggable[]} targets - Everything that can be dragged, in the order they are drawn.
+   * @param {() => Draggable[]} getTargets - Returns everything that can be dragged right now, in the order they are drawn.
    * @param {(target: Draggable) => void} [onDrop] - Called with the target when the player releases it.
    */
-  constructor(canvas, targets, onDrop = () => {}) {
+  constructor(canvas, getTargets, onDrop = () => {}) {
     this.#canvas = canvas
-    this.#targets = targets
+    this.#getTargets = getTargets
     this.#onDrop = onDrop
 
     canvas.addEventListener('pointerdown', (event) => this.#grab(event))
@@ -98,9 +98,11 @@ export class DragController {
    * @returns {Draggable | null} The topmost target at the point, or null if there is none.
    */
   #topmostAt(x, y) {
-    for (let i = this.#targets.length - 1; i >= 0; i--) {
-      if (this.#targets[i].contains(x, y)) {
-        return this.#targets[i]
+    const targets = this.#getTargets()
+
+    for (let i = targets.length - 1; i >= 0; i--) {
+      if (targets[i].contains(x, y)) {
+        return targets[i]
       }
     }
 

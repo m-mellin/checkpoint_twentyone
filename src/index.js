@@ -94,6 +94,13 @@ new ClickController(canvas, () => {
   return currentScreen.buttons
 })
 
+new DragController(canvas, () => {
+    return gameView ? gameView.draggables : []
+  }, (dropped) => {
+    gameView?.dropped(dropped)
+  }
+)
+
 /**
  * Stops the game and shows the end screen, where the player can start a new game.
  */
@@ -179,21 +186,6 @@ function startGame(difficulty) {
     ]
   })
 
-  new DragController(
-    canvas,
-    [
-      view.passport,
-      view.discrepancyList,
-      ...view.stamps,
-      ...view.citations,
-      ...view.volumeSliders
-    ],
-    (dropped) => {
-      view.dropped(dropped)
-    }
-  )
-
-
   view.gameDate = gameController.gameDate
   
   /**
@@ -228,7 +220,7 @@ function startGame(difficulty) {
     gameController.day,
     gameController.gameDate,
     () => {
-  callNextTraveller()
+      callNextTraveller()
     },
     true
   )
