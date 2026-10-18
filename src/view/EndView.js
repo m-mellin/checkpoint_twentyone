@@ -20,12 +20,46 @@ const IMAGE_WIDTH = 1536
 const IMAGE_HEIGHT = 1024
 
 /**
- * The space between two difficulty buttons, in pixels.
+ * How the statistics are written.
  */
-const BUTTON_DISTANCE = 90
+const STATS_FONT = '20px "Press Start 2P"'
+const STATS_COLOR = '#fff'
 
 /**
- * The end screen, shown when the game is over. The player chooses a difficulty to play again.
+ * The y coordinate of the first statistics line, just under "GAME OVER" in the image.
+ */
+const STATS_Y = 630
+
+/**
+ * The space between two statistics lines, in pixels.
+ */
+const LINE_DISTANCE = 36
+
+/**
+ * The see-through box behind the statistics, which makes them easier to read.
+ */
+const BOX_COLOR = 'rgba(0, 0, 0, 0.6)'
+const BOX_WIDTH = 600
+const BOX_PADDING = 16
+
+/**
+ * The y coordinate of the first difficulty button, and the space between two buttons, in pixels.
+ */
+const BUTTONS_Y = 820
+const BUTTON_DISTANCE = 70
+
+/**
+ * How a game went.
+ *
+ * @typedef {object} GameStats
+ * @property {number} days - How many days the player played.
+ * @property {number} correct - How many passports the player judged right.
+ * @property {number} incorrect - How many passports the player judged wrong.
+ */
+
+/**
+ * The end screen, shown when the game is over. Shows how the game went,
+ * and lets the player choose a difficulty to play again.
  */
 export class EndView {
   /**
@@ -39,13 +73,10 @@ export class EndView {
    * Creates the end screen and adds it to the renderer.
    *
    * @param {SpriteRenderer} renderer - The renderer to draw with.
-   * @param {object} options - The size of the game and what happens when a difficulty is chosen.
+   * @param {object} options - The size of the game, how it went, and what happens when a difficulty is chosen.
    * @param {number} options.gameWidth - The width of the canvas.
    * @param {number} options.gameHeight - The height of the canvas.
-   * @param {object} options.stats - How the game went.
-   * @param {number} options.stats.days - How many days the player played.
-   * @param {number} options.stats.correct - How many passports the player judged right.
-   * @param {number} options.stats.incorrect - How many passports the player judged wrong.
+   * @param {GameStats} options.stats - How the game went.
    * @param {(difficulty: 'easy' | 'medium' | 'hard') => void} options.onRestart - Called with the chosen difficulty.
    */
   constructor(renderer, { gameWidth, gameHeight, stats, onRestart }) {
@@ -55,26 +86,15 @@ export class EndView {
     image.x = (gameWidth - image.width) / 2
     image.y = 0
     renderer.add(image)
-    
-    const texts = [
-      `DAYS PLAYED: ${stats.days}`,
-      `CORRECT PASSPORTS: ${stats.correct}`,
-      `INCORRECT STAMPED PASSPORTS: ${stats.incorrect}`
-    ]
 
-    for (const [index, text] of texts.entries()) {
-      const line = new TextLine(text, { color: '#fff', font: '16px "Press Start 2P"'})
-      line.x = (gameWidth - line.width) / 2
-      line.y = index * 20
-      renderer.add(line.sprite)
-    }
+    this.#addStats(renderer, gameWidth, stats)
 
     this.#buttons = Object.values(Difficulties).map(
       (difficulty, index) =>
         new TextButton(renderer, {
           text: difficulty.toUpperCase(),
           centerX: gameWidth / 2,
-          y: gameHeight / 1.4 + index * BUTTON_DISTANCE,
+          y: BUTTONS_Y + index * BUTTON_DISTANCE,
           /**
            * Starts a new game at this button's difficulty.
            */
@@ -92,5 +112,35 @@ export class EndView {
    */
   get buttons() {
     return this.#buttons
+  }
+
+  /**
+   * Writes the statistics, one centred line each, on a see-through box.
+   *
+   * @param {SpriteRenderer} renderer - The renderer to draw with.
+   * @param {number} gameWidth - The width of the canvas.
+   * @param {{days: number, correct: number, incorrect: number}} stats - How the game went.
+   */
+  #addStats(renderer, gameWidth, stats) {
+    const texts = [
+      `DAYS PLAYED: ${stats.days}`,
+      `CORRECT PASSPORTS: ${stats.correct}`,
+      `INCORRECT STAMPED PASSPORTS: ${stats.incorrect}`
+    ]
+
+    renderer.add(
+      new BlockSprite(BOX_WIDTH, texts.length * LINE_DISTANCE + BOX_PADDING * 2, {
+        x: (gameWidth - BOX_WIDTH) / 2,
+        y: STATS_Y - BOX_PADDING,
+        color: BOX_COLOR
+      })
+    )
+
+    for (const [index, text] of texts.entries()) {
+      const line = new TextLine(text, { color: STATS_COLOR, font: STATS_FONT })
+      line.x = (gameWidth - line.width) / 2
+      line.y = STATS_Y + index * LINE_DISTANCE
+      renderer.add(line.sprite)
+    }
   }
 }
