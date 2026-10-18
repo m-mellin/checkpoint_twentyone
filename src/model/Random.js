@@ -1,21 +1,30 @@
+import { RandomGenerator, Randomizer } from 'dice-rng-toolkit'
+
 /**
  * Picks random values. The source of randomness can be replaced.
  */
 export class Random {
   /**
-   * Returns a number from 0 (inclusive) to 1 (exclusive).
+   * The seedable generator that all values come from.
    *
-   * @type {() => number}
+   * @type {RandomGenerator}
    */
-  #next
+  #generator
+
+  /**
+   * Picks random items from lists, using the generator.
+   *
+   * @type {Randomizer}
+   */
+  #randomizer = new Randomizer()
 
   /**
    * Creates a random picker.
    *
-   * @param {() => number} [next=Math.random] - Returns a number from 0 (inclusive) to 1 (exclusive).
+   * @param {number} [seed=Date.now()] - The seed.
    */
-  constructor(next = Math.random) {
-    this.#next = next
+  constructor(seed = Date.now()) {
+    this.#generator = new RandomGenerator(seed)
   }
 
   /**
@@ -31,7 +40,7 @@ export class Random {
       throw new RangeError('Cannot pick from an empty list')
     }
 
-    return items[Math.floor(this.#next() * items.length)]
+    return this.#randomizer.pick([...items], this.#generator)
   }
 
   /**
@@ -42,7 +51,7 @@ export class Random {
    * @returns {number} The random number.
    */
   integer(min, max) {
-    return min + Math.floor(this.#next() * (max - min + 1))
+    return this.#generator.nextInt(min, max)
   }
 
   /**
@@ -52,6 +61,6 @@ export class Random {
    * @returns {boolean} True or false.
    */
   chance(probability) {
-    return this.#next() < probability
+    return this.#generator.nextBoolean(probability)
   }
 }

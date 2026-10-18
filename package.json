@@ -43,6 +43,7 @@
     "vitest": "^5.0.0"
   },
   "dependencies": {
-    "2d-sprite-renderer": "github:m-mellin/2d-sprite-renderer#feature/block-sprite"
+    "2d-sprite-renderer": "github:m-mellin/2d-sprite-renderer#feature/block-sprite",
+    "dice-rng-toolkit": "^0.1.0"
   }
 }
