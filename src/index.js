@@ -112,6 +112,11 @@ function gameOver() {
   currentScreen = new EndView(renderer, {
     gameWidth: GAME_WIDTH,
     gameHeight: GAME_HEIGHT,
+    stats: {
+      days: gameController.day,
+      correct: gameController.correctDecisions,
+      incorrect: gameController.incorrectDecisions
+    },
     /**
      * Starts a new game at the difficulty the player chose.
      *
