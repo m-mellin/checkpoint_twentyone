@@ -25,7 +25,7 @@ const PORTRAIT_SCALE = 2
 /**
  * The y coordinate of the traveller's top edge when standing still, in pixels.
  */
-const TRAVELLER_Y = 260
+const TRAVELLER_Y = 320
 
 /**
  * How slowly the traveller breathes. A higher value gives slower breathing.
