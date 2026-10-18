@@ -239,7 +239,7 @@ function judgeDecision(approved) {
     gameView?.addCitation(reason)
   }
 
-  if (gameController.incorrectDecisions < MAX_MISTAKES) {
+  if (gameController.citations < MAX_MISTAKES) {
     setTimeout(() => {
      soundController.play(SOUNDS.NEXT)
     }, NEXT_SOUND_DELAY)
@@ -269,8 +269,9 @@ function callNextTraveller() {
 
   if (traveller === null) {
     gameController.startNextDay()
-    gameView.gameDate = gameController.gameDate
-    callNextTraveller()
+    gameView.startNextDay(gameController.day, gameController.gameDate, () => {
+      callNextTraveller()
+    })
     return
   }
 
