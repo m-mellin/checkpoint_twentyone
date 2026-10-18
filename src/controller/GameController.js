@@ -9,12 +9,12 @@ import { Sex } from '../model/Person.js'
 import { TravellerGenerator } from '../model/TravellerGenerator.js'
 import { Traveller } from '../model/Traveller.js'
 import { Discrepancy } from '../model/Discrepancy.js'
-import { addDays } from '../model/dates'
+import { addDays } from '../model/dates.js'
 
 /**
  * How many travellers come to the checkpoint each day.
  */
-const TRAVELLERS_PER_DAY = 10
+const TRAVELLERS_PER_DAY = 1
 
 /**
  * The share of passports that are forged, from 0 to 1.
@@ -73,6 +73,13 @@ export class GameController {
   #gameDate = new Date()
 
   /**
+   * Which day of the game it is, starting at 1.
+   *
+   * @type {number}
+   */
+  #day = 1
+
+  /**
    * The difficulty the game was started at.
    *
    * @type {'easy' | 'medium' | 'hard'}
@@ -87,18 +94,23 @@ export class GameController {
   #currentTraveller = null
 
   /**
-   * How many decisions the player has got right today.
+   * How many decisions the player has got right.
    *
    * @type {number}
    */
   #correctDecisions = 0
   
   /**
-   * How many decisions the player has got wrong today.
+   * How many decisions the player has got wrong.
    *
    * @type {number}
    */
   #incorrectDecisions = 0
+
+  /**
+   * How many citations the player has today
+   */
+  #citations = 0
 
   /**
    * Starts a new game. Anything from an earlier game is replaced.
@@ -115,6 +127,7 @@ export class GameController {
 
     this.#gameDifficulty = difficulty
     this.#gameDate = this.#today()
+    this.#day = 1
 
     this.#nations = new Repository(Nation)
     this.#discrepancies = new Repository(Discrepancy)
@@ -124,6 +137,7 @@ export class GameController {
     this.#currentTraveller = null
     this.#correctDecisions = 0
     this.#incorrectDecisions = 0
+    this.#citations = 0
 
     this.#generateNations(difficulty)
     this.#generateDiscrepancies(difficulty)
@@ -135,10 +149,12 @@ export class GameController {
    * The nations, the discrepancies and the score are kept.
    */
   startNextDay() {
+    this.#day++
     this.#gameDate = addDays(this.#gameDate, 1)
     this.#travellers = new Repository(Traveller)
     this.#nextTravellerIndex = 0
     this.#currentTraveller = null
+    this.#citations = 0
     
     this.#generateTravellers(this.#gameDate)
   }
@@ -168,6 +184,24 @@ export class GameController {
    */
   get gameDate() {
     return new Date(this.#gameDate)
+  }
+
+  /**
+   * Returns which day of the game it is.
+   *
+   * @returns {number} The day, starting at 1.
+   */
+  get day() {
+    return this.#day
+  }
+
+  /**
+   * Returns the current days citation amount.
+   * 
+   * @returns {number} The citation amount.
+   */
+  get citations() {
+    return this.#citations
   }
 
   /**
@@ -229,6 +263,7 @@ export class GameController {
       this.#correctDecisions++
     } else {
       this.#incorrectDecisions++
+      this.#citations++
     }
 
     return { isCorrect, discrepancy }
