@@ -1,4 +1,4 @@
-import { RandomGenerator, Randomizer } from "dice-rng-toolkit"
+import { RandomGenerator, Randomizer } from 'dice-rng-toolkit'
 
 /**
  * Picks random values. The source of randomness can be replaced.
