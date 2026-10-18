@@ -4,14 +4,14 @@
 export class Sound {
   /**
    * The name of the Sound object.
-   * 
+   *
    * @type {string}
    */
   #name
 
   /**
    * The audio element.
-   * 
+   *
    * @type {HTMLAudioElement}
    */
   #sound
@@ -38,7 +38,7 @@ export class Sound {
 
   /**
    * Returns the audio element.
-   * 
+   *
    * @returns {HTMLAudioElement} The audio element.
    */
   get sound() {
@@ -71,7 +71,7 @@ export class Sound {
 
   /**
    * Returns the volume of the audio element.
-   * 
+   *
    * @returns {number} The volume, from 0 (silent) to 1 (full).
    */
   get volume() {
@@ -80,7 +80,7 @@ export class Sound {
 
   /**
    * Sets the volume of the audio element.
-   * 
+   *
    * @param {number} value - The volume, from 0 (silent) to 1 (full).
    * @throws {RangeError} If the volume is not between 0 and 1.
    */

@@ -74,7 +74,7 @@ export class LcdDisplayView {
   get value() {
     return this.#text.text
   }
-  
+
   /**
    * Sets the text shown on the display.
    *

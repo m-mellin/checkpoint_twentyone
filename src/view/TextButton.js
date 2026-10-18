@@ -49,11 +49,15 @@ export class TextButton {
    */
   constructor(renderer, { text, centerX, y, onClick }) {
     this.#label = new TextLine(text, { color: TEXT_COLOR })
-    this.#box = new BlockSprite(this.#label.width + PADDING * 2, this.#label.height + PADDING * 2, {
-      x: centerX - this.#label.width / 2 - PADDING,
-      y,
-      color: BUTTON_COLOR
-    })
+    this.#box = new BlockSprite(
+      this.#label.width + PADDING * 2,
+      this.#label.height + PADDING * 2,
+      {
+        x: centerX - this.#label.width / 2 - PADDING,
+        y,
+        color: BUTTON_COLOR
+      }
+    )
 
     this.#label.x = this.#box.x + PADDING
     this.#label.y = this.#box.y + PADDING

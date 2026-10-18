@@ -80,7 +80,7 @@ export class InspectableItemView {
    * @type {number}
    */
   #startX
-  
+
   /**
    * The y coordinate the item started at.
    *

@@ -1,29 +1,125 @@
 [
-  { "id": "M0", "sex": "M", "region": { "x": 31, "y": 21, "width": 240, "height": 157 } },
-  { "id": "F0", "sex": "F", "region": { "x": 292, "y": 19, "width": 220, "height": 157 } },
-  { "id": "M1", "sex": "M", "region": { "x": 527, "y": 17, "width": 228, "height": 157 } },
-  { "id": "F1", "sex": "F", "region": { "x": 780, "y": 11, "width": 216, "height": 157 } },
-  { "id": "M2", "sex": "M", "region": { "x": 1018, "y": 19, "width": 231, "height": 157 } },
-  { "id": "M3", "sex": "M", "region": { "x": 1270, "y": 19, "width": 234, "height": 157 } },
+  {
+    "id": "M0",
+    "sex": "M",
+    "region": { "x": 31, "y": 21, "width": 240, "height": 157 }
+  },
+  {
+    "id": "F0",
+    "sex": "F",
+    "region": { "x": 292, "y": 19, "width": 220, "height": 157 }
+  },
+  {
+    "id": "M1",
+    "sex": "M",
+    "region": { "x": 527, "y": 17, "width": 228, "height": 157 }
+  },
+  {
+    "id": "F1",
+    "sex": "F",
+    "region": { "x": 780, "y": 11, "width": 216, "height": 157 }
+  },
+  {
+    "id": "M2",
+    "sex": "M",
+    "region": { "x": 1018, "y": 19, "width": 231, "height": 157 }
+  },
+  {
+    "id": "M3",
+    "sex": "M",
+    "region": { "x": 1270, "y": 19, "width": 234, "height": 157 }
+  },
 
-  { "id": "F2", "sex": "F", "region": { "x": 36, "y": 203, "width": 227, "height": 157 } },
-  { "id": "M4", "sex": "M", "region": { "x": 288, "y": 197, "width": 224, "height": 157 } },
-  { "id": "F3", "sex": "F", "region": { "x": 532, "y": 203, "width": 218, "height": 157 } },
-  { "id": "M5", "sex": "M", "region": { "x": 772, "y": 205, "width": 237, "height": 157 } },
-  { "id": "F4", "sex": "F", "region": { "x": 1021, "y": 200, "width": 225, "height": 157 } },
-  { "id": "M6", "sex": "M", "region": { "x": 1270, "y": 197, "width": 232, "height": 157 } },
+  {
+    "id": "F2",
+    "sex": "F",
+    "region": { "x": 36, "y": 203, "width": 227, "height": 157 }
+  },
+  {
+    "id": "M4",
+    "sex": "M",
+    "region": { "x": 288, "y": 197, "width": 224, "height": 157 }
+  },
+  {
+    "id": "F3",
+    "sex": "F",
+    "region": { "x": 532, "y": 203, "width": 218, "height": 157 }
+  },
+  {
+    "id": "M5",
+    "sex": "M",
+    "region": { "x": 772, "y": 205, "width": 237, "height": 157 }
+  },
+  {
+    "id": "F4",
+    "sex": "F",
+    "region": { "x": 1021, "y": 200, "width": 225, "height": 157 }
+  },
+  {
+    "id": "M6",
+    "sex": "M",
+    "region": { "x": 1270, "y": 197, "width": 232, "height": 157 }
+  },
 
-  { "id": "M7", "sex": "M", "region": { "x": 29, "y": 376, "width": 225, "height": 157 } },
-  { "id": "F5", "sex": "F", "region": { "x": 287, "y": 376, "width": 211, "height": 157 } },
-  { "id": "M8", "sex": "M", "region": { "x": 523, "y": 376, "width": 227, "height": 157 } },
-  { "id": "F6", "sex": "F", "region": { "x": 775, "y": 378, "width": 215, "height": 157 } },
-  { "id": "M9", "sex": "M", "region": { "x": 1014, "y": 376, "width": 229, "height": 157 } },
-  { "id": "M10", "sex": "M", "region": { "x": 1270, "y": 380, "width": 234, "height": 157 } },
+  {
+    "id": "M7",
+    "sex": "M",
+    "region": { "x": 29, "y": 376, "width": 225, "height": 157 }
+  },
+  {
+    "id": "F5",
+    "sex": "F",
+    "region": { "x": 287, "y": 376, "width": 211, "height": 157 }
+  },
+  {
+    "id": "M8",
+    "sex": "M",
+    "region": { "x": 523, "y": 376, "width": 227, "height": 157 }
+  },
+  {
+    "id": "F6",
+    "sex": "F",
+    "region": { "x": 775, "y": 378, "width": 215, "height": 157 }
+  },
+  {
+    "id": "M9",
+    "sex": "M",
+    "region": { "x": 1014, "y": 376, "width": 229, "height": 157 }
+  },
+  {
+    "id": "M10",
+    "sex": "M",
+    "region": { "x": 1270, "y": 380, "width": 234, "height": 157 }
+  },
 
-  { "id": "F7", "sex": "F", "region": { "x": 29, "y": 548, "width": 220, "height": 157 } },
-  { "id": "M11", "sex": "M", "region": { "x": 274, "y": 550, "width": 236, "height": 157 } },
-  { "id": "M12", "sex": "M", "region": { "x": 524, "y": 550, "width": 228, "height": 157 } },
-  { "id": "F8", "sex": "F", "region": { "x": 775, "y": 552, "width": 215, "height": 157 } },
-  { "id": "M13", "sex": "M", "region": { "x": 1018, "y": 552, "width": 229, "height": 157 } },
-  { "id": "F9", "sex": "F", "region": { "x": 1280, "y": 551, "width": 219, "height": 157 } }
+  {
+    "id": "F7",
+    "sex": "F",
+    "region": { "x": 29, "y": 548, "width": 220, "height": 157 }
+  },
+  {
+    "id": "M11",
+    "sex": "M",
+    "region": { "x": 274, "y": 550, "width": 236, "height": 157 }
+  },
+  {
+    "id": "M12",
+    "sex": "M",
+    "region": { "x": 524, "y": 550, "width": 228, "height": 157 }
+  },
+  {
+    "id": "F8",
+    "sex": "F",
+    "region": { "x": 775, "y": 552, "width": 215, "height": 157 }
+  },
+  {
+    "id": "M13",
+    "sex": "M",
+    "region": { "x": 1018, "y": 552, "width": 229, "height": 157 }
+  },
+  {
+    "id": "F9",
+    "sex": "F",
+    "region": { "x": 1280, "y": 551, "width": 219, "height": 157 }
+  }
 ]

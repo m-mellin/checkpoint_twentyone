@@ -94,9 +94,12 @@ new ClickController(canvas, () => {
   return currentScreen.buttons
 })
 
-new DragController(canvas, () => {
+new DragController(
+  canvas,
+  () => {
     return gameView ? gameView.draggables : []
-  }, (dropped) => {
+  },
+  (dropped) => {
     gameView?.dropped(dropped)
   }
 )
@@ -157,7 +160,7 @@ function createSounds() {
 function startGame(difficulty) {
   renderer.clear()
   gameController.startGame(difficulty)
-  
+
   const view = new GameView(renderer, {
     gameWidth: GAME_WIDTH,
     gameHeight: GAME_HEIGHT,
@@ -174,7 +177,6 @@ function startGame(difficulty) {
           soundController.setVolume(SOUNDS.AMBIENT_TALKING, value)
           soundController.setVolume(SOUNDS.AMBIENT_MUSIC, value)
         }
-
       },
       {
         label: 'Voice volume',
@@ -192,7 +194,7 @@ function startGame(difficulty) {
   })
 
   view.gameDate = gameController.gameDate
-  
+
   /**
    * Plays the stamp sound when a stamp lands on the passport.
    */
@@ -220,7 +222,7 @@ function startGame(difficulty) {
   currentScreen = view
 
   startAmbientSounds()
-  
+
   view.startNextDay(
     gameController.day,
     gameController.gameDate,
@@ -241,7 +243,9 @@ function judgeDecision(approved) {
   const { isCorrect, discrepancy } = gameController.judge(approved)
 
   if (!isCorrect) {
-    const reason = discrepancy ? DISCREPANCY_TEXTS[discrepancy.code] : DENIED_VALID_PASSPORT
+    const reason = discrepancy
+      ? DISCREPANCY_TEXTS[discrepancy.code]
+      : DENIED_VALID_PASSPORT
     gameView?.addCitation(reason)
   }
 
@@ -295,7 +299,8 @@ let previousTimestamp = null
  * @param {number} timestamp - The current frame time, provided by requestAnimationFrame.
  */
 function gameLoop(timestamp) {
-  const deltaTime = previousTimestamp === null ? 0 : timestamp - previousTimestamp
+  const deltaTime =
+    previousTimestamp === null ? 0 : timestamp - previousTimestamp
   previousTimestamp = timestamp
 
   gameView?.update(Math.min(deltaTime, MAX_DELTA_TIME))

@@ -21,7 +21,7 @@ const HEIGHT = 1024
 /**
  * The space between two difficulty buttons, in pixels.
  */
-const BUTTON_DISTANCE = 90 
+const BUTTON_DISTANCE = 90
 
 /**
  * The start screen, where the player chooses a difficulty to begin the game.
@@ -44,9 +44,11 @@ export class StartView {
    * @param {(difficulty: 'easy' | 'medium' | 'hard') => void} options.onStart - Called with the chosen difficulty.
    */
   constructor(renderer, { gameWidth, gameHeight, onStart }) {
-    renderer.add(new BlockSprite(gameWidth, gameHeight, { color: BACKGROUND_COLOR }))
+    renderer.add(
+      new BlockSprite(gameWidth, gameHeight, { color: BACKGROUND_COLOR })
+    )
 
-    const image = new Sprite(IMAGE_SRC, {width: WIDTH, height: HEIGHT})
+    const image = new Sprite(IMAGE_SRC, { width: WIDTH, height: HEIGHT })
     image.x = (gameWidth - image.width) / 2
     image.y = 0
     renderer.add(image)

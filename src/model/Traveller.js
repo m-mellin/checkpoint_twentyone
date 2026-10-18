@@ -78,7 +78,7 @@ export class Traveller {
 
   /**
    * Returns true if the traveller has a genuine passport.
-   * 
+   *
    * @returns {boolean} True if genuine, false if not.
    */
   get hasGenuinePassport() {

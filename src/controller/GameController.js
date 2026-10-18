@@ -99,7 +99,7 @@ export class GameController {
    * @type {number}
    */
   #correctDecisions = 0
-  
+
   /**
    * How many decisions the player has got wrong.
    *
@@ -143,7 +143,7 @@ export class GameController {
     this.#generateDiscrepancies(difficulty)
     this.#generateTravellers(this.#gameDate)
   }
-  
+
   /**
    * Starts the next day: moves the game date one day forward and lets a new queue of travellers in.
    * The nations, the discrepancies and the score are kept.
@@ -155,7 +155,7 @@ export class GameController {
     this.#nextTravellerIndex = 0
     this.#currentTraveller = null
     this.#citations = 0
-    
+
     this.#generateTravellers(this.#gameDate)
   }
 
@@ -176,7 +176,7 @@ export class GameController {
   get difficulty() {
     return this.#gameDifficulty
   }
-  
+
   /**
    * Returns today's date in the game.
    *
@@ -197,7 +197,7 @@ export class GameController {
 
   /**
    * Returns the current days citation amount.
-   * 
+   *
    * @returns {number} The citation amount.
    */
   get citations() {
@@ -212,7 +212,7 @@ export class GameController {
   get correctDecisions() {
     return this.#correctDecisions
   }
-  
+
   /**
    * Returns how many decisions the player has got wrong today.
    *

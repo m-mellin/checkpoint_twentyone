@@ -65,7 +65,7 @@ export class SoundController {
       sound.stop()
     }
   }
-  
+
   /**
    * Returns the sound with the given name.
    *

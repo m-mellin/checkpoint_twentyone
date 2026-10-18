@@ -80,9 +80,14 @@ export class EndView {
    * @param {(difficulty: 'easy' | 'medium' | 'hard') => void} options.onRestart - Called with the chosen difficulty.
    */
   constructor(renderer, { gameWidth, gameHeight, stats, onRestart }) {
-    renderer.add(new BlockSprite(gameWidth, gameHeight, { color: BACKGROUND_COLOR }))
+    renderer.add(
+      new BlockSprite(gameWidth, gameHeight, { color: BACKGROUND_COLOR })
+    )
 
-    const image = new Sprite(IMAGE_SRC, { width: IMAGE_WIDTH, height: IMAGE_HEIGHT })
+    const image = new Sprite(IMAGE_SRC, {
+      width: IMAGE_WIDTH,
+      height: IMAGE_HEIGHT
+    })
     image.x = (gameWidth - image.width) / 2
     image.y = 0
     renderer.add(image)
@@ -129,11 +134,15 @@ export class EndView {
     ]
 
     renderer.add(
-      new BlockSprite(BOX_WIDTH, texts.length * LINE_DISTANCE + BOX_PADDING * 2, {
-        x: (gameWidth - BOX_WIDTH) / 2,
-        y: STATS_Y - BOX_PADDING,
-        color: BOX_COLOR
-      })
+      new BlockSprite(
+        BOX_WIDTH,
+        texts.length * LINE_DISTANCE + BOX_PADDING * 2,
+        {
+          x: (gameWidth - BOX_WIDTH) / 2,
+          y: STATS_Y - BOX_PADDING,
+          color: BOX_COLOR
+        }
+      )
     )
 
     for (const [index, text] of texts.entries()) {

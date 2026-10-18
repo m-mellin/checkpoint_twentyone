@@ -1,6 +1,6 @@
-import { SpriteRenderer } from "2d-sprite-renderer";
-import { InspectableItemView } from "./InspectableItemView";
-import { TextLine } from "./TextLine";
+import { SpriteRenderer } from '2d-sprite-renderer'
+import { InspectableItemView } from './InspectableItemView'
+import { TextLine } from './TextLine'
 
 /**
  * The citation's images, closed on the counter and open on the inspection desk.
@@ -18,7 +18,7 @@ const DOCUMENT_SCALE = 0.3
  */
 const OPEN_WIDTH = 2098 * DOCUMENT_SCALE
 const OPEN_HEIGHT = 316 * DOCUMENT_SCALE
-const CLOSED_WIDTH = 644  * DOCUMENT_SCALE
+const CLOSED_WIDTH = 644 * DOCUMENT_SCALE
 const CLOSED_HEIGHT = 157 * DOCUMENT_SCALE
 
 /**
@@ -62,14 +62,14 @@ export class CitationView extends InspectableItemView {
    *
    * @type {TextLine}
    */
-  #title = new TextLine(TITLE_TEXT, { color: TITLE_COLOR, font: TITLE_FONT})
+  #title = new TextLine(TITLE_TEXT, { color: TITLE_COLOR, font: TITLE_FONT })
 
   /**
    * The line that tells why the citation was given.
    *
    * @type {TextLine}
    */
-  #reasonLine = new TextLine('', { color: TEXT_COLOR, font: TEXT_FONT})
+  #reasonLine = new TextLine('', { color: TEXT_COLOR, font: TEXT_FONT })
 
   /**
    * Why the citation was given, or an empty string if it has not been printed.
@@ -80,7 +80,7 @@ export class CitationView extends InspectableItemView {
 
   /**
    * Creates an unused citation and adds it to the renderer. It stays hidden until it is printed.
-   * 
+   *
    * @param {SpriteRenderer} renderer - The renderer to draw with.
    */
   constructor(renderer) {
@@ -108,7 +108,7 @@ export class CitationView extends InspectableItemView {
 
   /**
    * Prints the citation onto the counter with the reason it was given.
-   * 
+   *
    * @param {string} reason - What the player missed, for example "WRONG ISSUING CITY".
    */
   print(reason) {
@@ -136,7 +136,7 @@ export class CitationView extends InspectableItemView {
     this.#reasonLine.x = this.x + REASON_OFFSET_X
     this.#reasonLine.y = this.y + REASON_OFFSET_Y
   }
-  
+
   /**
    * Shows the title and the reason on the inspection desk, and hides them on the counter.
    *
@@ -148,5 +148,4 @@ export class CitationView extends InspectableItemView {
     this.#title.text = isOpen ? TITLE_TEXT : ''
     this.#reasonLine.text = isOpen ? this.#reason : ''
   }
-
 }

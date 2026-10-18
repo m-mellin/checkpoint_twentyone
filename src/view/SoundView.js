@@ -92,7 +92,9 @@ export class SoundView {
     this.#gameWidth = gameWidth
     this.#gameHeight = gameHeight
 
-    this.#background = new BlockSprite(gameWidth, gameHeight, { color: BACKGROUND_COLOR })
+    this.#background = new BlockSprite(gameWidth, gameHeight, {
+      color: BACKGROUND_COLOR
+    })
 
     this.#title.x = (gameWidth - this.#title.width) / 2
     this.#title.y = gameHeight / 4
@@ -113,7 +115,7 @@ export class SoundView {
 
     this.hide()
   }
-  
+
   /**
    * Returns the volume sliders, for example to let the player drag them.
    *

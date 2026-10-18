@@ -118,7 +118,10 @@ export class SliderView {
    * @param {number} [options.value=0.4] - The start value, from 0 to 1.
    * @param {(value: number) => void} [options.onChange] - Called with the new value when the handle moves.
    */
-  constructor(renderer, { label, x, y, width, value = 0.4, onChange = () => {} }) {
+  constructor(
+    renderer,
+    { label, x, y, width, value = 0.4, onChange = () => {} }
+  ) {
     this.#trackX = x
     this.#trackWidth = width
     this.#centerY = y
@@ -130,10 +133,18 @@ export class SliderView {
       y: y - TRACK_HEIGHT / 2,
       color: TRACK_COLOR
     })
-    this.#handle = new BlockSprite(HANDLE_SIZE, HANDLE_SIZE, { color: HANDLE_COLOR })
+    this.#handle = new BlockSprite(HANDLE_SIZE, HANDLE_SIZE, {
+      color: HANDLE_COLOR
+    })
     this.#labelText = label.toUpperCase()
-    this.#label = new TextLine(this.#labelText, { color: TEXT_COLOR, font: TEXT_FONT })
-    this.#percentLabel = new TextLine(this.#valueAsPercent(), { color: TEXT_COLOR, font: TEXT_FONT })
+    this.#label = new TextLine(this.#labelText, {
+      color: TEXT_COLOR,
+      font: TEXT_FONT
+    })
+    this.#percentLabel = new TextLine(this.#valueAsPercent(), {
+      color: TEXT_COLOR,
+      font: TEXT_FONT
+    })
 
     renderer.add(this.#label.sprite)
     renderer.add(this.#percentLabel.sprite)
@@ -143,7 +154,7 @@ export class SliderView {
     this.#placeHandle()
     this.#placeLabels()
   }
-  
+
   /**
    * Returns the slider's value.
    *

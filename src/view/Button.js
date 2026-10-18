@@ -52,7 +52,7 @@ export class Button {
       y <= this.#sprite.y + this.#sprite.height
     )
   }
-  
+
   /**
    * Does what the button is for, by calling its onClick function.
    */

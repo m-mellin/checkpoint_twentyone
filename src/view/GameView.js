@@ -159,7 +159,10 @@ export class GameView {
       approves: false
     })
 
-    this.#citations = Array.from({ length: MAX_CITATIONS }, () => new CitationView(renderer))
+    this.#citations = Array.from(
+      { length: MAX_CITATIONS },
+      () => new CitationView(renderer)
+    )
 
     this.#dateDisplay = new LcdDisplayView(renderer, { x: 0, y: 1040 })
     this.#heightDisplay = new LcdDisplayView(renderer, { x: 1100, y: 1040 })
@@ -398,7 +401,7 @@ export class GameView {
 
   /**
    * Prints a citation for a mistake on the next unused slip. Does nothing if every slip is used.
-   * 
+   *
    * @param {string} reason - What the player missed, for example "WRONG ISSUING CITY".
    */
   addCitation(reason) {
@@ -458,7 +461,12 @@ export class GameView {
    * @returns {InspectableItemView[]} The passport, the discrepancy list and the stamps.
    */
   #items() {
-    return [this.#passportView, this.#discrepancyView, ...this.stamps, ...this.#citations]
+    return [
+      this.#passportView,
+      this.#discrepancyView,
+      ...this.stamps,
+      ...this.#citations
+    ]
   }
 
   /**
