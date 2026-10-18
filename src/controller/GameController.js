@@ -14,7 +14,7 @@ import { addDays } from '../model/dates.js'
 /**
  * How many travellers come to the checkpoint each day.
  */
-const TRAVELLERS_PER_DAY = 1
+const TRAVELLERS_PER_DAY = 15
 
 /**
  * The share of passports that are forged, from 0 to 1.
