@@ -75,6 +75,20 @@ export class InspectableItemView {
   #y
 
   /**
+   * The x coordinate the item started at.
+   *
+   * @type {number}
+   */
+  #startX
+  
+  /**
+   * The y coordinate the item started at.
+   *
+   * @type {number}
+   */
+  #startY
+
+  /**
    * Whether the item lies on the inspection desk (true) or on the counter (false).
    *
    * @type {boolean}
@@ -113,6 +127,8 @@ export class InspectableItemView {
     this.#inspectionDeskSprite = new Sprite(inspectionDesk.src)
     this.#x = x
     this.#y = y
+    this.#startX = x
+    this.#startY = y
 
     renderer.add(this.#counterSprite)
     renderer.add(this.#inspectionDeskSprite)
@@ -209,6 +225,13 @@ export class InspectableItemView {
     }
 
     this.#placeAll()
+  }
+
+  /**
+   * Moves the item back to where it started, for example when a new day begins.
+   */
+  moveToStart() {
+    this.moveTo(this.#startX, this.#startY)
   }
 
   /**
