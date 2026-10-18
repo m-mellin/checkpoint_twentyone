@@ -13,6 +13,7 @@ import { formatDate } from './formatDate.js'
 import { SliderView } from './SliderView.js'
 import { InspectableItemView } from './InspectableItemView.js'
 import { CitationView } from './CitationView.js'
+import { NextDayView } from './NextDayView.js'
 
 const MAX_CITATIONS = 10
 
@@ -92,6 +93,13 @@ export class GameView {
   #settingsButton
 
   /**
+   * The screen shown between two days, drawn on top of everything else.
+   *
+   * @type {NextDayView}
+   */
+  #nextDayView
+
+  /**
    * The passport to show when the traveller reaches the window, or null if there is none.
    *
    * @type {Passport | null}
@@ -169,6 +177,8 @@ export class GameView {
         this.#soundView.toggle()
       }
     })
+
+    this.#nextDayView = new NextDayView(renderer, { gameWidth, gameHeight })
   }
 
   /**
@@ -276,11 +286,35 @@ export class GameView {
   }
 
   /**
+   * Ends the day: the traveller leaves and the next day screen fades in. While it covers the game,
+   * the citations are removed, the items go back to where they started, and the new date is shown.
+   *
+   * @param {number} day - The number of the new day, starting at 1.
+   * @param {Date} date - The new game date.
+   * @param {() => void} onFinished - Called when the screen has faded out and the day can begin.
+   */
+  startNextDay(day, date, onFinished) {
+    this.travellerLeaves()
+
+    this.#nextDayView.play(day, date, {
+      /**
+       * Clears the desk for the new day while nobody can see it.
+       */
+      onCovered: () => {
+        this.#clearDesk()
+        this.gameDate = date
+      },
+      onFinished
+    })
+  }
+
+  /**
    * Moves the animations forward, and shows the waiting passport once the traveller has reached the window.
    *
    * @param {number} deltaTime - Milliseconds since the last frame.
    */
   update(deltaTime) {
+    this.#nextDayView.update(deltaTime)
     this.#travellerView.update(deltaTime)
 
     for (const item of this.#items()) {
@@ -377,5 +411,18 @@ export class GameView {
    */
   #items() {
     return [this.#passportView, this.#discrepancyView, ...this.stamps, ...this.#citations]
+  }
+
+  /**
+   * Removes every citation and moves the discrepancy list and the stamps back to where they started.
+   */
+  #clearDesk() {
+    for (const citation of this.#citations) {
+      citation.hide()
+    }
+
+    for (const item of [this.#discrepancyView, ...this.stamps]) {
+      item.moveToStart()
+    }
   }
 }
