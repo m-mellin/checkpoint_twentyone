@@ -1,6 +1,6 @@
 import nationData from '../data/nations.json'
 import difficulties from '../data/difficulties.json'
-import portraitData from '../data/potraits.json'
+import portraitData from '../data/portraits.json'
 import discrepanciesData from '../data/discrepancies.json'
 
 import { Nation } from '../model/Nation.js'
@@ -9,8 +9,16 @@ import { Sex } from '../model/Person.js'
 import { TravellerGenerator } from '../model/TravellerGenerator.js'
 import { Traveller } from '../model/Traveller.js'
 import { Discrepancy } from '../model/Discrepancy.js'
+import { addDays } from '../model/dates.js'
 
-const TRAVELLERS_PER_DAY = 10
+/**
+ * How many travellers come to the checkpoint each day.
+ */
+const TRAVELLERS_PER_DAY = 15
+
+/**
+ * The share of passports that are forged, from 0 to 1.
+ */
 const FORGERY_PROBABILITY = 0.4
 
 /**
@@ -51,6 +59,60 @@ export class GameController {
   #travellers = new Repository(Traveller)
 
   /**
+   * The position in the queue of the next traveller to call forward.
+   *
+   * @type {number}
+   */
+  #nextTravellerIndex = 0
+
+  /**
+   * Today's date in the game, at midnight UTC.
+   *
+   * @type {Date}
+   */
+  #gameDate = new Date()
+
+  /**
+   * Which day of the game it is, starting at 1.
+   *
+   * @type {number}
+   */
+  #day = 1
+
+  /**
+   * The difficulty the game was started at.
+   *
+   * @type {'easy' | 'medium' | 'hard'}
+   */
+  #gameDifficulty = Difficulties.EASY
+
+  /**
+   * The traveller at the window right now, or null if nobody has been called yet.
+   *
+   * @type {Traveller | null}
+   */
+  #currentTraveller = null
+
+  /**
+   * How many decisions the player has got right.
+   *
+   * @type {number}
+   */
+  #correctDecisions = 0
+
+  /**
+   * How many decisions the player has got wrong.
+   *
+   * @type {number}
+   */
+  #incorrectDecisions = 0
+
+  /**
+   * How many citations the player has today
+   */
+  #citations = 0
+
+  /**
    * Starts a new game. Anything from an earlier game is replaced.
    *
    * @param {'easy' | 'medium' | 'hard'} difficulty - Difficulties.EASY, Difficulties.MEDIUM or Difficulties.HARD.
@@ -63,15 +125,38 @@ export class GameController {
       )
     }
 
-    const gameDate = this.#today()
+    this.#gameDifficulty = difficulty
+    this.#gameDate = this.#today()
+    this.#day = 1
 
     this.#nations = new Repository(Nation)
     this.#discrepancies = new Repository(Discrepancy)
     this.#travellers = new Repository(Traveller)
 
+    this.#nextTravellerIndex = 0
+    this.#currentTraveller = null
+    this.#correctDecisions = 0
+    this.#incorrectDecisions = 0
+    this.#citations = 0
+
     this.#generateNations(difficulty)
     this.#generateDiscrepancies(difficulty)
-    this.#generateTravellers(gameDate)
+    this.#generateTravellers(this.#gameDate)
+  }
+
+  /**
+   * Starts the next day: moves the game date one day forward and lets a new queue of travellers in.
+   * The nations, the discrepancies and the score are kept.
+   */
+  startNextDay() {
+    this.#day++
+    this.#gameDate = addDays(this.#gameDate, 1)
+    this.#travellers = new Repository(Traveller)
+    this.#nextTravellerIndex = 0
+    this.#currentTraveller = null
+    this.#citations = 0
+
+    this.#generateTravellers(this.#gameDate)
   }
 
   /**
@@ -81,6 +166,107 @@ export class GameController {
    */
   get travellers() {
     return this.#travellers.getAllItems()
+  }
+
+  /**
+   * Returns the difficulty the game was started at.
+   *
+   * @returns {'easy' | 'medium' | 'hard'} The difficulty.
+   */
+  get difficulty() {
+    return this.#gameDifficulty
+  }
+
+  /**
+   * Returns today's date in the game.
+   *
+   * @returns {Date} A copy of the game date.
+   */
+  get gameDate() {
+    return new Date(this.#gameDate)
+  }
+
+  /**
+   * Returns which day of the game it is.
+   *
+   * @returns {number} The day, starting at 1.
+   */
+  get day() {
+    return this.#day
+  }
+
+  /**
+   * Returns the current days citation amount.
+   *
+   * @returns {number} The citation amount.
+   */
+  get citations() {
+    return this.#citations
+  }
+
+  /**
+   * Returns how many decisions the player has got right today.
+   *
+   * @returns {number} The number of correct decisions.
+   */
+  get correctDecisions() {
+    return this.#correctDecisions
+  }
+
+  /**
+   * Returns how many decisions the player has got wrong today.
+   *
+   * @returns {number} The number of mistakes.
+   */
+  get incorrectDecisions() {
+    return this.#incorrectDecisions
+  }
+
+  /**
+   * Calls the next traveller in the queue forward.
+   *
+   * @returns {Traveller | null} The next traveller, or null if everyone has already been called.
+   */
+  callNextTraveller() {
+    const travellers = this.#travellers.getAllItems()
+
+    // Everyone in today's queue has already been called
+    if (this.#nextTravellerIndex >= travellers.length) {
+      return null
+    }
+
+    const traveller = travellers[this.#nextTravellerIndex]
+    this.#nextTravellerIndex++
+
+    this.#currentTraveller = traveller
+
+    return traveller
+  }
+
+  /**
+   * Judges the player's decision for the traveller at the window, and counts it.
+   *
+   * @param {boolean} approved - True if the player approved the passport.
+   * @returns {{isCorrect: boolean, discrepancy: Discrepancy | null}} Whether the decision was right,
+   *   and the error in the passport, if it had one.
+   * @throws {Error} If no traveller is at the window.
+   */
+  judge(approved) {
+    if (this.#currentTraveller === null) {
+      throw new Error('There is no current traveller to judge.')
+    }
+
+    const discrepancy = this.#currentTraveller.discrepancy
+    const isCorrect = approved === this.#currentTraveller.hasGenuinePassport
+
+    if (isCorrect) {
+      this.#correctDecisions++
+    } else {
+      this.#incorrectDecisions++
+      this.#citations++
+    }
+
+    return { isCorrect, discrepancy }
   }
 
   /**

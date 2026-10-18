@@ -35,7 +35,7 @@ export class TravellerGenerator {
    *
    * @type {Record<'M' | 'F', readonly string[]>}
    */
-  #apperances
+  #appearances
 
   /**
    * The share of passports that are forged, from 0 to 1.
@@ -48,18 +48,18 @@ export class TravellerGenerator {
    * Creates a generator.
    *
    * @param {Date} gameDate - Today's date in the game, at midnight UTC.
-   * @param {Record<'M' | 'F', readonly string[]>} apperances - The appearance ids available for each sex.
+   * @param {Record<'M' | 'F', readonly string[]>} appearances - The appearance ids available for each sex.
    * @param {number} [forgeryProbability=0.4] - The share of passports that are forged, from 0 to 1.
    * @param {Random} [random=new Random()] - The source of randomness.
    */
   constructor(
     gameDate,
-    apperances,
+    appearances,
     forgeryProbability = 0.4,
     random = new Random()
   ) {
     this.#gameDate = new Date(gameDate)
-    this.#apperances = apperances
+    this.#appearances = appearances
     this.#forgeryProbability = forgeryProbability
     this.#random = random
   }
@@ -126,7 +126,7 @@ export class TravellerGenerator {
       dateOfBirth: this.#randomDateOfBirth(),
       birthplace: this.#random.pick(nation.issuingCities),
       sex,
-      apperance: this.#random.pick(this.#apperances[sex])
+      appearance: this.#random.pick(this.#appearances[sex])
     })
   }
 
@@ -166,8 +166,8 @@ export class TravellerGenerator {
       issuingCity: this.#random.pick(person.nationality.issuingCities),
       issueDate,
       expiryDate: addYears(issueDate, VALIDITY_IN_YEARS),
-      identificationString: `${person.nationality.countryCode}_${person.firstName.toUpperCase()}_${person.surname.toUpperCase()}`,
-      photo: person.apperance
+      identificationString: `P<${person.nationality.countryCode}<${person.surname.toUpperCase()}<<${person.firstName.toUpperCase()}<<`,
+      photo: person.appearance
     }
   }
 
