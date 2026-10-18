@@ -41,12 +41,6 @@ const START_VOLUME = 0.4
 const DENIED_VALID_PASSPORT = 'DENIED A VALID PASSPORT'
 
 /**
- * How long after the next traveller is called the voice lines are played, in milliseconds.
- */
-const NEXT_SOUND_DELAY = 1000
-const DOCUMENT_SOUND_DELAY = 2100
-
-/**
  * The names of the game's sounds.
  *
  * @readonly
@@ -210,6 +204,13 @@ function startGame(difficulty) {
   }
 
   /**
+   * Plays the voice asking for the passport when the traveller reaches the window.
+   */
+  view.onPassportShown = () => {
+    soundController.play(SOUNDS.DOCUMENT)
+  }
+
+  /**
    * Judges the decision when a stamped passport is handed back.
    *
    * @param {boolean} approved - True if the player approved the passport.
@@ -248,9 +249,6 @@ function judgeDecision(approved) {
   }
 
   if (gameController.citations < MAX_MISTAKES) {
-    setTimeout(() => {
-     soundController.play(SOUNDS.NEXT)
-    }, NEXT_SOUND_DELAY)
     callNextTraveller()
   } else {
     gameOver()
@@ -283,10 +281,8 @@ function callNextTraveller() {
     return
   }
 
+  soundController.play(SOUNDS.NEXT)
   gameView.showTraveller(traveller)
-  setTimeout(() => {
-    soundController.play(SOUNDS.DOCUMENT)
-  }, DOCUMENT_SOUND_DELAY)
 }
 
 /**

@@ -114,6 +114,13 @@ export class GameView {
   #onStamp = () => {}
 
   /**
+   * Called when the traveller has reached the window and their passport is put on the counter.
+   *
+   * @type {() => void}
+   */
+  #onPassportShown = () => {}
+
+  /**
    * Called when a stamped passport is handed back to the traveller, with true if it was approved.
    *
    * @type {(approved: boolean) => void}
@@ -207,6 +214,15 @@ export class GameView {
    */
   set onStamp(callback) {
     this.#onStamp = callback
+  }
+
+  /**
+   * Sets what happens when the traveller reaches the window and their passport is put on the counter.
+   *
+   * @param {() => void} callback - Called once for each traveller.
+   */
+  set onPassportShown(callback) {
+    this.#onPassportShown = callback
   }
 
   /**
@@ -355,6 +371,7 @@ export class GameView {
     if (this.#waitingPassport !== null && this.#travellerView.isAtWindow) {
       this.#passportView.showPassport(this.#waitingPassport)
       this.#waitingPassport = null
+      this.#onPassportShown()
     }
   }
 
