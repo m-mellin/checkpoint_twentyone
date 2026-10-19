@@ -161,32 +161,7 @@ export class App {
       gameWidth: this.#canvas.width,
       gameHeight: this.#canvas.height,
       difficulty: this.#gameController.difficulty,
-      volumeSettings: [
-        {
-          label: 'Ambient volume',
-          /**
-           * Sets the volume of the background sounds.
-           *
-           * @param {number} value - The new volume, from 0 to 1.
-           */
-          onChange: (value) => {
-            this.#soundController.setVolume(SOUNDS.AMBIENT_TALKING, value)
-            this.#soundController.setVolume(SOUNDS.AMBIENT_MUSIC, value)
-          }
-        },
-        {
-          label: 'Voice volume',
-          /**
-           * Sets the volume of player's voice.
-           *
-           * @param {number} value - The new volume, from 0 to 1.
-           */
-          onChange: (value) => {
-            this.#soundController.setVolume(SOUNDS.DOCUMENT, value)
-            this.#soundController.setVolume(SOUNDS.NEXT, value)
-          }
-        }
-      ]
+      volumeSettings: this.#volumeSettings()
     })
 
     this.#gameView = view
