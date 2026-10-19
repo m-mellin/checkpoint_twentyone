@@ -42,6 +42,9 @@ const SOUNDS = Object.freeze({
   NEXT: 'Next'
 })
 
+/**
+ * The whole application. Shows the start screen, runs the game day by day, and shows the end screen.
+ */
 export class App {
   /**
    * The canvas the game is drawn on.
@@ -72,13 +75,6 @@ export class App {
   #soundController
 
   /**
-   * Every sound in the game.
-   *
-   * @type {SoundController}
-   */
-  #sounds
-
-  /**
    * The game screen, or null while the start or end screen is shown.
    *
    * @type {GameView | null}
@@ -107,7 +103,7 @@ export class App {
   constructor(canvas) {
     this.#canvas = canvas
     this.#renderer = new SpriteRenderer(canvas)
-    this.#sounds = this.#createSounds()
+    this.#soundController = this.#createSounds()
 
     new ClickController(canvas, () => {
       return this.#currentScreen.buttons
@@ -188,14 +184,14 @@ export class App {
      * Plays the stamp sound when a stamp lands on the passport.
      */
     view.onStamp = () => {
-      this.#sounds.play(SOUNDS.STAMP)
+      this.#soundController.play(SOUNDS.STAMP)
     }
 
     /**
      * Plays the voice asking for the passport when the traveller reaches the window.
      */
     view.onPassportShown = () => {
-      this.#sounds.play(SOUNDS.DOCUMENT)
+      this.#soundController.play(SOUNDS.DOCUMENT)
     }
 
     /**
@@ -220,8 +216,8 @@ export class App {
          * @param {number} value - The new volume, from 0 to 1.
          */
         onChange: (value) => {
-          this.#sounds.setVolume(SOUNDS.AMBIENT_TALKING, value)
-          this.#sounds.setVolume(SOUNDS.AMBIENT_MUSIC, value)
+          this.#soundController.setVolume(SOUNDS.AMBIENT_TALKING, value)
+          this.#soundController.setVolume(SOUNDS.AMBIENT_MUSIC, value)
         }
       },
       {
@@ -232,8 +228,8 @@ export class App {
          * @param {number} value - The new volume, from 0 to 1.
          */
         onChange: (value) => {
-          this.#sounds.setVolume(SOUNDS.DOCUMENT, value)
-          this.#sounds.setVolume(SOUNDS.NEXT, value)
+          this.#soundController.setVolume(SOUNDS.DOCUMENT, value)
+          this.#soundController.setVolume(SOUNDS.NEXT, value)
         }
       }
     ]
@@ -268,7 +264,7 @@ export class App {
       return
     }
 
-    this.#sounds.play(SOUNDS.NEXT)
+    this.#soundController.play(SOUNDS.NEXT)
     view.showTraveller(traveller)
   }
 
@@ -322,8 +318,8 @@ export class App {
 
   #startAmbientSounds() {
     for (const name of [SOUNDS.AMBIENT_TALKING, SOUNDS.AMBIENT_MUSIC]) {
-      this.#sounds.loop(name)
-      this.#sounds.play(name)
+      this.#soundController.loop(name)
+      this.#soundController.play(name)
     }
   }
 
