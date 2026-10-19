@@ -2,6 +2,10 @@ import { SpriteRenderer } from "2d-sprite-renderer"
 import { SoundController } from "./controller/SoundController"
 import { ClickController } from "./controller/ClickController"
 import { DragController } from "./controller/DragController"
+import { GameController } from "./controller/GameController"
+import { StartView } from "./view/StartView"
+import { GameView } from "./view/GameView"
+import { EndView } from "./view/EndView"
 
 /**
  * The longest time step one frame may take, so animations don't jump after the tab was hidden.
@@ -38,20 +42,60 @@ const SOUNDS = Object.freeze({
 })
 
 export class App {
+  /**
+   * The canvas the game is drawn on.
+   *
+   * @type {HTMLCanvasElement}
+   */
   #canvas
 
+  /**
+   * Draws every screen on the canvas.
+   *
+   * @type {SpriteRenderer}
+   */
   #renderer
 
-  #game
+  /**
+   * The rules of the game: the travellers, the days and the player's decisions.
+   *
+   * @type {GameController}
+   */
+  #game = new GameController()
 
+  /**
+   * Every sound in the game.
+   *
+   * @type {SoundController}
+   */
   #sounds
 
-  #gameView
+  /**
+   * The game screen, or null while the start or end screen is shown.
+   *
+   * @type {GameView | null}
+   */
+  #gameView = null
 
+  /**
+   * The screen whose buttons can be clicked right now.
+   *
+   * @type {StartView | GameView | EndView}
+   */
   #currentScreen
 
+  /**
+   * The time of the previous frame, or null before the first frame.
+   *
+   * @type {number | null}
+   */
   #previousTimestamp = null
 
+  /**
+   * Creates the application on a canvas and starts listening for clicks and drags.
+   *
+   * @param {HTMLCanvasElement} canvas - The canvas to draw the game on.
+   */
   constructor(canvas) {
     this.#canvas = canvas
     this.#renderer = new SpriteRenderer(canvas)
@@ -71,6 +115,8 @@ export class App {
       }
     )
   }
+
+
 
   #createSounds() {
     const sounds = new SoundController()
