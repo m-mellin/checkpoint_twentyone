@@ -113,53 +113,6 @@ export class GameController {
   #citations = 0
 
   /**
-   * Starts a new game. Anything from an earlier game is replaced.
-   *
-   * @param {'easy' | 'medium' | 'hard'} difficulty - Difficulties.EASY, Difficulties.MEDIUM or Difficulties.HARD.
-   * @throws {RangeError} If the difficulty is unknown.
-   */
-  startGame(difficulty) {
-    if (!Object.values(Difficulties).includes(difficulty)) {
-      throw new RangeError(
-        'difficulty must be Difficulties.EASY ("easy"), Difficulties.MEDIUM ("medium") or Difficulties.HARD ("hard")'
-      )
-    }
-
-    this.#gameDifficulty = difficulty
-    this.#gameDate = this.#today()
-    this.#day = 1
-
-    this.#nations = new Repository(Nation)
-    this.#discrepancies = new Repository(Discrepancy)
-    this.#travellers = new Repository(Traveller)
-
-    this.#nextTravellerIndex = 0
-    this.#currentTraveller = null
-    this.#correctDecisions = 0
-    this.#incorrectDecisions = 0
-    this.#citations = 0
-
-    this.#generateNations(difficulty)
-    this.#generateDiscrepancies(difficulty)
-    this.#generateTravellers(this.#gameDate)
-  }
-
-  /**
-   * Starts the next day: moves the game date one day forward and lets a new queue of travellers in.
-   * The nations, the discrepancies and the score are kept.
-   */
-  startNextDay() {
-    this.#day++
-    this.#gameDate = addDays(this.#gameDate, 1)
-    this.#travellers = new Repository(Traveller)
-    this.#nextTravellerIndex = 0
-    this.#currentTraveller = null
-    this.#citations = 0
-
-    this.#generateTravellers(this.#gameDate)
-  }
-
-  /**
    * Returns the travellers waiting at the checkpoint.
    *
    * @returns {Traveller[]} A copy of the list of travellers.
@@ -220,6 +173,53 @@ export class GameController {
    */
   get incorrectDecisions() {
     return this.#incorrectDecisions
+  }
+
+  /**
+   * Starts a new game. Anything from an earlier game is replaced.
+   *
+   * @param {'easy' | 'medium' | 'hard'} difficulty - Difficulties.EASY, Difficulties.MEDIUM or Difficulties.HARD.
+   * @throws {RangeError} If the difficulty is unknown.
+   */
+  startGame(difficulty) {
+    if (!Object.values(Difficulties).includes(difficulty)) {
+      throw new RangeError(
+        'difficulty must be Difficulties.EASY ("easy"), Difficulties.MEDIUM ("medium") or Difficulties.HARD ("hard")'
+      )
+    }
+
+    this.#gameDifficulty = difficulty
+    this.#gameDate = this.#today()
+    this.#day = 1
+
+    this.#nations = new Repository(Nation)
+    this.#discrepancies = new Repository(Discrepancy)
+    this.#travellers = new Repository(Traveller)
+
+    this.#nextTravellerIndex = 0
+    this.#currentTraveller = null
+    this.#correctDecisions = 0
+    this.#incorrectDecisions = 0
+    this.#citations = 0
+
+    this.#generateNations(difficulty)
+    this.#generateDiscrepancies(difficulty)
+    this.#generateTravellers(this.#gameDate)
+  }
+
+  /**
+   * Starts the next day: moves the game date one day forward and lets a new queue of travellers in.
+   * The nations, the discrepancies and the score are kept.
+   */
+  startNextDay() {
+    this.#day++
+    this.#gameDate = addDays(this.#gameDate, 1)
+    this.#travellers = new Repository(Traveller)
+    this.#nextTravellerIndex = 0
+    this.#currentTraveller = null
+    this.#citations = 0
+
+    this.#generateTravellers(this.#gameDate)
   }
 
   /**
