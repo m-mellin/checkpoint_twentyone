@@ -130,7 +130,6 @@ export class TravellerView {
    * @param {Traveller} traveller - The traveller who walks in.
    */
   #walkIn(traveller) {
-    // Find the portrait that matches the person's appearance id
     const portrait = portraitData.find(
       (p) => p.id === traveller.person.appearance
     )
@@ -139,7 +138,6 @@ export class TravellerView {
 
     this.#current = traveller
 
-    // Show only this person's part of the sprite sheet
     this.#traveller.region = new SpriteRegion(portrait?.region)
 
     this.#traveller.width = portrait?.region.width * PORTRAIT_SCALE
