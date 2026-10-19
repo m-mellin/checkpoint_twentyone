@@ -46,17 +46,61 @@ difficulty, so that it rewards careful reading rather than fast clicking.
 | R12 | The end screen shows the days played, the passports judged right and the passports missed, and lets the player start a new game. |
 | R13 | The volume of the background sounds and of the voices can be changed in the settings. |
 
+## For developers
 
+### Run it locally
 
+You need Node.js 24 or later.
 
+```bash
+git clone https://github.com/m-mellin/checkpoint_twentyone.git
+cd checkpoint_twentyone
+npm install
+npm run dev
+```
 
+Open the address Vite prints, usually http://localhost:5173.
 
+| Command | What it does |
+| ------- | ------------ |
+| `npm run dev` | Starts the development server. |
+| `npm run build` | Builds the game into `dist/`. |
+| `npm test` | Runs the unit tests in watch mode. |
+| `npm run test:run` | Runs the unit tests once. |
+| `npm run lint` | Checks the code with ESLint. |
+| `npm run format` | Formats the code with Prettier. |
 
+### Structure
 
+The code follows Model–View–Controller:
 
+```text
+src/
+├── model/        # The game's rules: nations, people, passports, travellers, forgeries
+├── view/         # Everything drawn on the canvas, one class per part of the screen
+├── controller/   # Runs the game and handles dragging, clicking and sound
+├── repository/   # A small typed collection used by the controllers
+├── data/         # Nations, difficulties, discrepancies and portraits as JSON
+└── index.js      # Starts the game
+```
 
+- **Model** knows nothing about the screen. `TravellerGenerator` creates the travellers of a day
+  and forges some of their passports. `GameController` judges the player's decisions.
+- **View** draws with `2d-sprite-renderer`. `GameView` creates every other view and is the only
+  view the controllers talk to.
+- **Controllers** connect the two and react to the player.
 
-#stamp sound:
-Free for use under the Pixabay Content License:
-https://pixabay.com/sound-effects/film-special-effects-traditional-stamp-44189/
+### Modules
 
+| Module | Used for |
+| ------ | -------- |
+| [2d-sprite-renderer](https://github.com/m-mellin/2d-sprite-renderer) (my own) | Draws every image, text and coloured block on the canvas. |
+| [dice-rng-toolkit](https://github.com/ThJoker3/Dice-RNG-Toolkit) | Seedable randomness for creating travellers and forgeries, wrapped in `src/model/Random.js`. |
+
+## Credits and licenses
+
+- Code: [MIT](LICENSE)
+- Font: [Press Start 2P](https://fonts.google.com/specimen/Press+Start+2P) by CodeMan38, SIL Open Font License
+- Stamp sound: [Pixabay](https://pixabay.com/sound-effects/film-special-effects-traditional-stamp-44189/), Pixabay Content License
+- Other sounds: Where created using ChatGPT 6, with some cropping made with online tools.
+- Images and portraits: Where created using ChatGPT 6, with some changes made with photoshop.
