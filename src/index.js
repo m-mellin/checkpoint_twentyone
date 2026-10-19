@@ -20,39 +20,39 @@ const PIXEL_FONT = '16px "Press Start 2P"'
 const GAME_WIDTH = window.innerWidth
 const GAME_HEIGHT = window.innerHeight
 
-/**
- * The longest time step one frame may take, so animations don't jump after the tab was hidden.
- */
-const MAX_DELTA_TIME = 100
+// /**
+//  * The longest time step one frame may take, so animations don't jump after the tab was hidden.
+//  */
+// const MAX_DELTA_TIME = 100
 
-/**
- * How many mistakes the player can make before no more travellers are called.
- */
-const MAX_MISTAKES = 3
+// /**
+//  * How many mistakes the player can make before no more travellers are called.
+//  */
+// const MAX_MISTAKES = 3
 
-/**
- * The volume every sound starts at, from 0 to 1.
- */
-const START_VOLUME = 0.4
+// /**
+//  * The volume every sound starts at, from 0 to 1.
+//  */
+// const START_VOLUME = 0.4
 
-/**
- * The reason on a citation when the player denied a genuine passport.
- */
-const DENIED_VALID_PASSPORT = 'DENIED A VALID PASSPORT'
+// /**
+//  * The reason on a citation when the player denied a genuine passport.
+//  */
+// const DENIED_VALID_PASSPORT = 'DENIED A VALID PASSPORT'
 
-/**
- * The names of the game's sounds.
- *
- * @readonly
- * @enum {string}
- */
-const SOUNDS = Object.freeze({
-  AMBIENT_TALKING: 'Ambient_Talking',
-  AMBIENT_MUSIC: 'Ambient_Music',
-  DOCUMENT: 'Document',
-  STAMP: 'Stamp',
-  NEXT: 'Next'
-})
+// /**
+//  * The names of the game's sounds.
+//  *
+//  * @readonly
+//  * @enum {string}
+//  */
+// const SOUNDS = Object.freeze({
+//   AMBIENT_TALKING: 'Ambient_Talking',
+//   AMBIENT_MUSIC: 'Ambient_Music',
+//   DOCUMENT: 'Document',
+//   STAMP: 'Stamp',
+//   NEXT: 'Next'
+// })
 
 await document.fonts.load(PIXEL_FONT)
 
@@ -131,26 +131,26 @@ function gameOver() {
   })
 }
 
-/**
- * Creates every sound and sets its start volume.
- *
- * @returns {SoundController} The controller holding the sounds.
- */
-function createSounds() {
-  const sounds = new SoundController()
+// /**
+//  * Creates every sound and sets its start volume.
+//  *
+//  * @returns {SoundController} The controller holding the sounds.
+//  */
+// function createSounds() {
+//   const sounds = new SoundController()
 
-  sounds.createSound(SOUNDS.AMBIENT_TALKING, '/assets/ambient_talking.wav')
-  sounds.createSound(SOUNDS.AMBIENT_MUSIC, '/assets/ambient.wav')
-  sounds.createSound(SOUNDS.DOCUMENT, '/assets/dokument_tack.wav')
-  sounds.createSound(SOUNDS.STAMP, '/assets/stamp.mp3')
-  sounds.createSound(SOUNDS.NEXT, '/assets/next_tack.wav')
+//   sounds.createSound(SOUNDS.AMBIENT_TALKING, '/assets/ambient_talking.wav')
+//   sounds.createSound(SOUNDS.AMBIENT_MUSIC, '/assets/ambient.wav')
+//   sounds.createSound(SOUNDS.DOCUMENT, '/assets/dokument_tack.wav')
+//   sounds.createSound(SOUNDS.STAMP, '/assets/stamp.mp3')
+//   sounds.createSound(SOUNDS.NEXT, '/assets/next_tack.wav')
 
-  for (const name of Object.values(SOUNDS)) {
-    sounds.setVolume(name, START_VOLUME)
-  }
+//   for (const name of Object.values(SOUNDS)) {
+//     sounds.setVolume(name, START_VOLUME)
+//   }
 
-  return sounds
-}
+//   return sounds
+// }
 
 /**
  * Removes the start screen and starts a game at the chosen difficulty.
@@ -158,68 +158,68 @@ function createSounds() {
  * @param {'easy' | 'medium' | 'hard'} difficulty - The chosen difficulty.
  */
 function startGame(difficulty) {
-  renderer.clear()
-  gameController.startGame(difficulty)
+  // renderer.clear()
+  // gameController.startGame(difficulty)
 
-  const view = new GameView(renderer, {
-    gameWidth: GAME_WIDTH,
-    gameHeight: GAME_HEIGHT,
-    difficulty: gameController.difficulty,
-    volumeSettings: [
-      {
-        label: 'Ambient volume',
-        /**
-         * Sets the volume of the background sounds.
-         *
-         * @param {number} value - The new volume, from 0 to 1.
-         */
-        onChange: (value) => {
-          soundController.setVolume(SOUNDS.AMBIENT_TALKING, value)
-          soundController.setVolume(SOUNDS.AMBIENT_MUSIC, value)
-        }
-      },
-      {
-        label: 'Voice volume',
-        /**
-         * Sets the volume of player's voice.
-         *
-         * @param {number} value - The new volume, from 0 to 1.
-         */
-        onChange: (value) => {
-          soundController.setVolume(SOUNDS.DOCUMENT, value)
-          soundController.setVolume(SOUNDS.NEXT, value)
-        }
-      }
-    ]
-  })
+  // const view = new GameView(renderer, {
+  //   gameWidth: GAME_WIDTH,
+  //   gameHeight: GAME_HEIGHT,
+  //   difficulty: gameController.difficulty,
+  //   volumeSettings: [
+  //     {
+  //       label: 'Ambient volume',
+  //       /**
+  //        * Sets the volume of the background sounds.
+  //        *
+  //        * @param {number} value - The new volume, from 0 to 1.
+  //        */
+  //       onChange: (value) => {
+  //         soundController.setVolume(SOUNDS.AMBIENT_TALKING, value)
+  //         soundController.setVolume(SOUNDS.AMBIENT_MUSIC, value)
+  //       }
+  //     },
+  //     {
+  //       label: 'Voice volume',
+  //       /**
+  //        * Sets the volume of player's voice.
+  //        *
+  //        * @param {number} value - The new volume, from 0 to 1.
+  //        */
+  //       onChange: (value) => {
+  //         soundController.setVolume(SOUNDS.DOCUMENT, value)
+  //         soundController.setVolume(SOUNDS.NEXT, value)
+  //       }
+  //     }
+  //   ]
+  // })
 
-  view.gameDate = gameController.gameDate
+  // view.gameDate = gameController.gameDate
 
-  /**
-   * Plays the stamp sound when a stamp lands on the passport.
-   */
-  view.onStamp = () => {
-    soundController.play(SOUNDS.STAMP)
-  }
+  // /**
+  //  * Plays the stamp sound when a stamp lands on the passport.
+  //  */
+  // view.onStamp = () => {
+  //   soundController.play(SOUNDS.STAMP)
+  // }
 
-  /**
-   * Plays the voice asking for the passport when the traveller reaches the window.
-   */
-  view.onPassportShown = () => {
-    soundController.play(SOUNDS.DOCUMENT)
-  }
+  // /**
+  //  * Plays the voice asking for the passport when the traveller reaches the window.
+  //  */
+  // view.onPassportShown = () => {
+  //   soundController.play(SOUNDS.DOCUMENT)
+  // }
 
-  /**
-   * Judges the decision when a stamped passport is handed back.
-   *
-   * @param {boolean} approved - True if the player approved the passport.
-   */
-  view.onPassportReturned = (approved) => {
-    judgeDecision(approved)
-  }
+  // /**
+  //  * Judges the decision when a stamped passport is handed back.
+  //  *
+  //  * @param {boolean} approved - True if the player approved the passport.
+  //  */
+  // view.onPassportReturned = (approved) => {
+  //   judgeDecision(approved)
+  // }
 
-  gameView = view
-  currentScreen = view
+  // gameView = view
+  // currentScreen = view
 
   startAmbientSounds()
 
@@ -286,27 +286,27 @@ function callNextTraveller() {
   gameView.showTraveller(traveller)
 }
 
-/**
- * The time of the previous frame, or null before the first frame.
- *
- * @type {number | null}
- */
-let previousTimestamp = null
+// /**
+//  * The time of the previous frame, or null before the first frame.
+//  *
+//  * @type {number | null}
+//  */
+// let previousTimestamp = null
 
-/**
- * Runs once per frame: moves the animations forward and draws everything.
- *
- * @param {number} timestamp - The current frame time, provided by requestAnimationFrame.
- */
-function gameLoop(timestamp) {
-  const deltaTime =
-    previousTimestamp === null ? 0 : timestamp - previousTimestamp
-  previousTimestamp = timestamp
+// /**
+//  * Runs once per frame: moves the animations forward and draws everything.
+//  *
+//  * @param {number} timestamp - The current frame time, provided by requestAnimationFrame.
+//  */
+// function gameLoop(timestamp) {
+//   const deltaTime =
+//     previousTimestamp === null ? 0 : timestamp - previousTimestamp
+//   previousTimestamp = timestamp
 
-  gameView?.update(Math.min(deltaTime, MAX_DELTA_TIME))
-  renderer.render()
+//   gameView?.update(Math.min(deltaTime, MAX_DELTA_TIME))
+//   renderer.render()
 
-  requestAnimationFrame(gameLoop)
-}
+//   requestAnimationFrame(gameLoop)
+// }
 
 requestAnimationFrame(gameLoop)
