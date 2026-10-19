@@ -157,12 +157,7 @@ export class App {
     this.#renderer.clear()
     this.#gameController.startGame(difficulty)
 
-    const view = new GameView(this.#renderer, {
-      gameWidth: this.#canvas.width,
-      gameHeight: this.#canvas.height,
-      difficulty: this.#gameController.difficulty,
-      volumeSettings: this.#volumeSettings()
-    })
+    const view = this.#createGameView()
 
     this.#gameView = view
     this.#currentScreen = view
