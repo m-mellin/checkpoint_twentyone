@@ -3,6 +3,7 @@ import difficulties from '../data/difficulties.json'
 import portraitData from '../data/portraits.json'
 import discrepanciesData from '../data/discrepancies.json'
 
+import { Random } from '../model/Random.js'
 import { Nation } from '../model/Nation.js'
 import { Repository } from '../repository/Repository.js'
 import { Sex } from '../model/Person.js'
@@ -111,6 +112,33 @@ export class GameController {
    * How many citations the player has today
    */
   #citations = 0
+
+  /**
+   * The source of randomness for creating travellers.
+   *
+   * @type {Random}
+   */
+  #random
+
+  /**
+   * Returns the current date and time. Can be replaced, for example in tests.
+   *
+   * @type {() => Date}
+   */
+  #now
+  
+  /**
+   * Creates a game controller. The randomness and the clock can be passed in, so that a test
+   * can get the same travellers and the same date every time.
+   *
+   * @param {object} [options] - What the controller depends on.
+   * @param {Random} [options.random=new Random()] - The source of randomness for creating travellers.
+   * @param {() => Date} [options.now] - Returns the current date and time. Defaults to the real clock.
+   */
+  constructor({ random = new Random(), now = () => new Date() } = {}) {
+    this.#random = random
+    this.#now = now
+  }
 
   /**
    * Returns the travellers waiting at the checkpoint.
@@ -275,11 +303,9 @@ export class GameController {
    * @returns {Date} The date.
    */
   #today() {
-    const now = new Date()
+    const now = this.#now()
 
-    return new Date(
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
-    )
+    return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
   }
 
   /**
@@ -317,7 +343,8 @@ export class GameController {
     const generator = new TravellerGenerator(
       gameDate,
       this.#appearancesBySex(),
-      FORGERY_PROBABILITY
+      FORGERY_PROBABILITY,
+      this.#random
     )
     const travellers = generator.createTravellers(
       TRAVELLERS_PER_DAY,
