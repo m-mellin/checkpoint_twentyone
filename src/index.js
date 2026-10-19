@@ -221,16 +221,16 @@ function startGame(difficulty) {
   // gameView = view
   // currentScreen = view
 
-  startAmbientSounds()
+  // startAmbientSounds()
 
-  view.startNextDay(
-    gameController.day,
-    gameController.gameDate,
-    () => {
-      callNextTraveller()
-    },
-    true
-  )
+  // view.startNextDay(
+  //   gameController.day,
+  //   gameController.gameDate,
+  //   () => {
+  //     callNextTraveller()
+  //   },
+  //   true
+  // )
 }
 
 /**
@@ -259,32 +259,32 @@ function judgeDecision(approved) {
 /**
  * Starts the background sounds and lets them loop.
  */
-function startAmbientSounds() {
-  for (const name of [SOUNDS.AMBIENT_TALKING, SOUNDS.AMBIENT_MUSIC]) {
-    soundController.loop(name)
-    soundController.play(name)
-  }
-}
+// function startAmbientSounds() {
+//   for (const name of [SOUNDS.AMBIENT_TALKING, SOUNDS.AMBIENT_MUSIC]) {
+//     soundController.loop(name)
+//     soundController.play(name)
+//   }
+// }
 
 /**
  * Calls the next traveller to the window, or lets the last one leave when the queue is empty.
  */
-function callNextTraveller() {
-  if (gameView === null) return
+// function callNextTraveller() {
+//   if (gameView === null) return
 
-  const traveller = gameController.callNextTraveller()
+//   const traveller = gameController.callNextTraveller()
 
-  if (traveller === null) {
-    gameController.startNextDay()
-    gameView.startNextDay(gameController.day, gameController.gameDate, () => {
-      callNextTraveller()
-    })
-    return
-  }
+//   if (traveller === null) {
+//     gameController.startNextDay()
+//     gameView.startNextDay(gameController.day, gameController.gameDate, () => {
+//       callNextTraveller()
+//     })
+//     return
+//   }
 
-  soundController.play(SOUNDS.NEXT)
-  gameView.showTraveller(traveller)
-}
+//   soundController.play(SOUNDS.NEXT)
+//   gameView.showTraveller(traveller)
+// }
 
 // /**
 //  * The time of the previous frame, or null before the first frame.
@@ -309,4 +309,4 @@ function callNextTraveller() {
 //   requestAnimationFrame(gameLoop)
 // }
 
-requestAnimationFrame(gameLoop)
+// requestAnimationFrame(gameLoop)

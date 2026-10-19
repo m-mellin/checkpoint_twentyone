@@ -184,6 +184,41 @@ export class App {
 
     this.#gameView = view
     this.#currentScreen = view
+
+    this.#startAmbientSounds()
+
+    view.startNextDay(
+      this.#gameController.day,
+      this.#gameController.gameDate,
+      () => {
+        this.#callNextTraveller()
+      },
+      true
+    )
+  }
+
+  #callNextTraveller() {
+    const view = this.#gameView
+
+    if (view === null) return
+
+    const traveller = this.#gameController.callNextTraveller()
+
+    if (traveller === null) {
+      this.#startNextDay(view)
+      return
+    }
+
+    this.#sounds.play(SOUNDS.NEXT)
+    view.showTraveller(traveller)
+  }
+
+  #startNextDay(view) {
+    this.#gameController.startNextDay()
+
+    view.startNextDay(this.#gameController.day, this.#gameController.gameDate, () => {
+      this.#callNextTraveller()
+    })
   }
 
   #createSounds() {
@@ -200,6 +235,13 @@ export class App {
     }
 
     return this.#soundController
+  }
+
+  #startAmbientSounds() {
+    for (const name of [SOUNDS.AMBIENT_TALKING, SOUNDS.AMBIENT_MUSIC]) {
+      this.#sounds.loop(name)
+      this.#sounds.play(name)
+    }
   }
 
   #runFrame(timestamp) {
