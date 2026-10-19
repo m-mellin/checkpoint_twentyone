@@ -61,7 +61,14 @@ export class App {
    *
    * @type {GameController}
    */
-  #game = new GameController()
+  #gameController = new GameController()
+
+  /**
+   * The soundController
+   * 
+   * @type {SoundController}
+   */
+  #soundController
 
   /**
    * Every sound in the game.
@@ -116,21 +123,94 @@ export class App {
     )
   }
 
+  #start() {
+    this.#showStartScreen()
 
+    requestAnimationFrame((timestamp) => {
+      this.#runFrame(timestamp)
+    })
+  }
+
+  #showStartScreen() {
+    this.#currentScreen = new StartView(this.#renderer, {
+      gameWidth: this.#canvas.width,
+      gameHeight: this.#canvas.height,
+      /**
+       * Starts the game at the difficulty the player chose.
+       *
+       * @param {'easy' | 'medium' | 'hard'} difficulty - The chosen difficulty.
+       */
+      onStart: (difficulty) => {
+        this.#startGame(difficulty)
+      }
+    })
+  }
+
+  #startGame(difficulty) {
+    this.#renderer.clear()
+    this.#gameController.startGame(difficulty)
+
+    const view = new GameView(this.#renderer, {
+      gameWidth: this.#canvas.width,
+      gameHeight: this.#canvas.height,
+      difficulty: this.#gameController.difficulty,
+      volumeSettings: [
+        {
+          label: 'Ambient volume',
+          /**
+           * Sets the volume of the background sounds.
+           *
+           * @param {number} value - The new volume, from 0 to 1.
+           */
+          onChange: (value) => {
+            this.#soundController.setVolume(SOUNDS.AMBIENT_TALKING, value)
+            this.#soundController.setVolume(SOUNDS.AMBIENT_MUSIC, value)
+          }
+        },
+        {
+          label: 'Voice volume',
+          /**
+           * Sets the volume of player's voice.
+           *
+           * @param {number} value - The new volume, from 0 to 1.
+           */
+          onChange: (value) => {
+            this.#soundController.setVolume(SOUNDS.DOCUMENT, value)
+            this.#soundController.setVolume(SOUNDS.NEXT, value)
+          }
+        }
+      ]
+    })
+
+    this.#gameView = view
+    this.#currentScreen = view
+  }
 
   #createSounds() {
-    const sounds = new SoundController()
+    this.#soundController = new SoundController()
 
-    sounds.createSound(SOUNDS.AMBIENT_TALKING, 'assets/ambient_talking.wav')
-    sounds.createSound(SOUNDS.AMBIENT_MUSIC, 'assets/ambient.wav')
-    sounds.createSound(SOUNDS.DOCUMENT, 'assets/dokument_tack.wav')
-    sounds.createSound(SOUNDS.STAMP, 'assets/stamp.mp3')
-    sounds.createSound(SOUNDS.NEXT, 'assets/next_tack.wav')
+    this.#soundController.createSound(SOUNDS.AMBIENT_TALKING, 'assets/ambient_talking.wav')
+    this.#soundController.createSound(SOUNDS.AMBIENT_MUSIC, 'assets/ambient.wav')
+    this.#soundController.createSound(SOUNDS.DOCUMENT, 'assets/dokument_tack.wav')
+    this.#soundController.createSound(SOUNDS.STAMP, 'assets/stamp.mp3')
+    this.#soundController.createSound(SOUNDS.NEXT, 'assets/next_tack.wav')
 
     for (const name of Object.values(SOUNDS)) {
-      sounds.setVolume(name, START_VOLUME)
+      this.#soundController.setVolume(name, START_VOLUME)
     }
 
-    return sounds
+    return this.#soundController
+  }
+
+  #runFrame(timestamp) {
+    const deltaTime = this.#previousTimestamp === null ? 0 : timestamp - this.#previousTimestamp
+    this.#previousTimestamp = timestamp
+
+    this.#gameView?.update(Math.min(deltaTime, MAX_DELTA_TIME))
+    this.#renderer.render()
+
+    requestAnimationFrame((nextTimestamp) => {
+      this.#runFrame(nextTimestamp)
+    })
   }
 }
