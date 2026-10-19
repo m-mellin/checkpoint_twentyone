@@ -285,7 +285,7 @@ export class App {
     this.#soundController.stopAllSounds()
     this.#gameView = null
 
-    this.#currentScreen = new EndView(renderer, {
+    this.#currentScreen = new EndView(this.#renderer, {
       gameWidth: this.#canvas.width,
       gameHeight: this.#canvas.height,
       stats: {
