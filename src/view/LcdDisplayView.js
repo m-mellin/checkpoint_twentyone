@@ -33,7 +33,7 @@ const TEXT_FONT = '18px "Press Start 2P"'
  * A small LCD panel that shows one line of text, for example today's date or the traveller's height.
  */
 export class LcdDisplayView {
-  /*
+  /**
    * The image of the panel.
    *
    * @type {Sprite}
