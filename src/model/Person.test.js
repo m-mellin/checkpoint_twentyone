@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { Person, Sex } from "./Person";
-import { Nation } from "./Nation";
+import { describe, it, expect } from 'vitest';
+import { Person, Sex } from './Person.js';
+import { Nation } from './Nation.js';
 
 const SWEDEN = new Nation({name: 'Sweden', countryCode: 'SWE'})
 
@@ -18,9 +18,9 @@ function validData(changes = {}) {
   }
 }
 
-describe("Person", () => {
-  describe("constructor", () => {
-    it("creates a Person with default values", () => {
+describe('Person', () => {
+  describe('constructor', () => {
+    it('creates a Person with default values', () => {
       const data = validData()
       const person = new Person(data)
 
@@ -35,7 +35,7 @@ describe("Person", () => {
     })
   })
 
-  describe("validation", () => {
+  describe('validation', () => {
     it.each(['firstName', 'surname', 'birthplace', 'appearance'])(
       'throws a TypeError if %s is not a non-empty string',
       (field) => {
@@ -44,7 +44,7 @@ describe("Person", () => {
         }
       }
     )
-    
+
     it.each(['1990-05-17', new Date('not a date'), undefined])(
       'throws a TypeError if dateOfBirth is %s',
       (dateOfBirth) => {
