@@ -170,11 +170,13 @@ export class TravellerView {
    * @param {number} deltaTime - Milliseconds since the last frame.
    */
   #walk(deltaTime) {
-    const distance = this.#targetX - this.#traveller.x
+    const distanceLeft = this.#targetX - this.#traveller.x
+    const direction = Math.sign(distanceLeft)
 
-    const step = Math.min(Math.abs(distance), WALK_SPEED * deltaTime)
+    // Never further than the distance left, so the traveller stops exactly on the target
+    const stepLength = Math.min(Math.abs(distanceLeft), WALK_SPEED * deltaTime)
 
-    this.#traveller.x += Math.sign(distance) * step
+    this.#traveller.x += direction * stepLength
   }
 
   /**
