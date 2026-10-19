@@ -19,8 +19,8 @@ function validData(changes = {}) {
 }
 
 describe('Person', () => {
-  describe('constructor', () => {
-    it('creates a Person with default values', () => {
+  describe('constructor with valid data', () => {
+    it('returns every value through its getter', () => {
       const data = validData()
       const person = new Person(data)
 
