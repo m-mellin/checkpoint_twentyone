@@ -1,12 +1,12 @@
-import { SpriteRenderer } from "2d-sprite-renderer"
-import { SoundController } from "./controller/SoundController"
-import { ClickController } from "./controller/ClickController"
-import { DragController } from "./controller/DragController"
-import { GameController } from "./controller/GameController"
-import { StartView } from "./view/StartView"
-import { GameView } from "./view/GameView"
-import { EndView } from "./view/EndView"
-import { DISCREPANCY_TEXTS } from "./view/DiscrepancyView"
+import { SpriteRenderer } from '2d-sprite-renderer'
+import { SoundController } from './controller/SoundController.js'
+import { ClickController } from './controller/ClickController.js'
+import { DragController } from './controller/DragController.js'
+import { GameController } from './controller/GameController.js'
+import { StartView } from './view/StartView.js'
+import { GameView } from './view/GameView.js'
+import { EndView } from './view/EndView.js'
+import { DISCREPANCY_TEXTS } from './view/DiscrepancyView.js'
 
 /**
  * The longest time step one frame may take, so animations don't jump after the tab was hidden.
@@ -68,8 +68,8 @@ export class App {
   #gameController = new GameController()
 
   /**
-   * The soundController
-   * 
+   * Every sound in the game.
+   *
    * @type {SoundController}
    */
   #soundController
@@ -96,7 +96,7 @@ export class App {
   #previousTimestamp = null
 
   /**
-   * Creates the application on a canvas and starts listening for clicks and drags.
+   * Creates the application on a canvas with the start screen, and starts listening for clicks and drags.
    *
    * @param {HTMLCanvasElement} canvas - The canvas to draw the game on.
    */
@@ -104,6 +104,7 @@ export class App {
     this.#canvas = canvas
     this.#renderer = new SpriteRenderer(canvas)
     this.#soundController = this.#createSounds()
+    this.#currentScreen = this.#createStartScreen()
 
     new ClickController(canvas, () => {
       return this.#currentScreen.buttons
@@ -124,18 +125,18 @@ export class App {
    * Shows the start screen and starts drawing.
    */
   start() {
-    this.#showStartScreen()
-
     requestAnimationFrame((timestamp) => {
       this.#runFrame(timestamp)
     })
   }
-
+  
   /**
-   * Shows the start screen, where the player chooses a difficulty.
+   * Creates the start screen, where the player chooses a difficulty.
+   *
+   * @returns {StartView} The start screen.
    */
-  #showStartScreen() {
-    this.#currentScreen = new StartView(this.#renderer, {
+  #createStartScreen() {
+    return new StartView(this.#renderer, {
       gameWidth: this.#canvas.width,
       gameHeight: this.#canvas.height,
       /**
@@ -149,6 +150,11 @@ export class App {
     })
   }
 
+  /**
+   * Removes the current screen and starts a game at the chosen difficulty, beginning with the day screen.
+   *
+   * @param {'easy' | 'medium' | 'hard'} difficulty - The chosen difficulty.
+   */
   #startGame(difficulty) {
     this.#renderer.clear()
     this.#gameController.startGame(difficulty)
@@ -170,6 +176,11 @@ export class App {
     )
   }
 
+  /**
+   * Creates the game screen and decides what happens when the player stamps or hands back a passport.
+   *
+   * @returns {GameView} The game screen.
+   */
   #createGameView() {
     const view = new GameView(this.#renderer, {
       gameWidth: this.#canvas.width,
@@ -206,6 +217,11 @@ export class App {
     return view
   }
 
+  /**
+   * Returns the volume settings shown in the sound settings.
+   *
+   * @returns {import('./view/SoundView.js').VolumeSetting[]} One setting for the background and one for the voices.
+   */
   #volumeSettings() {
     return [
       {
@@ -235,6 +251,12 @@ export class App {
     ]
   }
 
+  /**
+   * Judges the player's decision and gives a citation for a mistake.
+   * Calls the next traveller, or ends the game after too many citations in one day.
+   *
+   * @param {boolean} approved - True if the player approved the passport.
+   */
   #judgeDecision(approved) {
     const { isCorrect, discrepancy } = this.#gameController.judge(approved)
 
@@ -252,6 +274,9 @@ export class App {
     }
   }
 
+  /**
+   * Calls the next traveller to the window. When everyone in today's queue has been checked, a new day begins.
+   */
   #callNextTraveller() {
     const view = this.#gameView
 
@@ -268,6 +293,11 @@ export class App {
     view.showTraveller(traveller)
   }
 
+  /**
+   * Moves the game to the next day and shows the day screen. The next traveller is called when it has faded out.
+   *
+   * @param {GameView} view - The game screen to show the day screen on.
+   */
   #startNextDay(view) {
     this.#gameController.startNextDay()
 
@@ -276,12 +306,24 @@ export class App {
     })
   }
 
+  /**
+   * Stops the game and creates the EndView screen.
+   */
   #gameOver() {
     this.#renderer.clear()
     this.#soundController.stopAllSounds()
     this.#gameView = null
 
-    this.#currentScreen = new EndView(this.#renderer, {
+    this.#currentScreen = this.#createEndView()
+  }
+
+  /**
+   * Creates the end screen, where the player sees how the game went and can start a new game.
+   *
+   * @returns {EndView} The end screen.
+   */
+  #createEndView() {
+    return new EndView(this.#renderer, {
       gameWidth: this.#canvas.width,
       gameHeight: this.#canvas.height,
       stats: {
@@ -300,22 +342,30 @@ export class App {
     })
   }
 
+  /**
+   * Creates every sound and sets its start volume.
+   *
+   * @returns {SoundController} The controller holding the sounds.
+   */
   #createSounds() {
-    this.#soundController = new SoundController()
+    const sounds = new SoundController()
 
-    this.#soundController.createSound(SOUNDS.AMBIENT_TALKING, 'assets/ambient_talking.wav')
-    this.#soundController.createSound(SOUNDS.AMBIENT_MUSIC, 'assets/ambient.wav')
-    this.#soundController.createSound(SOUNDS.DOCUMENT, 'assets/dokument_tack.wav')
-    this.#soundController.createSound(SOUNDS.STAMP, 'assets/stamp.mp3')
-    this.#soundController.createSound(SOUNDS.NEXT, 'assets/next_tack.wav')
+    sounds.createSound(SOUNDS.AMBIENT_TALKING, 'assets/ambient_talking.wav')
+    sounds.createSound(SOUNDS.AMBIENT_MUSIC, 'assets/ambient.wav')
+    sounds.createSound(SOUNDS.DOCUMENT, 'assets/dokument_tack.wav')
+    sounds.createSound(SOUNDS.STAMP, 'assets/stamp.mp3')
+    sounds.createSound(SOUNDS.NEXT, 'assets/next_tack.wav')
 
     for (const name of Object.values(SOUNDS)) {
-      this.#soundController.setVolume(name, START_VOLUME)
+      sounds.setVolume(name, START_VOLUME)
     }
 
-    return this.#soundController
+    return sounds
   }
 
+  /**
+   * Starts the background sounds and lets them loop.
+   */
   #startAmbientSounds() {
     for (const name of [SOUNDS.AMBIENT_TALKING, SOUNDS.AMBIENT_MUSIC]) {
       this.#soundController.loop(name)
@@ -323,6 +373,11 @@ export class App {
     }
   }
 
+  /**
+   * Runs once per frame: moves the animations forward, draws everything, and asks for the next frame.
+   *
+   * @param {number} timestamp - The current frame time.
+   */
   #runFrame(timestamp) {
     const deltaTime = this.#previousTimestamp === null ? 0 : timestamp - this.#previousTimestamp
     this.#previousTimestamp = timestamp
