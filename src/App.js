@@ -6,6 +6,7 @@ import { GameController } from "./controller/GameController"
 import { StartView } from "./view/StartView"
 import { GameView } from "./view/GameView"
 import { EndView } from "./view/EndView"
+import { DISCREPANCY_TEXTS } from "./view/DiscrepancyView"
 
 /**
  * The longest time step one frame may take, so animations don't jump after the tab was hidden.
@@ -123,7 +124,10 @@ export class App {
     )
   }
 
-  #start() {
+  /**
+   * Shows the start screen and starts drawing.
+   */
+  start() {
     this.#showStartScreen()
 
     requestAnimationFrame((timestamp) => {
@@ -131,6 +135,9 @@ export class App {
     })
   }
 
+  /**
+   * Shows the start screen, where the player chooses a difficulty.
+   */
   #showStartScreen() {
     this.#currentScreen = new StartView(this.#renderer, {
       gameWidth: this.#canvas.width,
@@ -197,6 +204,88 @@ export class App {
     )
   }
 
+  #createGameView() {
+    const view = new GameView(this.#renderer, {
+      gameWidth: this.#canvas.width,
+      gameHeight: this.#canvas.height,
+      difficulty: this.#gameController.difficulty,
+      volumeSettings: this.#volumeSettings()
+    })
+
+    view.gameDate = this.#gameController.gameDate
+
+    /**
+     * Plays the stamp sound when a stamp lands on the passport.
+     */
+    view.onStamp = () => {
+      this.#sounds.play(SOUNDS.STAMP)
+    }
+
+    /**
+     * Plays the voice asking for the passport when the traveller reaches the window.
+     */
+    view.onPassportShown = () => {
+      this.#sounds.play(SOUNDS.DOCUMENT)
+    }
+
+    /**
+     * Judges the decision when a stamped passport is handed back.
+     *
+     * @param {boolean} approved - True if the player approved the passport.
+     */
+    view.onPassportReturned = (approved) => {
+      this.#judgeDecision(approved)
+    }
+
+    return view
+  }
+
+  #volumeSettings() {
+    return [
+      {
+        label: 'Ambient volume',
+        /**
+         * Sets the volume of the background sounds.
+         *
+         * @param {number} value - The new volume, from 0 to 1.
+         */
+        onChange: (value) => {
+          this.#sounds.setVolume(SOUNDS.AMBIENT_TALKING, value)
+          this.#sounds.setVolume(SOUNDS.AMBIENT_MUSIC, value)
+        }
+      },
+      {
+        label: 'Voice volume',
+        /**
+         * Sets the volume of the voices.
+         *
+         * @param {number} value - The new volume, from 0 to 1.
+         */
+        onChange: (value) => {
+          this.#sounds.setVolume(SOUNDS.DOCUMENT, value)
+          this.#sounds.setVolume(SOUNDS.NEXT, value)
+        }
+      }
+    ]
+  }
+
+  #judgeDecision(approved) {
+    const { isCorrect, discrepancy } = this.#gameController.judge(approved)
+
+    if (!isCorrect) {
+      const reason = discrepancy
+        ? DISCREPANCY_TEXTS[discrepancy.code]
+        : DENIED_VALID_PASSPORT
+      this.#gameView?.addCitation(reason)
+    }
+
+    if (this.#gameController.citations < MAX_CITATIONS_PER_DAY) {
+      this.#callNextTraveller()
+    } else {
+      this.#gameOver()
+    }
+  }
+
   #callNextTraveller() {
     const view = this.#gameView
 
@@ -218,6 +307,30 @@ export class App {
 
     view.startNextDay(this.#gameController.day, this.#gameController.gameDate, () => {
       this.#callNextTraveller()
+    })
+  }
+
+  #gameOver() {
+    this.#renderer.clear()
+    this.#soundController.stopAllSounds()
+    this.#gameView = null
+
+    this.#currentScreen = new EndView(renderer, {
+      gameWidth: this.#canvas.width,
+      gameHeight: this.#canvas.height,
+      stats: {
+        days: this.#gameController.day,
+        correct: this.#gameController.correctDecisions,
+        incorrect: this.#gameController.incorrectDecisions
+      },
+      /**
+       * Starts a new game at the difficulty the player chose.
+       *
+       * @param {'easy' | 'medium' | 'hard'} difficulty - The chosen difficulty.
+       */
+      onRestart: (difficulty) => {
+        this.#startGame(difficulty)
+      }
     })
   }
 
