@@ -20,7 +20,7 @@ const IMAGE_WIDTH = 1536
 const IMAGE_HEIGHT = 1024
 
 /**
- * How the statistics are written.
+ * With what font and color the statistics are written.
  */
 const STATS_FONT = '20px "Press Start 2P"'
 const STATS_COLOR = '#fff'
