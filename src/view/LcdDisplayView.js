@@ -4,7 +4,7 @@ import { TextLine } from './TextLine.js'
 /**
  * The image of the display panel.
  */
-const LCD_SRC = '/assets/lcd_panel.png'
+const LCD_SRC = 'assets/lcd_panel.png'
 
 /**
  * The scale of the display panel is drawn.
@@ -33,7 +33,7 @@ const TEXT_FONT = '18px "Press Start 2P"'
  * A small LCD panel that shows one line of text, for example today's date or the traveller's height.
  */
 export class LcdDisplayView {
-  /*
+  /**
    * The image of the panel.
    *
    * @type {Sprite}

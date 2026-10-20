@@ -128,12 +128,16 @@ export class SliderView {
     this.#value = value
     this.#onChange = onChange
 
-    this.#track = new BlockSprite(width, TRACK_HEIGHT, {
+    this.#track = new BlockSprite({
+      width: width,
+      height: TRACK_HEIGHT,
       x,
       y: y - TRACK_HEIGHT / 2,
       color: TRACK_COLOR
     })
-    this.#handle = new BlockSprite(HANDLE_SIZE, HANDLE_SIZE, {
+    this.#handle = new BlockSprite({
+      width: HANDLE_SIZE,
+      height: HANDLE_SIZE,
       color: HANDLE_COLOR
     })
     this.#labelText = label.toUpperCase()

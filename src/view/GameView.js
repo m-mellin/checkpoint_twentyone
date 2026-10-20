@@ -17,6 +17,16 @@ import { NextDayView } from './NextDayView.js'
 
 const MAX_CITATIONS = 10
 
+const APPROVE_STAMP_X_POS = 1400
+const APPROVE_STAMP_Y_POS = 500
+const DENY_STAMP_X_POS = 1500
+const DENY_STAMP_Y_POS = 500
+
+const HEIGHT_DISPLAY_X = 1100
+const DATE_DISPLAY_X = 0
+
+const DISPLAY_Y = 1040
+
 /**
  * The whole game screen. Creates every view in the order they are drawn,
  * and is the only view the rest of the game talks to.
@@ -147,15 +157,15 @@ export class GameView {
     this.#approveStamp = new StampView(renderer, {
       counterSrc: 'assets/approve_stamp.png',
       inspectionDeskSrc: 'assets/approve_stamp.png',
-      x: 1400,
-      y: 500,
+      x: APPROVE_STAMP_X_POS,
+      y: APPROVE_STAMP_Y_POS,
       approves: true
     })
     this.#denyStamp = new StampView(renderer, {
       counterSrc: 'assets/deny_stamp.png',
       inspectionDeskSrc: 'assets/deny_stamp.png',
-      x: 1500,
-      y: 500,
+      x: DENY_STAMP_X_POS,
+      y: DENY_STAMP_Y_POS,
       approves: false
     })
 
@@ -164,8 +174,14 @@ export class GameView {
       () => new CitationView(renderer)
     )
 
-    this.#dateDisplay = new LcdDisplayView(renderer, { x: 0, y: 1040 })
-    this.#heightDisplay = new LcdDisplayView(renderer, { x: 1100, y: 1040 })
+    this.#dateDisplay = new LcdDisplayView(renderer, {
+      x: DATE_DISPLAY_X,
+      y: DISPLAY_Y
+    })
+    this.#heightDisplay = new LcdDisplayView(renderer, {
+      x: HEIGHT_DISPLAY_X,
+      y: DISPLAY_Y
+    })
 
     this.#soundView = new SoundView(
       renderer,

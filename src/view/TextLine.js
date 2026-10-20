@@ -13,27 +13,6 @@ export class TextLine {
   #sprite
 
   /**
-   * The width of the text, in pixels.
-   *
-   * @type {number}
-   */
-  #width = 0
-
-  /**
-   * The height of the text, in pixels.
-   *
-   * @type {number}
-   */
-  #height = 0
-
-  /**
-   * A canvas context shared by every text line, used only for measuring text.
-   *
-   * @type {CanvasRenderingContext2D | null}
-   */
-  static #context = document.createElement('canvas').getContext('2d')
-
-  /**
    * Creates a line of text and measures it.
    *
    * @param {string} text - The text to draw.
@@ -47,7 +26,6 @@ export class TextLine {
     { color = '#000000', font = '12px "Press Start 2P"' } = {}
   ) {
     this.#sprite = new TextSprite(text, { color, font })
-    this.#measureTextAndSetSize()
   }
 
   /**
@@ -75,7 +53,6 @@ export class TextLine {
    */
   set text(text) {
     this.#sprite.text = text
-    this.#measureTextAndSetSize()
   }
 
   /**
@@ -138,7 +115,7 @@ export class TextLine {
    * @returns {number} The width in pixels.
    */
   get width() {
-    return this.#width
+    return this.#sprite.width
   }
 
   /**
@@ -147,27 +124,6 @@ export class TextLine {
    * @returns {number} The height in pixels.
    */
   get height() {
-    return this.#height
-  }
-
-  /**
-   * Measures the text with the sprite's font and stores its width and height.
-   *
-   * @throws {Error} If the browser cannot create a context for measuring text.
-   */
-  #measureTextAndSetSize() {
-    const context = TextLine.#context
-
-    if (context === null) {
-      throw new Error('Could not create a 2D context for measuring text')
-    }
-
-    context.font = this.#sprite.font
-    const metrics = context.measureText(this.#sprite.text)
-
-    this.#width = Math.ceil(metrics.width)
-    this.#height = Math.ceil(
-      metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent
-    )
+    return this.#sprite.height
   }
 }

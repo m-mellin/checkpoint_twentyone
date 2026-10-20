@@ -10,7 +10,7 @@ const BACKGROUND_COLOR = '#03090c'
 /**
  * The image on the StartView.
  */
-const IMAGE_SRC = '/assets/start_game.png'
+const IMAGE_SRC = 'assets/start_game.png'
 
 /**
  * The size of the StartView image.
@@ -45,7 +45,11 @@ export class StartView {
    */
   constructor(renderer, { gameWidth, gameHeight, onStart }) {
     renderer.add(
-      new BlockSprite(gameWidth, gameHeight, { color: BACKGROUND_COLOR })
+      new BlockSprite({
+        width: gameWidth,
+        height: gameHeight,
+        color: BACKGROUND_COLOR
+      })
     )
 
     const image = new Sprite(IMAGE_SRC, { width: WIDTH, height: HEIGHT })

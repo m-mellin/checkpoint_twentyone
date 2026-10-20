@@ -3,6 +3,7 @@ import difficulties from '../data/difficulties.json'
 import portraitData from '../data/portraits.json'
 import discrepanciesData from '../data/discrepancies.json'
 
+import { Random } from '../model/Random.js'
 import { Nation } from '../model/Nation.js'
 import { Repository } from '../repository/Repository.js'
 import { Sex } from '../model/Person.js'
@@ -113,50 +114,30 @@ export class GameController {
   #citations = 0
 
   /**
-   * Starts a new game. Anything from an earlier game is replaced.
+   * The source of randomness for creating travellers.
    *
-   * @param {'easy' | 'medium' | 'hard'} difficulty - Difficulties.EASY, Difficulties.MEDIUM or Difficulties.HARD.
-   * @throws {RangeError} If the difficulty is unknown.
+   * @type {Random}
    */
-  startGame(difficulty) {
-    if (!Object.values(Difficulties).includes(difficulty)) {
-      throw new RangeError(
-        'difficulty must be Difficulties.EASY ("easy"), Difficulties.MEDIUM ("medium") or Difficulties.HARD ("hard")'
-      )
-    }
-
-    this.#gameDifficulty = difficulty
-    this.#gameDate = this.#today()
-    this.#day = 1
-
-    this.#nations = new Repository(Nation)
-    this.#discrepancies = new Repository(Discrepancy)
-    this.#travellers = new Repository(Traveller)
-
-    this.#nextTravellerIndex = 0
-    this.#currentTraveller = null
-    this.#correctDecisions = 0
-    this.#incorrectDecisions = 0
-    this.#citations = 0
-
-    this.#generateNations(difficulty)
-    this.#generateDiscrepancies(difficulty)
-    this.#generateTravellers(this.#gameDate)
-  }
+  #random
 
   /**
-   * Starts the next day: moves the game date one day forward and lets a new queue of travellers in.
-   * The nations, the discrepancies and the score are kept.
+   * Returns the current date and time. Can be replaced, for example in tests.
+   *
+   * @type {() => Date}
    */
-  startNextDay() {
-    this.#day++
-    this.#gameDate = addDays(this.#gameDate, 1)
-    this.#travellers = new Repository(Traveller)
-    this.#nextTravellerIndex = 0
-    this.#currentTraveller = null
-    this.#citations = 0
+  #now
 
-    this.#generateTravellers(this.#gameDate)
+  /**
+   * Creates a game controller. The randomness and the clock can be passed in, so that a test
+   * can get the same travellers and the same date every time.
+   *
+   * @param {object} [options] - What the controller depends on.
+   * @param {Random} [options.random=new Random()] - The source of randomness for creating travellers.
+   * @param {() => Date} [options.now] - Returns the current date and time. Defaults to the real clock.
+   */
+  constructor({ random = new Random(), now = () => new Date() } = {}) {
+    this.#random = random
+    this.#now = now
   }
 
   /**
@@ -223,6 +204,53 @@ export class GameController {
   }
 
   /**
+   * Starts a new game. Anything from an earlier game is replaced.
+   *
+   * @param {'easy' | 'medium' | 'hard'} difficulty - Difficulties.EASY, Difficulties.MEDIUM or Difficulties.HARD.
+   * @throws {RangeError} If the difficulty is unknown.
+   */
+  startGame(difficulty) {
+    if (!Object.values(Difficulties).includes(difficulty)) {
+      throw new RangeError(
+        'difficulty must be Difficulties.EASY ("easy"), Difficulties.MEDIUM ("medium") or Difficulties.HARD ("hard")'
+      )
+    }
+
+    this.#gameDifficulty = difficulty
+    this.#gameDate = this.#today()
+    this.#day = 1
+
+    this.#nations = new Repository(Nation)
+    this.#discrepancies = new Repository(Discrepancy)
+    this.#travellers = new Repository(Traveller)
+
+    this.#nextTravellerIndex = 0
+    this.#currentTraveller = null
+    this.#correctDecisions = 0
+    this.#incorrectDecisions = 0
+    this.#citations = 0
+
+    this.#generateNations(difficulty)
+    this.#generateDiscrepancies(difficulty)
+    this.#generateTravellers(this.#gameDate)
+  }
+
+  /**
+   * Starts the next day: moves the game date one day forward and lets a new queue of travellers in.
+   * The nations, the discrepancies and the score are kept.
+   */
+  startNextDay() {
+    this.#day++
+    this.#gameDate = addDays(this.#gameDate, 1)
+    this.#travellers = new Repository(Traveller)
+    this.#nextTravellerIndex = 0
+    this.#currentTraveller = null
+    this.#citations = 0
+
+    this.#generateTravellers(this.#gameDate)
+  }
+
+  /**
    * Calls the next traveller in the queue forward.
    *
    * @returns {Traveller | null} The next traveller, or null if everyone has already been called.
@@ -275,7 +303,7 @@ export class GameController {
    * @returns {Date} The date.
    */
   #today() {
-    const now = new Date()
+    const now = this.#now()
 
     return new Date(
       Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
@@ -317,7 +345,8 @@ export class GameController {
     const generator = new TravellerGenerator(
       gameDate,
       this.#appearancesBySex(),
-      FORGERY_PROBABILITY
+      FORGERY_PROBABILITY,
+      this.#random
     )
     const travellers = generator.createTravellers(
       TRAVELLERS_PER_DAY,

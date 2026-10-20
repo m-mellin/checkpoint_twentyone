@@ -92,7 +92,9 @@ export class SoundView {
     this.#gameWidth = gameWidth
     this.#gameHeight = gameHeight
 
-    this.#background = new BlockSprite(gameWidth, gameHeight, {
+    this.#background = new BlockSprite({
+      width: gameWidth,
+      height: gameHeight,
       color: BACKGROUND_COLOR
     })
 

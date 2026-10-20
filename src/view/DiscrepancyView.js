@@ -6,8 +6,8 @@ import discrepanciesData from '../data/discrepancies.json'
 /**
  * The discrepancy list's images, closed on the counter and open on the inspection desk.
  */
-const OPEN_SRC = '/assets/discrepancy_open.png'
-const CLOSED_SRC = '/assets/discrepancy_closed.png'
+const OPEN_SRC = 'assets/discrepancy_open.png'
+const CLOSED_SRC = 'assets/discrepancy_closed.png'
 
 /**
  * How much smaller than the image files the discrepancy list is drawn.

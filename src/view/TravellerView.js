@@ -130,7 +130,6 @@ export class TravellerView {
    * @param {Traveller} traveller - The traveller who walks in.
    */
   #walkIn(traveller) {
-    // Find the portrait that matches the person's appearance id
     const portrait = portraitData.find(
       (p) => p.id === traveller.person.appearance
     )
@@ -139,14 +138,11 @@ export class TravellerView {
 
     this.#current = traveller
 
-    // Show only this person's part of the sprite sheet
     this.#traveller.region = new SpriteRegion(portrait?.region)
 
-    // Size the sprite after the portrait, since the portraits have different widths
     this.#traveller.width = portrait?.region.width * PORTRAIT_SCALE
     this.#traveller.height = portrait?.region.height * PORTRAIT_SCALE
 
-    // Start outside the screen and walk towards the window
     this.#traveller.x = START_X
     this.#targetX = WINDOW_X
   }
@@ -157,14 +153,11 @@ export class TravellerView {
    * @param {Traveller} traveller - The traveller to show.
    */
   show(traveller) {
-    // The booth is empty, so the new traveller can walk in at once
     if (this.#current === null) {
       this.#walkIn(traveller)
       return
     }
 
-    // Someone is already at the window: let them leave first,
-    // and let the new traveller wait until they are gone
     this.#next = traveller
     this.#targetX = EXIT_X
   }
@@ -175,15 +168,13 @@ export class TravellerView {
    * @param {number} deltaTime - Milliseconds since the last frame.
    */
   #walk(deltaTime) {
-    // How far is left to the target. Positive means right, negative means left
-    const distance = this.#targetX - this.#traveller.x
+    const distanceLeft = this.#targetX - this.#traveller.x
+    const direction = Math.sign(distanceLeft)
 
-    // How far the traveller can walk this frame, but never further than
-    // the distance left, so they stop exactly on the target
-    const step = Math.min(Math.abs(distance), WALK_SPEED * deltaTime)
+    // Never further than the distance left, so the traveller stops exactly on the target
+    const stepLength = Math.min(Math.abs(distanceLeft), WALK_SPEED * deltaTime)
 
-    // Math.sign gives the direction: 1 for right, -1 for left, 0 if already there
-    this.#traveller.x += Math.sign(distance) * step
+    this.#traveller.x += direction * stepLength
   }
 
   /**
@@ -220,8 +211,6 @@ export class TravellerView {
 
     this.#breathEffect()
 
-    // The traveller has walked all the way out. The null check stops an
-    // empty booth from running this every frame
     if (this.#current !== null && this.#traveller.x === EXIT_X) {
       this.#afterLeaving()
     }
