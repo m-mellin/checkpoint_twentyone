@@ -39,7 +39,6 @@ const LINE_DISTANCE = 36
  * The see-through box behind the statistics, which makes them easier to read.
  */
 const BOX_COLOR = 'rgba(0, 0, 0, 0.6)'
-const BOX_WIDTH = 600
 const BOX_PADDING = 16
 
 /**
@@ -93,7 +92,7 @@ export class EndView {
       height: IMAGE_HEIGHT
     })
     image.x = (gameWidth - image.width) / 2
-    image.y = 0
+
     renderer.add(image)
 
     this.#addStats(renderer, gameWidth, stats)
@@ -124,35 +123,47 @@ export class EndView {
   }
 
   /**
-   * Writes the statistics, one centred line each, on a see-through box.
+   * Writes the statistics, one centred line each, on a see-through box as wide as the widest line.
    *
    * @param {SpriteRenderer} renderer - The renderer to draw with.
    * @param {number} gameWidth - The width of the canvas.
-   * @param {{days: number, correct: number, incorrect: number}} stats - How the game went.
+   * @param {GameStats} stats - How the game went.
    */
   #addStats(renderer, gameWidth, stats) {
-    const texts = [
+    const lines = [
       `DAYS PLAYED: ${stats.days}`,
       `CORRECT PASSPORTS: ${stats.correct}`,
       `INCORRECT STAMPED PASSPORTS: ${stats.incorrect}`
-    ]
+    ].map(
+      (text) => new TextLine(text, { color: STATS_COLOR, font: STATS_FONT })
+    )
+
+    const boxWidth = this.#widestWidth(lines) + BOX_PADDING * 2
 
     renderer.add(
       new BlockSprite({
-        width: BOX_WIDTH,
-        height: texts.length * LINE_DISTANCE + BOX_PADDING * 2,
-
-        x: (gameWidth - BOX_WIDTH) / 2,
+        x: (gameWidth - boxWidth) / 2,
         y: STATS_Y - BOX_PADDING,
+        width: boxWidth,
+        height: lines.length * LINE_DISTANCE + BOX_PADDING * 2,
         color: BOX_COLOR
       })
     )
 
-    for (const [index, text] of texts.entries()) {
-      const line = new TextLine(text, { color: STATS_COLOR, font: STATS_FONT })
+    for (const [index, line] of lines.entries()) {
       line.x = (gameWidth - line.width) / 2
       line.y = STATS_Y + index * LINE_DISTANCE
       renderer.add(line.sprite)
     }
+  }
+
+  /**
+   * Returns the width of the widest text line.
+   *
+   * @param {TextLine[]} lines - The lines to compare.
+   * @returns {number} The width of the widest line, in pixels.
+   */
+  #widestWidth(lines) {
+    return Math.max(...lines.map((line) => line.width))
   }
 }
