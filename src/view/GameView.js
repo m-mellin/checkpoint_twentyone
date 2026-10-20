@@ -15,17 +15,23 @@ import { InspectableItemView } from './InspectableItemView.js'
 import { CitationView } from './CitationView.js'
 import { NextDayView } from './NextDayView.js'
 
-const MAX_CITATIONS = 10
-
+/**
+ * The position of the approve and deny stamps.
+ */
 const APPROVE_STAMP_X_POS = 1400
 const APPROVE_STAMP_Y_POS = 500
 const DENY_STAMP_X_POS = 1500
 const DENY_STAMP_Y_POS = 500
 
-const HEIGHT_DISPLAY_X = 1100
-const DATE_DISPLAY_X = 0
+/**
+ * The size of the settings button.
+ */
+const BUTTON_SETTING_SIZE = 60
 
-const DISPLAY_Y = 1040
+/**
+ * The y coordinate of the height display.
+ */
+const HEIGHT_DISPLAY_X = 1100
 
 /**
  * The whole game screen. Creates every view in the order they are drawn,
@@ -146,14 +152,18 @@ export class GameView {
    * @param {number} options.gameWidth - The width of the canvas.
    * @param {number} options.gameHeight - The height of the canvas.
    * @param {'easy' | 'medium' | 'hard'} options.difficulty - Decides which discrepancies are listed.
+   * @param {number} options.maxCitations - The maximum number of citations to create.
    * @param {import('./SoundView.js').VolumeSetting[]} options.volumeSettings - One slider per setting.
    */
-  constructor(renderer, { gameWidth, gameHeight, difficulty, volumeSettings }) {
+  constructor(
+    renderer,
+    { gameWidth, gameHeight, difficulty, maxCitations = 3, volumeSettings }
+  ) {
     this.#travellerView = new TravellerView(renderer)
     new DeskView(renderer)
-
     this.#passportView = new PassportView(renderer)
     this.#discrepancyView = new DiscrepancyView(renderer, difficulty)
+
     this.#approveStamp = new StampView(renderer, {
       counterSrc: 'assets/approve_stamp.png',
       inspectionDeskSrc: 'assets/approve_stamp.png',
@@ -161,6 +171,7 @@ export class GameView {
       y: APPROVE_STAMP_Y_POS,
       approves: true
     })
+
     this.#denyStamp = new StampView(renderer, {
       counterSrc: 'assets/deny_stamp.png',
       inspectionDeskSrc: 'assets/deny_stamp.png',
@@ -169,40 +180,18 @@ export class GameView {
       approves: false
     })
 
-    this.#citations = Array.from(
-      { length: MAX_CITATIONS },
-      () => new CitationView(renderer)
-    )
+    this.#citations = this.#createCitations(renderer, maxCitations)
 
-    this.#dateDisplay = new LcdDisplayView(renderer, {
-      x: DATE_DISPLAY_X,
-      y: DISPLAY_Y
-    })
-    this.#heightDisplay = new LcdDisplayView(renderer, {
-      x: HEIGHT_DISPLAY_X,
-      y: DISPLAY_Y
-    })
+    this.#dateDisplay = new LcdDisplayView(renderer)
+    this.#heightDisplay = new LcdDisplayView(renderer, { x: HEIGHT_DISPLAY_X })
 
-    this.#soundView = new SoundView(
-      renderer,
+    this.#soundView = new SoundView(renderer, {
       gameWidth,
       gameHeight,
       volumeSettings
-    )
-
-    this.#settingsButton = new Button(renderer, {
-      src: 'assets/settings_button.png',
-      x: 0,
-      y: 0,
-      width: 60,
-      height: 60,
-      /**
-       * Opens the sound settings if they are closed, and closes them if they are open.
-       */
-      onClick: () => {
-        this.#soundView.toggle()
-      }
     })
+
+    this.#settingsButton = this.#createSettingsButton(renderer)
 
     this.#nextDayView = new NextDayView(renderer, { gameWidth, gameHeight })
   }
@@ -424,6 +413,40 @@ export class GameView {
     const citatonSlip = this.#citations.find((citation) => !citation.isInUse)
 
     citatonSlip?.print(reason)
+  }
+
+  /**
+   * Creates the citation slips. They stay hidden until a mistake prints one.
+   *
+   * @param {SpriteRenderer} renderer - The renderer to draw with.
+   * @param {number} amount - How many slips to create.
+   * @returns {CitationView[]} The citation slips.
+   */
+  #createCitations(renderer, amount) {
+    return Array.from(
+      { length: amount },
+      () => new CitationView(renderer)
+    )
+  }
+
+  /**
+   * Creates the button that opens and closes the sound settings.
+   *
+   * @param {SpriteRenderer} renderer - The renderer to draw with.
+   * @returns {Button} The settings button.
+   */
+  #createSettingsButton(renderer) {
+    return new Button(renderer, {
+      src: 'assets/settings_button.png',
+      width: BUTTON_SETTING_SIZE,
+      height: BUTTON_SETTING_SIZE,
+      /**
+       * Opens the sound settings if they are closed, and closes them if they are open.
+       */
+      onClick: () => {
+        this.#soundView.toggle()
+      }
+    })
   }
 
   /**
