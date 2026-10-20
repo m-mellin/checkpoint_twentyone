@@ -4,7 +4,7 @@ import { TextLine } from './TextLine.js'
 /**
  * The image of the display panel.
  */
-const LCD_SRC = '/assets/lcd_panel.png'
+const LCD_SRC = 'assets/lcd_panel.png'
 
 /**
  * The scale of the display panel is drawn.

@@ -1,5 +1,7 @@
 ## Test Report
 
+### Summary
+
 ### Run 1: Index.js
 
 All test cases were run manually in Chrome on Windows, in full screen at 1920 × 1080.
@@ -63,3 +65,11 @@ After moving logic code from index.js to App.js, i needed to run every test-case
 | TC23 | Start again | R12 | ✅ Passed  2026-10-19 |
 | TC24 | Background volume | R13 | ✅ Passed  2026-10-19 |
 | TC25 | Voice volume | R13 | ✅ Passed  2026-10-19 |
+
+### Known issues in Third-Party Modules
+As i have found out none. As i was developing my application i thought about using a different module 
+than the one i did. After continuing to develop my application i found that i couldn't use the intended module 
+and instead had to go looking for another students. 
+
+I found the `dice-rng-toolkit` and looked at how similar it looked to my own Random class. I therefore just 
+implemented the logic into my own class, and it has worked as intended.

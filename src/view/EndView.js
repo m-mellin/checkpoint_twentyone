@@ -11,7 +11,7 @@ const BACKGROUND_COLOR = '#03090c'
 /**
  * The image on the end screen.
  */
-const IMAGE_SRC = '/assets/game_over.png'
+const IMAGE_SRC = 'assets/game_over.png'
 
 /**
  * The size of the end screen image, in pixels.

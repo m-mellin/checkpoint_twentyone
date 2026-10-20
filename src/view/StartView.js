@@ -10,7 +10,7 @@ const BACKGROUND_COLOR = '#03090c'
 /**
  * The image on the StartView.
  */
-const IMAGE_SRC = '/assets/start_game.png'
+const IMAGE_SRC = 'assets/start_game.png'
 
 /**
  * The size of the StartView image.
