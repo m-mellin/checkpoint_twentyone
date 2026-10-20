@@ -34,6 +34,11 @@ const START_Y = 700
 const TEXT_COLOR = '#fff'
 
 /**
+ * The colour of the text while the list is closed on the counter, where it is too small to read.
+ */
+const HIDDEN_COLOR = 'transparent'
+
+/**
  * The heading above the possible discrepancies on the open list.
  */
 const TITLE_TEXT = 'POSSIBLE DISCREPANCIES'
@@ -90,7 +95,7 @@ export class DiscrepancyView extends InspectableItemView {
    *
    * @type {TextLine}
    */
-  #title = new TextLine('', {
+  #title = new TextLine(TITLE_TEXT, {
     color: TEXT_COLOR,
     font: TITLE_FONT
   })
@@ -101,13 +106,6 @@ export class DiscrepancyView extends InspectableItemView {
    * @type {TextLine[]}
    */
   #fields = []
-
-  /**
-   * The text for each possible discrepancy, in the same order as the text lines.
-   *
-   * @type {string[]}
-   */
-  #texts = []
 
   /**
    * Creates the discrepancy list with every discrepancy that can occur at the difficulty,
@@ -124,14 +122,12 @@ export class DiscrepancyView extends InspectableItemView {
       y: START_Y
     })
 
-    renderer.add(this.#title.sprite)
+    this.#fields = discrepanciesData[difficulty].map(
+      (code) => new TextLine(DISCREPANCY_TEXTS[code] ?? code, { color: TEXT_COLOR })
+    )
 
-    for (const code of discrepanciesData[difficulty]) {
-      this.#texts.push(DISCREPANCY_TEXTS[code] ?? code)
-
-      const field = new TextLine('', { color: TEXT_COLOR })
-      this.#fields.push(field)
-      renderer.add(field.sprite)
+    for (const line of [this.#title, ...this.#fields]) {
+      renderer.add(line.sprite)
     }
 
     this.show()
@@ -162,12 +158,10 @@ export class DiscrepancyView extends InspectableItemView {
    * @protected
    */
   updateContent() {
-    const isOpen = this.isOnInspectionDesk
+    const color = this.isOnInspectionDesk ? TEXT_COLOR : HIDDEN_COLOR
 
-    this.#title.text = isOpen ? TITLE_TEXT : ''
-
-    this.#fields.forEach((field, index) => {
-      field.text = isOpen ? this.#texts[index] : ''
-    })
+    for (const line of [this.#title, ...this.#fields]) {
+      line.textColor = color
+    }
   }
 }
