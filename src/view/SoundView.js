@@ -84,11 +84,12 @@ export class SoundView {
    * They start hidden.
    *
    * @param {SpriteRenderer} renderer - The renderer to draw with.
-   * @param {number} gameWidth - The width of the game.
-   * @param {number} gameHeight - The height of the game.
-   * @param {VolumeSetting[]} volumeSettings - One slider per setting, from top to bottom.
+   * @param {object} options - The size of the game and the volume settings.
+   * @param {number} options.gameWidth - The width of the game, used to centre the settings.
+   * @param {number} options.gameHeight - The height of the game, used to centre the settings.
+   * @param {VolumeSetting[]} options.volumeSettings - One slider per setting.
    */
-  constructor(renderer, gameWidth, gameHeight, volumeSettings) {
+  constructor(renderer, { gameWidth, gameHeight, volumeSettings }) {
     this.#gameWidth = gameWidth
     this.#gameHeight = gameHeight
 
