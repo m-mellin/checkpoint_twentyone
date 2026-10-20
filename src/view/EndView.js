@@ -81,7 +81,7 @@ export class EndView {
    */
   constructor(renderer, { gameWidth, gameHeight, stats, onRestart }) {
     renderer.add(
-      new BlockSprite(gameWidth, gameHeight, { color: BACKGROUND_COLOR })
+      new BlockSprite( { width: gameWidth, height: gameHeight, color: BACKGROUND_COLOR })
     )
 
     const image = new Sprite(IMAGE_SRC, {
@@ -134,15 +134,14 @@ export class EndView {
     ]
 
     renderer.add(
-      new BlockSprite(
-        BOX_WIDTH,
-        texts.length * LINE_DISTANCE + BOX_PADDING * 2,
-        {
-          x: (gameWidth - BOX_WIDTH) / 2,
-          y: STATS_Y - BOX_PADDING,
-          color: BOX_COLOR
-        }
-      )
+      new BlockSprite({
+        width: BOX_WIDTH,
+        height: texts.length * LINE_DISTANCE + BOX_PADDING * 2,
+
+        x: (gameWidth - BOX_WIDTH) / 2,
+        y: STATS_Y - BOX_PADDING,
+        color: BOX_COLOR
+      })
     )
 
     for (const [index, text] of texts.entries()) {

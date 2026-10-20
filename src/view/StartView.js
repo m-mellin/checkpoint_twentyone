@@ -45,7 +45,11 @@ export class StartView {
    */
   constructor(renderer, { gameWidth, gameHeight, onStart }) {
     renderer.add(
-      new BlockSprite(gameWidth, gameHeight, { color: BACKGROUND_COLOR })
+      new BlockSprite({
+        width: gameWidth,
+        height: gameHeight,
+        color: BACKGROUND_COLOR
+      })
     )
 
     const image = new Sprite(IMAGE_SRC, { width: WIDTH, height: HEIGHT })

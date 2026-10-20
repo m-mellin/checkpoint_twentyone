@@ -116,7 +116,9 @@ export class NextDayView {
    */
   constructor(renderer, { gameWidth, gameHeight }) {
     this.#gameSize = { width: gameWidth, height: gameHeight }
-    this.#background = new BlockSprite(gameWidth, gameHeight, {
+    this.#background = new BlockSprite({
+      width: gameWidth,
+      height: gameHeight,
       color: `rgba(${BACKGROUND_RGB}, 0)`
     })
 
