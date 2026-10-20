@@ -9,7 +9,6 @@ const DESK_SRC = 'assets/inspection_desk.png'
  * The positon of the desk, in pixels.
  */
 const DESK_X = 1370
-const DESK_Y = 0
 
 /**
  * The size of the desk, in pixels.
@@ -26,7 +25,7 @@ export class DeskView {
    *
    * @type {Sprite}
    */
-  #desk = new Sprite(DESK_SRC, { x: DESK_X, y: DESK_Y, width: DESK_WIDTH, height: DESK_HEIGHT })
+  #desk = new Sprite(DESK_SRC, { x: DESK_X, width: DESK_WIDTH, height: DESK_HEIGHT })
 
   /**
    * Adds the inspection desk to the renderer.
