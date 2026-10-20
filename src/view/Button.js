@@ -24,13 +24,13 @@ export class Button {
    * @param {SpriteRenderer} renderer - The renderer to draw with.
    * @param {object} options - The button's image, position, size and action.
    * @param {string} options.src - The image of the button.
-   * @param {number} options.x - The x coordinate of the top left corner.
-   * @param {number} options.y - The y coordinate of the top left corner.
-   * @param {number} options.width - The width in pixels.
-   * @param {number} options.height - The height in pixels.
+   * @param {number} [options.x=0] - The x coordinate of the top left corner.
+   * @param {number} [options.y=0] - The y coordinate of the top left corner.
+   * @param {number} [options.width=0] - The width in pixels.
+   * @param {number} [options.height=0] - The height in pixels.
    * @param {() => void} options.onClick - Called when the button is clicked.
    */
-  constructor(renderer, { src, x, y, width, height, onClick }) {
+  constructor(renderer, { src, x = 0, y = 0, width = 0, height = 0, onClick }) {
     this.#sprite = new Sprite(src, { x, y, width, height })
     this.#onClick = onClick
 
