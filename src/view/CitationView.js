@@ -30,8 +30,8 @@ const START_Y = 700
 /**
  * The colour of the title and the discrepancy text
  */
-const TITLE_COLOR = 'red'
-const TEXT_COLOR = 'black'
+const TITLE_COLOR = '#A31800'
+const TEXT_COLOR = '#1A0400'
 
 /**
  * The heading above the possible discrepancies on the open list.
