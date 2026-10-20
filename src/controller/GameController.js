@@ -126,7 +126,7 @@ export class GameController {
    * @type {() => Date}
    */
   #now
-  
+
   /**
    * Creates a game controller. The randomness and the clock can be passed in, so that a test
    * can get the same travellers and the same date every time.
@@ -305,7 +305,9 @@ export class GameController {
   #today() {
     const now = this.#now()
 
-    return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
+    return new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+    )
   }
 
   /**

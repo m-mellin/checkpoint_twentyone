@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { Person, Sex } from './Person.js';
-import { Nation } from './Nation.js';
+import { describe, it, expect } from 'vitest'
+import { Person, Sex } from './Person.js'
+import { Nation } from './Nation.js'
 
-const SWEDEN = new Nation({name: 'Sweden', countryCode: 'SWE'})
+const SWEDEN = new Nation({ name: 'Sweden', countryCode: 'SWE' })
 
 function validData(changes = {}) {
   return {
@@ -40,7 +40,9 @@ describe('Person', () => {
       'throws a TypeError if %s is not a non-empty string',
       (field) => {
         for (const invalidData of ['', '   ', 55, undefined]) {
-          expect(() => new Person(validData({[field]: invalidData }))).toThrow(TypeError)
+          expect(() => new Person(validData({ [field]: invalidData }))).toThrow(
+            TypeError
+          )
         }
       }
     )
@@ -52,14 +54,19 @@ describe('Person', () => {
       }
     )
 
-    it.each([NaN, Infinity, '180'])('throws a TypeError if heightInCm is %s', (heightInCm) => {
-      expect(() => new Person(validData({ heightInCm }))).toThrow(TypeError)
-    })
+    it.each([NaN, Infinity, '180'])(
+      'throws a TypeError if heightInCm is %s',
+      (heightInCm) => {
+        expect(() => new Person(validData({ heightInCm }))).toThrow(TypeError)
+      }
+    )
 
     it('throws a TypeError if nationality is not a Nation', () => {
       const fakeNation = { name: 'Sweden', countryCode: 'SWE' }
 
-      expect(() => new Person(validData({ nationality: fakeNation }))).toThrow(TypeError)
+      expect(() => new Person(validData({ nationality: fakeNation }))).toThrow(
+        TypeError
+      )
     })
 
     it('throws a RangeError if sex is not Sex.MALE or Sex.FEMALE', () => {

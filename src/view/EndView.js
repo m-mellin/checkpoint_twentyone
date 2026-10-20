@@ -81,7 +81,11 @@ export class EndView {
    */
   constructor(renderer, { gameWidth, gameHeight, stats, onRestart }) {
     renderer.add(
-      new BlockSprite( { width: gameWidth, height: gameHeight, color: BACKGROUND_COLOR })
+      new BlockSprite({
+        width: gameWidth,
+        height: gameHeight,
+        color: BACKGROUND_COLOR
+      })
     )
 
     const image = new Sprite(IMAGE_SRC, {

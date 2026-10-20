@@ -129,7 +129,7 @@ export class App {
       this.#runFrame(timestamp)
     })
   }
-  
+
   /**
    * Creates the start screen, where the player chooses a difficulty.
    *
@@ -301,9 +301,13 @@ export class App {
   #startNextDay(view) {
     this.#gameController.startNextDay()
 
-    view.startNextDay(this.#gameController.day, this.#gameController.gameDate, () => {
-      this.#callNextTraveller()
-    })
+    view.startNextDay(
+      this.#gameController.day,
+      this.#gameController.gameDate,
+      () => {
+        this.#callNextTraveller()
+      }
+    )
   }
 
   /**
@@ -379,7 +383,8 @@ export class App {
    * @param {number} timestamp - The current frame time.
    */
   #runFrame(timestamp) {
-    const deltaTime = this.#previousTimestamp === null ? 0 : timestamp - this.#previousTimestamp
+    const deltaTime =
+      this.#previousTimestamp === null ? 0 : timestamp - this.#previousTimestamp
     this.#previousTimestamp = timestamp
 
     this.#gameView?.update(Math.min(deltaTime, MAX_DELTA_TIME))

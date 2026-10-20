@@ -174,8 +174,14 @@ export class GameView {
       () => new CitationView(renderer)
     )
 
-    this.#dateDisplay = new LcdDisplayView(renderer, { x: DATE_DISPLAY_X, y: DISPLAY_Y })
-    this.#heightDisplay = new LcdDisplayView(renderer, { x: HEIGHT_DISPLAY_X, y: DISPLAY_Y })
+    this.#dateDisplay = new LcdDisplayView(renderer, {
+      x: DATE_DISPLAY_X,
+      y: DISPLAY_Y
+    })
+    this.#heightDisplay = new LcdDisplayView(renderer, {
+      x: HEIGHT_DISPLAY_X,
+      y: DISPLAY_Y
+    })
 
     this.#soundView = new SoundView(
       renderer,

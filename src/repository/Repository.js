@@ -30,7 +30,9 @@ export class Repository {
    */
   add(item) {
     if (!(item instanceof this.#itemType)) {
-      throw new TypeError(`item must be a ${this.#itemType.name}, but was ${typeof item}`)
+      throw new TypeError(
+        `item must be a ${this.#itemType.name}, but was ${typeof item}`
+      )
     }
 
     if (this.has(item)) {
