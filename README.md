@@ -15,6 +15,8 @@ difficulty, so that it rewards careful reading rather than fast clicking.
 
 ## How to play
 
+Currently playable at: https://m-mellin.github.io/checkpoint_twentyone/
+
 1. Choose a difficulty: **Easy**, **Medium** or **Hard**.
 2. A traveller walks up to the window and hands over their passport.
 3. Drag the passport to the inspection desk on the right to open it.

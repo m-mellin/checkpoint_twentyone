@@ -66,6 +66,38 @@ After moving logic code from index.js to App.js, i needed to run every test-case
 | TC24 | Background volume | R13 | ✅ Passed  2026-10-19 |
 | TC25 | Voice volume | R13 | ✅ Passed  2026-10-19 |
 
+### Run 3: Publishing on GitHub Pages
+
+After making some additional changes and publishing the game again on GitHub Pages, i ran every test-case again.
+
+| Id | Test case | Requirement | Result |
+| -- | --------- | ----------- | ------ |
+| TC1 | Start a game | R1 | ✅ Passed  2026-10-20 |
+| TC2 | Start on every difficulty | R1 | ✅ Passed  2026-10-20 |
+| TC3 | Discrepancies follow the difficulty | R2 | ✅ Passed  2026-10-20 |
+| TC4 | Nations follow the difficulty | R2 | ✅ Passed  2026-10-20 |
+| TC5 | Passport when the traveller arrives | R3 | ✅ Passed  2026-10-20 |
+| TC6 | Open on the inspection desk | R4 | ✅ Passed  2026-10-20 |
+| TC7 | Fall onto the counter | R4 | ✅ Passed  2026-10-20 |
+| TC8 | Drag every item | R4 | ✅ Passed  2026-10-20 |
+| TC9 | Passport details and displays | R5 | ✅ Passed  2026-10-20 |
+| TC10 | Genuine passport matches | R6 | ✅ Passed  2026-10-20 |
+| TC11 | Forgery can be found | R6 | ✅ Passed  2026-10-20 |
+| TC12 | Stamp the passport | R7 | ✅ Passed  2026-10-20 |
+| TC13 | Stamp beside the passport | R7 | ✅ Passed  2026-10-20 |
+| TC14 | Hand back a stamped passport | R8 | ✅ Passed  2026-10-20 |
+| TC15 | Unstamped passport stays | R8 | ✅ Passed  2026-10-20 |
+| TC16 | Citation for denying a genuine passport | R9 | ✅ Passed  2026-10-20 |
+| TC17 | Citation for approving a forgery | R9 | ✅ Passed  2026-10-20 |
+| TC18 | New day | R10 | ✅ Passed  2026-10-20 |
+| TC19 | Date on the next day | R10 | ✅ Passed  2026-10-20 |
+| TC20 | Game over | R11 | ✅ Passed  2026-10-20 |
+| TC21 | Citations reset each day | R11 | ✅ Passed  2026-10-20 |
+| TC22 | Statistics on the end screen | R12 | ✅ Passed  2026-10-20 |
+| TC23 | Start again | R12 | ✅ Passed  2026-10-20 |
+| TC24 | Background volume | R13 | ✅ Passed  2026-10-20 |
+| TC25 | Voice volume | R13 | ✅ Passed  2026-10-20 |
+
 ### Known issues in Third-Party Modules
 As i have found out none. As i was developing my application i thought about using a different module 
 than the one i did. After continuing to develop my application i found that i couldn't use the intended module 
