@@ -186,6 +186,7 @@ export class App {
       gameWidth: this.#canvas.width,
       gameHeight: this.#canvas.height,
       difficulty: this.#gameController.difficulty,
+      maxCitations: MAX_CITATIONS_PER_DAY,
       volumeSettings: this.#volumeSettings()
     })
 
