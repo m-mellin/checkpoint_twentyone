@@ -1,4 +1,4 @@
-import { assertNonEmptyString } from './validation'
+import { assertNonEmptyString } from './validation.js'
 
 const COUNTRY_CODE_PATTERN = /^[A-Z]{3}$/
 

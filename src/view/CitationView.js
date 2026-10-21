@@ -1,6 +1,6 @@
 import { SpriteRenderer } from '2d-sprite-renderer'
-import { InspectableItemView } from './InspectableItemView'
-import { TextLine } from './TextLine'
+import { InspectableItemView } from './InspectableItemView.js'
+import { TextLine } from './TextLine.js'
 
 /**
  * The citation's images, closed on the counter and open on the inspection desk.
