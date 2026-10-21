@@ -51,22 +51,6 @@ export class Repository {
   }
 
   /**
-   * Return index of an item in the list.
-   *
-   * @param {T} item - The item to find
-   * @returns {number} the index of the item
-   */
-  #getIndex(item) {
-    const index = this.#items.indexOf(item)
-
-    if (index === -1) {
-      throw new Error(`${this.#itemType.name} does not exist.`)
-    }
-
-    return index
-  }
-
-  /**
    * Remove item from repository
    *
    * @param {T} item Any object
@@ -82,5 +66,21 @@ export class Repository {
    */
   getAllItems() {
     return Array.from(this.#items)
+  }
+
+  /**
+   * Return index of an item in the list.
+   *
+   * @param {T} item - The item to find
+   * @returns {number} the index of the item
+   */
+  #getIndex(item) {
+    const index = this.#items.indexOf(item)
+
+    if (index === -1) {
+      throw new Error(`${this.#itemType.name} does not exist.`)
+    }
+
+    return index
   }
 }
