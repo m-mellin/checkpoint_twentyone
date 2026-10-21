@@ -22,10 +22,15 @@ const APPROVE_MARKER_SRC = 'assets/approve_stamp_marker.png'
 const DENY_MARKER_SRC = 'assets/deny_stamp_marker.png'
 
 /**
+ * The scale of the passport from its original size.
+ */
+const PASSPORT_SCALE = 1.7
+
+/**
  * The width and height of the open passport.
  */
-const OPEN_WIDTH = 1404 / 1.7
-const OPEN_HEIGHT = 1120 / 1.7
+const OPEN_WIDTH = 1404 / PASSPORT_SCALE
+const OPEN_HEIGHT = 1120 / PASSPORT_SCALE
 
 /**
  * The width and height of the closed passport.
