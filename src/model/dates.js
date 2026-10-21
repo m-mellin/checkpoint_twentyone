@@ -1,3 +1,6 @@
+/**
+ * Miliseconds per day (24 hours * 60 minutes * 60 seconds * 1000 miliseconds)
+ */
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
 /**
