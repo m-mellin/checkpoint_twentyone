@@ -1,6 +1,6 @@
 {
   "name": "checkpoint_twentyone",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": false,
   "description": "A border control game in the browser. You are the officer at a Swedish checkpoint. Travellers come to your window one at a time, and you decide who gets in by checking their passport against the rules of the day.",
   "type": "module",
