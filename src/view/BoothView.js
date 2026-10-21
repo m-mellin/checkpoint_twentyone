@@ -3,56 +3,41 @@ import portraitData from '../data/portraits.json'
 import { Traveller } from '../model/Traveller.js'
 
 /**
- * The image source of the counter in front of the travellers, where their passports are first placed.
+ * The counter's image, position and size.
  */
 const COUNTER_SRC = 'assets/desk_final_2.png'
+const COUNTER_Y = 520
+const COUNTER_WIDTH = 1367
+const COUNTER_HEIGHT = 511
 
 /**
- * The image source of the background, behind the travellers.
+ * The background image and size.
  */
 const BACKGROUND_SRC = 'assets/background_final_2.png'
+const BACKGROUND_WIDTH = 1367
+const BACKGROUND_HEIGHT = 629
 
 /**
- * The image source of the traveller portraits.
+ * The sprite sheet's image, and the traveller's position and scale.
  */
 const TRAVELLERS_SRC = 'assets/travellers.png'
-
-/**
- * How many times larger than in the sprite sheet a portrait is drawn.
- */
+const TRAVELLER_Y = 320
 const PORTRAIT_SCALE = 2
 
 /**
- * The y coordinate of the traveller's top edge when standing still, in pixels.
- */
-const TRAVELLER_Y = 320
-
-/**
- * How slowly the traveller breathes. A higher value gives slower breathing.
+ * Controls the breathing animation of the traveller.
+ * 
+ * A higher speed gives slower breathing, and the height is how far the traveller moves, in pixels.
  */
 const BOB_SPEED = 400
-
-/**
- * How many pixels the traveller moves up and down when breathing.
- */
 const BOB_HEIGHT = 3
 
 /**
- * Where a new traveller starts. The value should be negative
- * so they start outside the screen on the left, in pixels.
+ * The x coordinates the traveller walks between: start, window and exit.
  */
-const START_X = -500
-
-/**
- * Where the traveller stops in the window, in pixels.
- */
-const WINDOW_X = 480
-
-/**
- * Where the traveller walks to when leaving. The value should be
- * further than the screen width, in pixels.
- */
-const EXIT_X = 1400
+const TRAVELLER_START_X = -500
+const TRAVELLER_STOP_X = 480
+const TRAVELLER_EXIT_X = 1400
 
 /**
  * How fast the traveller moves, in pixels per millisecond.
@@ -69,21 +54,21 @@ export class BoothView {
    *
    * @type {Sprite}
    */
-  #background = new Sprite(BACKGROUND_SRC, { x: 0, y: 0, width: 1367, height: 629 })
+  #background = new Sprite(BACKGROUND_SRC, { width: BACKGROUND_WIDTH, height: BACKGROUND_HEIGHT })
 
   /**
    * The counter in front of the traveller.
    *
    * @type {Sprite}
    */
-  #desk = new Sprite(COUNTER_SRC, { x: 0, y: 520, width: 1367, height: 511 })
+  #counter = new Sprite(COUNTER_SRC, { y: COUNTER_Y, width: COUNTER_WIDTH, height: COUNTER_HEIGHT })
 
   /**
    * The traveller's portrait. Its region decides which person is shown.
    *
    * @type {Sprite}
    */
-  #traveller = new Sprite(TRAVELLERS_SRC, { x: START_X, y: TRAVELLER_Y })
+  #traveller = new Sprite(TRAVELLERS_SRC, { x: TRAVELLER_START_X, y: TRAVELLER_Y })
 
   /**
    * Milliseconds since the view was created. Drives the breathing.
@@ -111,22 +96,23 @@ export class BoothView {
    *
    * @type {number}
    */
-  #targetX = START_X
+  #targetX = TRAVELLER_STOP_X
 
   /**
    * Adds the view's sprites to the renderer. The traveller is added between the background
-   * and the desk, so they are drawn behind the desk.
+   * and the counter, so they are drawn behind the counter.
    *
    * @param {SpriteRenderer} renderer - The renderer to draw with.
    */
   constructor(renderer) {
     renderer.add(this.#background)
     renderer.add(this.#traveller)
-    renderer.add(this.#desk)
+    renderer.add(this.#counter)
   }
 
   /**
    * Shows a traveller's portrait outside the booth and lets them walk to the window.
+   * Does nothing if there is no portrait for the traveller's appearance.
    *
    * @param {Traveller} traveller - The traveller who walks in.
    */
@@ -139,11 +125,11 @@ export class BoothView {
 
     this.#traveller.region = new SpriteRegion(portrait.region)
 
-    this.#traveller.width = portrait?.region.width * PORTRAIT_SCALE
-    this.#traveller.height = portrait?.region.height * PORTRAIT_SCALE
+    this.#traveller.width = portrait.region.width * PORTRAIT_SCALE
+    this.#traveller.height = portrait.region.height * PORTRAIT_SCALE
 
-    this.#traveller.x = START_X
-    this.#targetX = WINDOW_X
+    this.#traveller.x = TRAVELLER_START_X
+    this.#targetX = TRAVELLER_STOP_X
   }
 
   /**
@@ -158,7 +144,7 @@ export class BoothView {
     }
 
     this.#next = traveller
-    this.#targetX = EXIT_X
+    this.#targetX = TRAVELLER_EXIT_X
   }
 
   /**
@@ -190,7 +176,7 @@ export class BoothView {
   }
 
   /**
-   * Empties the booth, if no one is waiting.
+   * Empties the booth and hides the portrait.
    */
   #emptyBooth() {
     this.#current = null
@@ -210,7 +196,7 @@ export class BoothView {
 
     this.#breathEffect()
 
-    if (this.#current !== null && this.#traveller.x === EXIT_X) {
+    if (this.#current !== null && this.#traveller.x === TRAVELLER_EXIT_X) {
       this.#afterLeaving()
     }
   }
@@ -228,7 +214,7 @@ export class BoothView {
    */
   leave() {
     this.#next = null
-    this.#targetX = EXIT_X
+    this.#targetX = TRAVELLER_EXIT_X
   }
 
   /**
@@ -239,8 +225,8 @@ export class BoothView {
   get isAtWindow() {
     return (
       this.#current !== null &&
-      this.#targetX === WINDOW_X &&
-      this.#traveller.x === WINDOW_X
+      this.#targetX === TRAVELLER_STOP_X &&
+      this.#traveller.x === TRAVELLER_STOP_X
     )
   }
 }
