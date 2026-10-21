@@ -303,8 +303,7 @@ export class InspectableItemView {
    * @returns {boolean} True if the item changed place.
    */
   #decidePlace() {
-    const shouldBeOnInspectionDesk =
-      this.#x + this.width / 2 >= INSPECTION_DESK_LEFT_X
+    const shouldBeOnInspectionDesk = this.#x + this.width / 2 >= INSPECTION_DESK_LEFT_X
     const changed = shouldBeOnInspectionDesk !== this.#isOnInspectionDesk
 
     this.#isOnInspectionDesk = shouldBeOnInspectionDesk
@@ -320,10 +319,7 @@ export class InspectableItemView {
       this.#inspectionDeskSprite,
       this.isOnInspectionDesk ? this.#inspectionDeskLook : null
     )
-    this.#resize(
-      this.#counterSprite,
-      this.isOnCounter ? this.#counterLook : null
-    )
+    this.#resize(this.#counterSprite, this.isOnCounter ? this.#counterLook : null)
     this.updateContent()
   }
 
@@ -356,8 +352,6 @@ export class InspectableItemView {
    * @returns {ItemLook} The current look.
    */
   #currentLook() {
-    return this.#isOnInspectionDesk
-      ? this.#inspectionDeskLook
-      : this.#counterLook
+    return this.#isOnInspectionDesk ? this.#inspectionDeskLook : this.#counterLook
   }
 }

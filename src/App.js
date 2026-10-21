@@ -302,13 +302,9 @@ export class App {
   #startNextDay(view) {
     this.#gameController.startNextDay()
 
-    view.startNextDay(
-      this.#gameController.day,
-      this.#gameController.gameDate,
-      () => {
-        this.#callNextTraveller()
-      }
-    )
+    view.startNextDay(this.#gameController.day, this.#gameController.gameDate, () => {
+      this.#callNextTraveller()
+    })
   }
 
   /**

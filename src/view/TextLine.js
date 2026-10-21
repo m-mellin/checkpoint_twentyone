@@ -21,10 +21,7 @@ export class TextLine {
    * @param {string} [options.font='12px "Press Start 2P"'] - The CSS font of the text.
    * @throws {Error} If the browser cannot create a context for measuring text.
    */
-  constructor(
-    text,
-    { color = '#000000', font = '12px "Press Start 2P"' } = {}
-  ) {
+  constructor(text, { color = '#000000', font = '12px "Press Start 2P"' } = {}) {
     this.#sprite = new TextSprite(text, { color, font })
   }
 

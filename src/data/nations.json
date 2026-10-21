@@ -118,14 +118,7 @@
   {
     "name": "Germany",
     "countryCode": "DEU",
-    "issuingCities": [
-      "Berlin",
-      "Hamburg",
-      "München",
-      "Köln",
-      "Frankfurt",
-      "Düsseldorf"
-    ],
+    "issuingCities": ["Berlin", "Hamburg", "München", "Köln", "Frankfurt", "Düsseldorf"],
     "maleFirstNames": [
       "Hans",
       "Peter",
@@ -234,14 +227,7 @@
   {
     "name": "Denmark",
     "countryCode": "DNK",
-    "issuingCities": [
-      "København",
-      "Aarhus",
-      "Odense",
-      "Aalborg",
-      "Esbjerg",
-      "Horsens"
-    ],
+    "issuingCities": ["København", "Aarhus", "Odense", "Aalborg", "Esbjerg", "Horsens"],
     "maleFirstNames": [
       "Jens",
       "Peter",
@@ -292,14 +278,7 @@
   {
     "name": "Poland",
     "countryCode": "POL",
-    "issuingCities": [
-      "Warszawa",
-      "Kraków",
-      "Łódź",
-      "Wrocław",
-      "Poznań",
-      "Gdańsk"
-    ],
+    "issuingCities": ["Warszawa", "Kraków", "Łódź", "Wrocław", "Poznań", "Gdańsk"],
     "maleFirstNames": [
       "Jan",
       "Piotr",
@@ -350,14 +329,7 @@
   {
     "name": "Estonia",
     "countryCode": "EST",
-    "issuingCities": [
-      "Tallinn",
-      "Tartu",
-      "Narva",
-      "Pärnu",
-      "Kohtla-Järve",
-      "Viljandi"
-    ],
+    "issuingCities": ["Tallinn", "Tartu", "Narva", "Pärnu", "Kohtla-Järve", "Viljandi"],
     "maleFirstNames": [
       "Jaan",
       "Peeter",
@@ -408,14 +380,7 @@
   {
     "name": "Finland",
     "countryCode": "FIN",
-    "issuingCities": [
-      "Helsinki",
-      "Espoo",
-      "Tampere",
-      "Vantaa",
-      "Oulu",
-      "Turku"
-    ],
+    "issuingCities": ["Helsinki", "Espoo", "Tampere", "Vantaa", "Oulu", "Turku"],
     "maleFirstNames": [
       "Mikko",
       "Jari",
@@ -466,14 +431,7 @@
   {
     "name": "Latvia",
     "countryCode": "LVA",
-    "issuingCities": [
-      "Riga",
-      "Daugavpils",
-      "Liepāja",
-      "Jelgava",
-      "Jūrmala",
-      "Ventspils"
-    ],
+    "issuingCities": ["Riga", "Daugavpils", "Liepāja", "Jelgava", "Jūrmala", "Ventspils"],
     "maleFirstNames": [
       "Jānis",
       "Andris",
@@ -524,14 +482,7 @@
   {
     "name": "Lithuania",
     "countryCode": "LTU",
-    "issuingCities": [
-      "Vilnius",
-      "Kaunas",
-      "Klaipėda",
-      "Šiauliai",
-      "Panevėžys",
-      "Alytus"
-    ],
+    "issuingCities": ["Vilnius", "Kaunas", "Klaipėda", "Šiauliai", "Panevėžys", "Alytus"],
     "maleFirstNames": [
       "Jonas",
       "Andrius",

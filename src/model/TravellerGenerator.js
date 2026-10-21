@@ -52,12 +52,7 @@ export class TravellerGenerator {
    * @param {number} [forgeryProbability=0.4] - The share of passports that are forged, from 0 to 1.
    * @param {Random} [random=new Random()] - The source of randomness.
    */
-  constructor(
-    gameDate,
-    appearances,
-    forgeryProbability = 0.4,
-    random = new Random()
-  ) {
+  constructor(gameDate, appearances, forgeryProbability = 0.4, random = new Random()) {
     this.#gameDate = new Date(gameDate)
     this.#appearances = appearances
     this.#forgeryProbability = forgeryProbability
@@ -84,9 +79,7 @@ export class TravellerGenerator {
         this.#createForgery(passportData, discrepancy.code, nations)
       }
 
-      travellers.push(
-        new Traveller(person, new Passport(passportData), discrepancy)
-      )
+      travellers.push(new Traveller(person, new Passport(passportData), discrepancy))
     }
 
     return travellers
@@ -139,10 +132,7 @@ export class TravellerGenerator {
     const youngest = addYears(this.#gameDate, -MIN_AGE)
     const oldest = addYears(this.#gameDate, -MAX_AGE)
 
-    return addDays(
-      oldest,
-      this.#random.integer(0, daysBetween(oldest, youngest))
-    )
+    return addDays(oldest, this.#random.integer(0, daysBetween(oldest, youngest)))
   }
 
   /**
@@ -179,10 +169,7 @@ export class TravellerGenerator {
    * @returns {Date} The issue date.
    */
   #randomIssueDate(dateOfBirth) {
-    const earliestStillValid = addDays(
-      addYears(this.#gameDate, -VALIDITY_IN_YEARS),
-      1
-    )
+    const earliestStillValid = addDays(addYears(this.#gameDate, -VALIDITY_IN_YEARS), 1)
     const earliest = this.#later(dateOfBirth, earliestStillValid)
 
     return addDays(
@@ -198,9 +185,7 @@ export class TravellerGenerator {
    * @returns {boolean} True if the passport should be forged.
    */
   #shouldForge(discrepancies) {
-    return (
-      discrepancies.length > 0 && this.#random.chance(this.#forgeryProbability)
-    )
+    return discrepancies.length > 0 && this.#random.chance(this.#forgeryProbability)
   }
 
   /**
@@ -235,11 +220,7 @@ export class TravellerGenerator {
         break
       case 'SUSPICIOUS_SURNAME':
         data.surname = this.#random.pick(
-          this.#foreignValues(
-            data.nationality,
-            otherNations,
-            (nation) => nation.surnames
-          )
+          this.#foreignValues(data.nationality, otherNations, (nation) => nation.surnames)
         )
         break
       case 'INCORRECT_SEX':
@@ -252,10 +233,7 @@ export class TravellerGenerator {
         data.birthplace = this.#random.pick(randomNation.issuingCities)
         break
       case 'INCORRECT_ISSUE_DATE':
-        data.issueDate = addDays(
-          data.dateOfBirth,
-          -this.#random.integer(20, 255)
-        )
+        data.issueDate = addDays(data.dateOfBirth, -this.#random.integer(20, 255))
         break
       case 'INCORRECT_EXPIRY_DATE':
         data.expiryDate = addDays(this.#gameDate, -this.#random.integer(1, 55))
@@ -290,9 +268,7 @@ export class TravellerGenerator {
   #foreignValues(nation, otherNations, valuesOf) {
     const own = valuesOf(nation)
 
-    return otherNations
-      .flatMap(valuesOf)
-      .filter((value) => !own.includes(value))
+    return otherNations.flatMap(valuesOf).filter((value) => !own.includes(value))
   }
 
   /**

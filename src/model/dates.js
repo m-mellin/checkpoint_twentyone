@@ -26,9 +26,7 @@ export function addYears(date, years) {
   const month = date.getUTCMonth()
   const lastDayOfMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate()
 
-  return new Date(
-    Date.UTC(year, month, Math.min(date.getUTCDate(), lastDayOfMonth))
-  )
+  return new Date(Date.UTC(year, month, Math.min(date.getUTCDate(), lastDayOfMonth)))
 }
 
 /**

@@ -149,11 +149,7 @@ export class NextDayView {
    */
   play(day, date, { onCovered, onFinished, startCovered = false }) {
     this.#titleText = `DAY ${day}`
-    this.#centre(
-      this.#title,
-      this.#titleText,
-      this.#gameSize.height / 2 - LINE_DISTANCE
-    )
+    this.#centre(this.#title, this.#titleText, this.#gameSize.height / 2 - LINE_DISTANCE)
     this.#title.text = ''
 
     this.#centre(

@@ -118,10 +118,7 @@ export class SliderView {
    * @param {number} [options.value=0.4] - The start value, from 0 to 1.
    * @param {(value: number) => void} [options.onChange] - Called with the new value when the handle moves.
    */
-  constructor(
-    renderer,
-    { label, x, y, width, value = 0.4, onChange = () => {} }
-  ) {
+  constructor(renderer, { label, x, y, width, value = 0.4, onChange = () => {} }) {
     this.#trackX = x
     this.#trackWidth = width
     this.#centerY = y
@@ -217,10 +214,7 @@ export class SliderView {
     }
 
     return (
-      x >= this.x &&
-      x <= this.x + this.width &&
-      y >= this.y &&
-      y <= this.y + this.height
+      x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height
     )
   }
 
@@ -274,8 +268,7 @@ export class SliderView {
    * Places the handle on the track according to the value.
    */
   #placeHandle() {
-    this.#handle.x =
-      this.#trackX + this.#value * this.#trackWidth - HANDLE_SIZE / 2
+    this.#handle.x = this.#trackX + this.#value * this.#trackWidth - HANDLE_SIZE / 2
     this.#handle.y = this.#centerY - HANDLE_SIZE / 2
   }
 

@@ -48,17 +48,13 @@ describe('Nation', () => {
   describe('validation', () => {
     it('throws a TypeError if name is not a non-empty string', () => {
       for (const invalid of ['', '   ', 42, undefined]) {
-        expect(() => new Nation(validData({ name: invalid }))).toThrow(
-          TypeError
-        )
+        expect(() => new Nation(validData({ name: invalid }))).toThrow(TypeError)
       }
     })
 
     it('throws a RangeError if countryCode is not three capital letters', () => {
       for (const invalid of ['', '   ', 4, 'SW', 'swe', 'SWED', undefined]) {
-        expect(() => new Nation(validData({ countryCode: invalid }))).toThrow(
-          RangeError
-        )
+        expect(() => new Nation(validData({ countryCode: invalid }))).toThrow(RangeError)
       }
     })
   })

@@ -423,10 +423,7 @@ export class GameView {
    * @returns {CitationView[]} The citation slips.
    */
   #createCitations(renderer, amount) {
-    return Array.from(
-      { length: amount },
-      () => new CitationView(renderer)
-    )
+    return Array.from({ length: amount }, () => new CitationView(renderer))
   }
 
   /**
@@ -500,12 +497,7 @@ export class GameView {
    * @returns {InspectableItemView[]} The passport, the discrepancy list and the stamps.
    */
   #items() {
-    return [
-      this.#passportView,
-      this.#discrepancyView,
-      ...this.stamps,
-      ...this.#citations
-    ]
+    return [this.#passportView, this.#discrepancyView, ...this.stamps, ...this.#citations]
   }
 
   /**

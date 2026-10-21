@@ -332,11 +332,9 @@ export class PassportView extends InspectableItemView {
     this.#fields.sex.text = `SEX: ${passport.sex}`
     this.#fields.nationality.text =
       `NATIONALITY: ${passport.nationality.name}`.toUpperCase()
-    this.#fields.birthplace.text =
-      `BIRTHPLACE: ${passport.birthplace}`.toUpperCase()
+    this.#fields.birthplace.text = `BIRTHPLACE: ${passport.birthplace}`.toUpperCase()
     this.#fields.height.text = `HEIGHT: ${passport.heightInCm} CM`
-    this.#fields.issuingCity.text =
-      `ISSUED IN: ${passport.issuingCity}`.toUpperCase()
+    this.#fields.issuingCity.text = `ISSUED IN: ${passport.issuingCity}`.toUpperCase()
     this.#fields.issueDate.text = `ISSUED: ${formatDate(passport.issueDate)}`
     this.#fields.expiryDate.text = `EXPIRES: ${formatDate(passport.expiryDate)}`
     this.#fields.identification.text = `ID: ${passport.identificationString}`

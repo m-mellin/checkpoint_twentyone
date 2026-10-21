@@ -40,9 +40,7 @@ describe('Person', () => {
       'throws a TypeError if %s is not a non-empty string',
       (field) => {
         for (const invalidData of ['', '   ', 55, undefined]) {
-          expect(() => new Person(validData({ [field]: invalidData }))).toThrow(
-            TypeError
-          )
+          expect(() => new Person(validData({ [field]: invalidData }))).toThrow(TypeError)
         }
       }
     )
@@ -64,9 +62,7 @@ describe('Person', () => {
     it('throws a TypeError if nationality is not a Nation', () => {
       const fakeNation = { name: 'Sweden', countryCode: 'SWE' }
 
-      expect(() => new Person(validData({ nationality: fakeNation }))).toThrow(
-        TypeError
-      )
+      expect(() => new Person(validData({ nationality: fakeNation }))).toThrow(TypeError)
     })
 
     it('throws a RangeError if sex is not Sex.MALE or Sex.FEMALE', () => {

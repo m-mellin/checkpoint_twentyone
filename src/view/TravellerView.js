@@ -130,9 +130,7 @@ export class TravellerView {
    * @param {Traveller} traveller - The traveller who walks in.
    */
   #walkIn(traveller) {
-    const portrait = portraitData.find(
-      (p) => p.id === traveller.person.appearance
-    )
+    const portrait = portraitData.find((p) => p.id === traveller.person.appearance)
 
     if (!portrait) return
 

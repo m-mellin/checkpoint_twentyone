@@ -134,9 +134,7 @@ export class EndView {
       `DAYS PLAYED: ${stats.days}`,
       `CORRECT PASSPORTS: ${stats.correct}`,
       `INCORRECT STAMPED PASSPORTS: ${stats.incorrect}`
-    ].map(
-      (text) => new TextLine(text, { color: STATS_COLOR, font: STATS_FONT })
-    )
+    ].map((text) => new TextLine(text, { color: STATS_COLOR, font: STATS_FONT }))
 
     const boxWidth = this.#widestWidth(lines) + BOX_PADDING * 2
 
