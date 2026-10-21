@@ -2,7 +2,7 @@
 
 ### Summary
 
-### Run 1: Index.js
+### Test 1: Index.js
 
 All test cases were run manually in Chrome on Windows, in full screen at 1920 × 1080.
 
@@ -34,7 +34,7 @@ All test cases were run manually in Chrome on Windows, in full screen at 1920 ×
 | TC24 | Background volume | R13 | Click the settings button and drag the ambient slider to 0 | The background sounds go quiet, the voices can still be heard | ✅ Passed 2026-10-19 |
 | TC25 | Voice volume | R13 | Drag the voice slider to 0 | The voice lines go quiet | ✅ Passed 2026-10-19 |
 
-### Run 2: App.js
+### Test 2: App.js
 
 After moving logic code from index.js to App.js, i needed to run every test-case again.
 
@@ -66,7 +66,7 @@ After moving logic code from index.js to App.js, i needed to run every test-case
 | TC24 | Background volume | R13 | ✅ Passed  2026-10-19 |
 | TC25 | Voice volume | R13 | ✅ Passed  2026-10-19 |
 
-### Run 3: Publishing on GitHub Pages
+### Test 3: Publishing on GitHub Pages v1.0.2
 
 After making some additional changes and publishing the game again on GitHub Pages, i ran every test-case again.
 
@@ -97,6 +97,36 @@ After making some additional changes and publishing the game again on GitHub Pag
 | TC23 | Start again | R12 | ✅ Passed  2026-10-20 |
 | TC24 | Background volume | R13 | ✅ Passed  2026-10-20 |
 | TC25 | Voice volume | R13 | ✅ Passed  2026-10-20 |
+
+### Test 4: Version 1.0.3
+
+| Id | Test case | Requirement | Result |
+| -- | --------- | ----------- | ------ |
+| TC1 | Start a game | R1 | ✅ Passed  2026-10-21 |
+| TC2 | Start on every difficulty | R1 | ✅ Passed  2026-10-21 |
+| TC3 | Discrepancies follow the difficulty | R2 | ✅ Passed  2026-10-21 |
+| TC4 | Nations follow the difficulty | R2 | ✅ Passed  2026-10-21 |
+| TC5 | Passport when the traveller arrives | R3 | ✅ Passed  2026-10-21 |
+| TC6 | Open on the inspection desk | R4 | ✅ Passed  2026-10-21 |
+| TC7 | Fall onto the counter | R4 | ✅ Passed  2026-10-21 |
+| TC8 | Drag every item | R4 | ✅ Passed  2026-10-21 |
+| TC9 | Passport details and displays | R5 | ✅ Passed  2026-10-21 |
+| TC10 | Genuine passport matches | R6 | ✅ Passed  2026-10-21 |
+| TC11 | Forgery can be found | R6 | ✅ Passed  2026-10-21 |
+| TC12 | Stamp the passport | R7 | ✅ Passed  2026-10-21 |
+| TC13 | Stamp beside the passport | R7 | ✅ Passed  2026-10-21 |
+| TC14 | Hand back a stamped passport | R8 | ✅ Passed  2026-10-21 |
+| TC15 | Unstamped passport stays | R8 | ✅ Passed  2026-10-21 |
+| TC16 | Citation for denying a genuine passport | R9 | ✅ Passed  2026-10-21 |
+| TC17 | Citation for approving a forgery | R9 | ✅ Passed  2026-10-21 |
+| TC18 | New day | R10 | ✅ Passed  2026-10-21 |
+| TC19 | Date on the next day | R10 | ✅ Passed  2026-10-21 |
+| TC20 | Game over | R11 | ✅ Passed  2026-10-21 |
+| TC21 | Citations reset each day | R11 | ✅ Passed  2026-10-21 |
+| TC22 | Statistics on the end screen | R12 | ✅ Passed  2026-10-21 |
+| TC23 | Start again | R12 | ✅ Passed  2026-10-21 |
+| TC24 | Background volume | R13 | ✅ Passed  2026-10-21 |
+| TC25 | Voice volume | R13 | ✅ Passed  2026-10-21 |
 
 ### Known issues in Third-Party Modules
 As i have found out none. As i was developing my application i thought about using a different module 
