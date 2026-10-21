@@ -157,7 +157,7 @@ export class GameView {
    */
   constructor(
     renderer,
-    { gameWidth, gameHeight, difficulty, maxCitations = 3, volumeSettings }
+    { gameWidth, gameHeight, difficulty, maxCitations, volumeSettings }
   ) {
     this.#travellerView = new TravellerView(renderer)
     new DeskView(renderer)
