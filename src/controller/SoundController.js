@@ -77,7 +77,7 @@ export class SoundController {
     const sound = this.#sounds.find((s) => s.name === name)
 
     if (!sound) {
-      throw new TypeError(`${name} does not exists as a sound`)
+      throw new TypeError(`${name} does not exist as a sound`)
     }
 
     return sound
