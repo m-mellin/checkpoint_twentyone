@@ -6,11 +6,40 @@ import { Passport } from './Passport.js'
 import { Traveller } from './Traveller.js'
 import { Discrepancy } from './Discrepancy.js'
 
+/**
+ * The age range of the travellers, in years.
+ */
 const MIN_AGE = 10
 const MAX_AGE = 80
+
+/**
+ * The range of the travellers' real heights.
+ */
 const MIN_HEIGHT_IN_CM = 150
 const MAX_HEIGHT_IN_CM = 210
+
+/**
+ * How long a passport is valid after it is issued.
+ */
 const VALIDITY_IN_YEARS = 10
+
+/**
+ * Forged issue date: how many days before the birth.
+ */
+const ISSUED_BEFORE_BIRTH_MIN_DAYS = 20
+const ISSUED_BEFORE_BIRTH_MAX_DAYS = 255
+
+/**
+ * Forged expiry date: how many days before the game date.
+ */
+const EXPIRED_MIN_DAYS = 1
+const EXPIRED_MAX_DAYS = 55
+
+/**
+ * Forged height: how many centimetres taller than the traveller.
+ */
+const TOO_TALL_MIN_CM = 5
+const TOO_TALL_MAX_CM = 25
 
 /**
  * Creates random travellers, each carrying a passport. Some passports are forged with one discrepancy.
@@ -49,10 +78,10 @@ export class TravellerGenerator {
    *
    * @param {Date} gameDate - Today's date in the game, at midnight UTC.
    * @param {Record<'M' | 'F', readonly string[]>} appearances - The appearance ids available for each sex.
-   * @param {number} [forgeryProbability=0.4] - The share of passports that are forged, from 0 to 1.
+   * @param {number} forgeryProbability - The share of passports that are forged, from 0 to 1.
    * @param {Random} [random=new Random()] - The source of randomness.
    */
-  constructor(gameDate, appearances, forgeryProbability = 0.4, random = new Random()) {
+  constructor(gameDate, appearances, forgeryProbability, random = new Random()) {
     this.#gameDate = new Date(gameDate)
     this.#appearances = appearances
     this.#forgeryProbability = forgeryProbability
@@ -233,17 +262,26 @@ export class TravellerGenerator {
         data.birthplace = this.#random.pick(randomNation.issuingCities)
         break
       case 'INCORRECT_ISSUE_DATE':
-        data.issueDate = addDays(data.dateOfBirth, -this.#random.integer(20, 255))
+        data.issueDate = addDays(
+          data.dateOfBirth,
+          -this.#random.integer(
+            ISSUED_BEFORE_BIRTH_MAX_DAYS,
+            ISSUED_BEFORE_BIRTH_MIN_DAYS
+          )
+        )
         break
       case 'INCORRECT_EXPIRY_DATE':
-        data.expiryDate = addDays(this.#gameDate, -this.#random.integer(1, 55))
+        data.expiryDate = addDays(
+          this.#gameDate,
+          -this.#random.integer(EXPIRED_MIN_DAYS, EXPIRED_MAX_DAYS)
+        )
         data.issueDate = this.#later(
           data.dateOfBirth,
           addYears(data.expiryDate, -VALIDITY_IN_YEARS)
         )
         break
       case 'INCORRECT_HEIGHT':
-        data.heightInCm += this.#random.integer(5, 25)
+        data.heightInCm += this.#random.integer(TOO_TALL_MIN_CM, TOO_TALL_MAX_CM)
         break
       case 'INCORRECT_CODE':
         data.identificationString = data.identificationString.replace(
