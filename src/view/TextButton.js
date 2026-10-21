@@ -1,11 +1,11 @@
-import { BlockSprite, SpriteRenderer } from '2d-sprite-renderer'
-import { TextLine } from './TextLine.js'
+import { BlockSprite, SpriteRenderer, TextSprite } from '2d-sprite-renderer'
 
 /**
- * The colours of the button's box and text.
+ * The color of the button, the label's font and color.
  */
 const BUTTON_COLOR = '#333'
-const TEXT_COLOR = '#fff'
+const LABEL_FONT = '12px "Press Start 2P"'
+const LABEL_COLOR = '#fff'
 
 /**
  * The space between the text and the edge of the box, in pixels.
@@ -26,9 +26,9 @@ export class TextButton {
   /**
    * The text on the button.
    *
-   * @type {TextLine}
+   * @type {TextSprite}
    */
-  #label
+  #label = new TextSprite('', {color: LABEL_COLOR, font: LABEL_FONT})
 
   /**
    * Called when the button is clicked.
@@ -48,7 +48,8 @@ export class TextButton {
    * @param {() => void} options.onClick - Called when the button is clicked.
    */
   constructor(renderer, { text, centerX, y, onClick }) {
-    this.#label = new TextLine(text, { color: TEXT_COLOR })
+    this.#label.text = text
+
     this.#box = new BlockSprite({
       width: this.#label.width + PADDING * 2,
       height: this.#label.height + PADDING * 2,
@@ -62,7 +63,7 @@ export class TextButton {
     this.#onClick = onClick
 
     renderer.add(this.#box)
-    renderer.add(this.#label.sprite)
+    renderer.add(this.#label)
   }
 
   /**

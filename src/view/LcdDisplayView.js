@@ -1,5 +1,4 @@
-import { Sprite, SpriteRenderer } from '2d-sprite-renderer'
-import { TextLine } from './TextLine.js'
+import { Sprite, SpriteRenderer, TextSprite } from '2d-sprite-renderer'
 
 /**
  * The image of the display panel.
@@ -43,9 +42,9 @@ export class LcdDisplayView {
   /**
    * The text shown on the panel.
    *
-   * @type {TextLine}
+   * @type {TextSprite}
    */
-  #text = new TextLine('', { color: TEXT_COLOR, font: TEXT_FONT })
+  #text = new TextSprite('', { color: TEXT_COLOR, font: TEXT_FONT })
 
   /**
    * Creates an empty display and adds it to the renderer.
@@ -63,7 +62,7 @@ export class LcdDisplayView {
     this.#text.y = y + TEXT_OFFSET_Y
 
     renderer.add(this.#background)
-    renderer.add(this.#text.sprite)
+    renderer.add(this.#text)
   }
 
   /**

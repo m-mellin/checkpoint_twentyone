@@ -1,5 +1,4 @@
-import { BlockSprite, SpriteRenderer } from '2d-sprite-renderer'
-import { TextLine } from './TextLine.js'
+import { BlockSprite, SpriteRenderer, TextSprite } from '2d-sprite-renderer'
 import { SliderView } from './SliderView.js'
 
 /**
@@ -47,9 +46,9 @@ export class SoundView {
   /**
    * The heading above the sliders.
    *
-   * @type {TextLine}
+   * @type {TextSprite}
    */
-  #title = new TextLine(TITLE_TEXT, { color: TEXT_COLOR, font: TITLE_FONT })
+  #title = new TextSprite(TITLE_TEXT, { color: TEXT_COLOR, font: TITLE_FONT })
 
   /**
    * The width of the game, used to cover all of it.
@@ -103,7 +102,7 @@ export class SoundView {
     this.#title.y = gameHeight / 4
 
     renderer.add(this.#background)
-    renderer.add(this.#title.sprite)
+    renderer.add(this.#title)
 
     this.#volumeSliders = volumeSettings.map(
       (setting, index) =>

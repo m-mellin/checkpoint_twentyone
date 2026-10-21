@@ -1,5 +1,4 @@
-import { BlockSprite, SpriteRenderer } from '2d-sprite-renderer'
-import { TextLine } from './TextLine.js'
+import { BlockSprite, SpriteRenderer, TextSprite} from '2d-sprite-renderer'
 import { formatDate } from './formatDate.js'
 
 /**
@@ -46,16 +45,16 @@ export class NextDayView {
   /**
    * The line that shows the day, for example "DAY 2".
    *
-   * @type {TextLine}
+   * @type {TextSprite}
    */
-  #title = new TextLine('', { font: TITLE_FONT })
+  #title = new TextSprite('', { font: TITLE_FONT })
 
   /**
    * The line that shows the new date.
    *
-   * @type {TextLine}
+   * @type {TextSprite}
    */
-  #dateLine = new TextLine('', { font: DATE_FONT })
+  #dateLine = new TextSprite('', { font: DATE_FONT })
 
   /**
    * The whole day text, which is typed one letter at a time.
@@ -123,8 +122,8 @@ export class NextDayView {
     })
 
     renderer.add(this.#background)
-    renderer.add(this.#title.sprite)
-    renderer.add(this.#dateLine.sprite)
+    renderer.add(this.#title)
+    renderer.add(this.#dateLine)
   }
 
   /**
@@ -222,14 +221,14 @@ export class NextDayView {
    */
   #setOpacity(opacity) {
     this.#background.color = `rgba(${BACKGROUND_RGB}, ${opacity})`
-    this.#title.textColor = `rgba(${TEXT_RGB}, ${opacity})`
-    this.#dateLine.textColor = `rgba(${TEXT_RGB}, ${opacity})`
+    this.#title.color = `rgba(${TEXT_RGB}, ${opacity})`
+    this.#dateLine.color = `rgba(${TEXT_RGB}, ${opacity})`
   }
 
   /**
    * Gives a line its text and centres it across the screen.
    *
-   * @param {TextLine} line - The line to place.
+   * @param {TextSprite} line - The line to place.
    * @param {string} text - The text to write.
    * @param {number} y - The y coordinate of the top of the line.
    */

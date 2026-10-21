@@ -1,5 +1,4 @@
-import { Sprite, SpriteRegion, SpriteRenderer } from '2d-sprite-renderer'
-import { TextLine } from './TextLine.js'
+import { Sprite, SpriteRegion, SpriteRenderer, TextSprite } from '2d-sprite-renderer'
 import { Passport } from '../model/Passport.js'
 import { InspectableItemView } from './InspectableItemView.js'
 import { formatDate } from './formatDate.js'
@@ -64,7 +63,7 @@ const TEXT_OFFSET_X = 450
 const TEXT_OFFSET_Y = 300
 
 /**
- * The distance between TextLine objects.
+ * The space between two lines of text in the passport, in pixels.
  */
 const TEXT_DISTANCE = 10
 
@@ -124,9 +123,9 @@ export class PassportView extends InspectableItemView {
   /**
    * The date printed on the stamp marker.
    *
-   * @type {TextLine}
+   * @type {TextSprite}
    */
-  #markerDate = new TextLine('', { color: TEXT_COLOR, font: MARKER_FONT })
+  #markerDate = new TextSprite('', { color: TEXT_COLOR, font: MARKER_FONT })
 
   /**
    * The passport being shown, or null if none.
@@ -161,16 +160,16 @@ export class PassportView extends InspectableItemView {
    * in the order they are shown from top to bottom.
    */
   #fields = {
-    name: new TextLine('', { color: TEXT_COLOR }),
-    dateOfBirth: new TextLine('', { color: TEXT_COLOR }),
-    sex: new TextLine('', { color: TEXT_COLOR }),
-    nationality: new TextLine('', { color: TEXT_COLOR }),
-    birthplace: new TextLine('', { color: TEXT_COLOR }),
-    height: new TextLine('', { color: TEXT_COLOR }),
-    issuingCity: new TextLine('', { color: TEXT_COLOR }),
-    issueDate: new TextLine('', { color: TEXT_COLOR }),
-    expiryDate: new TextLine('', { color: TEXT_COLOR }),
-    identification: new TextLine('', { color: TEXT_COLOR })
+    name: new TextSprite('', { color: TEXT_COLOR }),
+    dateOfBirth: new TextSprite('', { color: TEXT_COLOR }),
+    sex: new TextSprite('', { color: TEXT_COLOR }),
+    nationality: new TextSprite('', { color: TEXT_COLOR }),
+    birthplace: new TextSprite('', { color: TEXT_COLOR }),
+    height: new TextSprite('', { color: TEXT_COLOR }),
+    issuingCity: new TextSprite('', { color: TEXT_COLOR }),
+    issueDate: new TextSprite('', { color: TEXT_COLOR }),
+    expiryDate: new TextSprite('', { color: TEXT_COLOR }),
+    identification: new TextSprite('', { color: TEXT_COLOR })
   }
 
   /**
@@ -190,12 +189,12 @@ export class PassportView extends InspectableItemView {
     renderer.add(this.#passportPhoto)
 
     for (const field of Object.values(this.#fields)) {
-      renderer.add(field.sprite)
+      renderer.add(field)
     }
 
     renderer.add(this.#approveMarker)
     renderer.add(this.#denyMarker)
-    renderer.add(this.#markerDate.sprite)
+    renderer.add(this.#markerDate)
 
     this.hide()
   }
@@ -385,7 +384,7 @@ export class PassportView extends InspectableItemView {
     this.#resizeMarker(this.#denyMarker, isStamped && !this.#approved)
 
     this.#markerDate.text = isStamped ? formatDate(this.#gameDate) : ''
-    this.#markerDate.textColor = this.#approved ? APPROVED_COLOR : DENIED_COLOR
+    this.#markerDate.color = this.#approved ? APPROVED_COLOR : DENIED_COLOR
   }
 
   /**

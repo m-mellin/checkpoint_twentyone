@@ -1,5 +1,4 @@
-import { BlockSprite, SpriteRenderer } from '2d-sprite-renderer'
-import { TextLine } from './TextLine.js'
+import { BlockSprite, SpriteRenderer, TextSprite } from '2d-sprite-renderer'
 
 /**
  * The height and color of the track the handle slide along.
@@ -32,7 +31,7 @@ export class SliderView {
   /**
    * The text above the slider.
    *
-   * @type {TextLine}
+   * @type {TextSprite}
    */
   #label
 
@@ -46,7 +45,7 @@ export class SliderView {
   /**
    * The value as a percentage, beside the track.
    *
-   * @type {TextLine}
+   * @type {TextSprite}
    */
   #percentLabel
 
@@ -138,17 +137,17 @@ export class SliderView {
       color: HANDLE_COLOR
     })
     this.#labelText = label.toUpperCase()
-    this.#label = new TextLine(this.#labelText, {
+    this.#label = new TextSprite(this.#labelText, {
       color: TEXT_COLOR,
       font: TEXT_FONT
     })
-    this.#percentLabel = new TextLine(this.#valueAsPercent(), {
+    this.#percentLabel = new TextSprite(this.#valueAsPercent(), {
       color: TEXT_COLOR,
       font: TEXT_FONT
     })
 
-    renderer.add(this.#label.sprite)
-    renderer.add(this.#percentLabel.sprite)
+    renderer.add(this.#label)
+    renderer.add(this.#percentLabel)
     renderer.add(this.#track)
     renderer.add(this.#handle)
 

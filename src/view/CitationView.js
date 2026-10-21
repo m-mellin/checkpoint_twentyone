@@ -1,6 +1,5 @@
-import { SpriteRenderer } from '2d-sprite-renderer'
+import { SpriteRenderer, TextSprite } from '2d-sprite-renderer'
 import { InspectableItemView } from './InspectableItemView.js'
-import { TextLine } from './TextLine.js'
 
 /**
  * The citation's images, closed on the counter and open on the inspection desk.
@@ -60,16 +59,16 @@ export class CitationView extends InspectableItemView {
   /**
    * The heading on the open citation.
    *
-   * @type {TextLine}
+   * @type {TextSprite}
    */
-  #title = new TextLine(TITLE_TEXT, { color: TITLE_COLOR, font: TITLE_FONT })
+  #title = new TextSprite(TITLE_TEXT, { color: TITLE_COLOR, font: TITLE_FONT })
 
   /**
    * The line that tells why the citation was given.
    *
-   * @type {TextLine}
+   * @type {TextSprite}
    */
-  #reasonLine = new TextLine('', { color: TEXT_COLOR, font: TEXT_FONT })
+  #reasonLine = new TextSprite('', { color: TEXT_COLOR, font: TEXT_FONT })
 
   /**
    * Why the citation was given, or an empty string if it has not been printed.
@@ -91,8 +90,8 @@ export class CitationView extends InspectableItemView {
       y: START_Y
     })
 
-    renderer.add(this.#title.sprite)
-    renderer.add(this.#reasonLine.sprite)
+    renderer.add(this.#title)
+    renderer.add(this.#reasonLine)
 
     this.hide()
   }

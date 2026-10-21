@@ -1,5 +1,4 @@
-import { SpriteRenderer } from '2d-sprite-renderer'
-import { TextLine } from './TextLine.js'
+import { SpriteRenderer, TextSprite } from '2d-sprite-renderer'
 import { InspectableItemView } from './InspectableItemView.js'
 import discrepanciesData from '../data/discrepancies.json'
 
@@ -93,9 +92,9 @@ export class DiscrepancyView extends InspectableItemView {
   /**
    * The heading above the possible discrepancies.
    *
-   * @type {TextLine}
+   * @type {TextSprite}
    */
-  #title = new TextLine(TITLE_TEXT, {
+  #title = new TextSprite(TITLE_TEXT, {
     color: TEXT_COLOR,
     font: TITLE_FONT
   })
@@ -103,7 +102,7 @@ export class DiscrepancyView extends InspectableItemView {
   /**
    * One text line per possible discrepancy, in the order they are shown from top to bottom.
    *
-   * @type {TextLine[]}
+   * @type {TextSprite[]}
    */
   #fields = []
 
@@ -123,11 +122,11 @@ export class DiscrepancyView extends InspectableItemView {
     })
 
     this.#fields = discrepanciesData[difficulty].map(
-      (code) => new TextLine(DISCREPANCY_TEXTS[code] ?? code, { color: TEXT_COLOR })
+      (code) => new TextSprite(DISCREPANCY_TEXTS[code] ?? code, { color: TEXT_COLOR })
     )
 
     for (const line of [this.#title, ...this.#fields]) {
-      renderer.add(line.sprite)
+      renderer.add(line)
     }
 
     this.show()
@@ -161,7 +160,7 @@ export class DiscrepancyView extends InspectableItemView {
     const color = this.isOnInspectionDesk ? TEXT_COLOR : HIDDEN_COLOR
 
     for (const line of [this.#title, ...this.#fields]) {
-      line.textColor = color
+      line.color = color
     }
   }
 }

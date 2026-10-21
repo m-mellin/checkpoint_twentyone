@@ -1,7 +1,6 @@
-import { BlockSprite, Sprite, SpriteRenderer } from '2d-sprite-renderer'
+import { BlockSprite, Sprite, SpriteRenderer, TextSprite } from '2d-sprite-renderer'
 import { TextButton } from './TextButton.js'
 import { Difficulties } from '../controller/GameController.js'
-import { TextLine } from './TextLine.js'
 
 /**
  * The colour of the background that covers the whole screen.
@@ -134,7 +133,7 @@ export class EndView {
       `DAYS PLAYED: ${stats.days}`,
       `CORRECT PASSPORTS: ${stats.correct}`,
       `INCORRECT STAMPED PASSPORTS: ${stats.incorrect}`
-    ].map((text) => new TextLine(text, { color: STATS_COLOR, font: STATS_FONT }))
+    ].map((text) => new TextSprite(text, { color: STATS_COLOR, font: STATS_FONT }))
 
     const boxWidth = this.#widestWidth(lines) + BOX_PADDING * 2
 
@@ -151,14 +150,14 @@ export class EndView {
     for (const [index, line] of lines.entries()) {
       line.x = (gameWidth - line.width) / 2
       line.y = STATS_Y + index * LINE_DISTANCE
-      renderer.add(line.sprite)
+      renderer.add(line)
     }
   }
 
   /**
    * Returns the width of the widest text line.
    *
-   * @param {TextLine[]} lines - The lines to compare.
+   * @param {TextSprite[]} lines - The lines to compare.
    * @returns {number} The width of the widest line, in pixels.
    */
   #widestWidth(lines) {
