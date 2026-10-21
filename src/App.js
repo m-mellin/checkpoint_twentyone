@@ -224,6 +224,7 @@ export class App {
     return [
       {
         label: 'Ambient volume',
+        value: START_VOLUME,
         /**
          * Sets the volume of the background sounds.
          *
@@ -236,6 +237,7 @@ export class App {
       },
       {
         label: 'Voice volume',
+        value: START_VOLUME,
         /**
          * Sets the volume of the voices.
          *

@@ -28,6 +28,7 @@ const BACKGROUND_COLOR = 'rgba(0, 0, 0, 0.9)'
  *
  * @typedef {object} VolumeSetting
  * @property {string} label - The text shown above the slider.
+ * @property {number} value - The volume the sound starts at, from 0 to 1.
  * @property {(volume: number) => void} onChange - Called with the new volume, from 0 to 1.
  */
 
@@ -111,6 +112,7 @@ export class SoundView {
           x: (gameWidth - SLIDER_WIDTH) / 2,
           y: gameHeight / 2 + index * SLIDER_DISTANCE,
           width: SLIDER_WIDTH,
+          value: setting.value,
           onChange: setting.onChange
         })
     )
