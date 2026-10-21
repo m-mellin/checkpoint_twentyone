@@ -136,7 +136,7 @@ export class TravellerView {
 
     this.#current = traveller
 
-    this.#traveller.region = new SpriteRegion(portrait?.region)
+    this.#traveller.region = new SpriteRegion(portrait.region)
 
     this.#traveller.width = portrait?.region.width * PORTRAIT_SCALE
     this.#traveller.height = portrait?.region.height * PORTRAIT_SCALE
