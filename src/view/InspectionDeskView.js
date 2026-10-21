@@ -26,7 +26,11 @@ export class InspectionDeskView {
    *
    * @type {Sprite}
    */
-  #desk = new Sprite(DESK_SRC, { x: INSPECTION_DESK_X, width: DESK_WIDTH, height: DESK_HEIGHT })
+  #desk = new Sprite(DESK_SRC, {
+    x: INSPECTION_DESK_X,
+    width: DESK_WIDTH,
+    height: DESK_HEIGHT
+  })
 
   /**
    * Adds the inspection desk to the renderer.

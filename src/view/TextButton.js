@@ -28,7 +28,7 @@ export class TextButton {
    *
    * @type {TextSprite}
    */
-  #label = new TextSprite('', {color: LABEL_COLOR, font: LABEL_FONT})
+  #label = new TextSprite('', { color: LABEL_COLOR, font: LABEL_FONT })
 
   /**
    * Called when the button is clicked.

@@ -1,4 +1,4 @@
-import { BlockSprite, SpriteRenderer, TextSprite} from '2d-sprite-renderer'
+import { BlockSprite, SpriteRenderer, TextSprite } from '2d-sprite-renderer'
 import { formatDate } from './formatDate.js'
 
 /**

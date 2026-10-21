@@ -26,7 +26,7 @@ const PORTRAIT_SCALE = 2
 
 /**
  * Controls the breathing animation of the traveller.
- * 
+ *
  * A higher speed gives slower breathing, and the height is how far the traveller moves, in pixels.
  */
 const BOB_SPEED = 400
@@ -54,14 +54,21 @@ export class BoothView {
    *
    * @type {Sprite}
    */
-  #background = new Sprite(BACKGROUND_SRC, { width: BACKGROUND_WIDTH, height: BACKGROUND_HEIGHT })
+  #background = new Sprite(BACKGROUND_SRC, {
+    width: BACKGROUND_WIDTH,
+    height: BACKGROUND_HEIGHT
+  })
 
   /**
    * The counter in front of the traveller.
    *
    * @type {Sprite}
    */
-  #counter = new Sprite(COUNTER_SRC, { y: COUNTER_Y, width: COUNTER_WIDTH, height: COUNTER_HEIGHT })
+  #counter = new Sprite(COUNTER_SRC, {
+    y: COUNTER_Y,
+    width: COUNTER_WIDTH,
+    height: COUNTER_HEIGHT
+  })
 
   /**
    * The traveller's portrait. Its region decides which person is shown.
