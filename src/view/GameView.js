@@ -1,7 +1,7 @@
 import { SpriteRenderer } from '2d-sprite-renderer'
 import { Traveller } from '../model/Traveller.js'
 import { BoothView } from './BoothView.js'
-import { DeskView } from './DeskView.js'
+import { InspectionDeskView } from './InspectionDeskView.js'
 import { Passport } from '../model/Passport.js'
 import { PassportView } from './PassportView.js'
 import { StampView } from './StampView.js'
@@ -165,7 +165,7 @@ export class GameView {
     { gameWidth, gameHeight, difficulty, maxCitations, volumeSettings }
   ) {
     this.#boothView = new BoothView(renderer)
-    new DeskView(renderer)
+    new InspectionDeskView(renderer)
     this.#passportView = new PassportView(renderer)
     this.#discrepancyView = new DiscrepancyView(renderer, difficulty)
 

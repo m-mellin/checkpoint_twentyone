@@ -1,9 +1,5 @@
 import { Sprite, SpriteRenderer } from '2d-sprite-renderer'
-
-/**
- * Where the inspection desk begins. Left of this, items are shown small on the counter.
- */
-const INSPECTION_DESK_LEFT_X = 1370
+import { INSPECTION_DESK_X } from './InspectionDeskView.js'
 
 /**
  * The y coordinate items land on when they fall onto the booth counter.
@@ -303,7 +299,7 @@ export class InspectableItemView {
    * @returns {boolean} True if the item changed place.
    */
   #decidePlace() {
-    const shouldBeOnInspectionDesk = this.#x + this.width / 2 >= INSPECTION_DESK_LEFT_X
+    const shouldBeOnInspectionDesk = this.#x + this.width / 2 >= INSPECTION_DESK_X
     const changed = shouldBeOnInspectionDesk !== this.#isOnInspectionDesk
 
     this.#isOnInspectionDesk = shouldBeOnInspectionDesk
