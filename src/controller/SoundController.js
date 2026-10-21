@@ -1,4 +1,4 @@
-import { Sound } from './Sound'
+import { Sound } from './Sound.js'
 
 /**
  * Keeps track of the game's sounds by name, and plays them and sets their volume.
