@@ -18,10 +18,10 @@ import { NextDayView } from './NextDayView.js'
 /**
  * The position of the approve and deny stamps.
  */
-const APPROVE_STAMP_X_POS = 1400
-const APPROVE_STAMP_Y_POS = 500
-const DENY_STAMP_X_POS = 1500
-const DENY_STAMP_Y_POS = 500
+const APPROVE_STAMP_X = 1400
+const APPROVE_STAMP_Y = 500
+const DENY_STAMP_X = 1500
+const DENY_STAMP_Y = 500
 
 /**
  * The size of the settings button.
@@ -172,16 +172,16 @@ export class GameView {
     this.#approveStamp = new StampView(renderer, {
       counterSrc: 'assets/approve_stamp.png',
       inspectionDeskSrc: 'assets/approve_stamp.png',
-      x: APPROVE_STAMP_X_POS,
-      y: APPROVE_STAMP_Y_POS,
+      x: APPROVE_STAMP_X,
+      y: APPROVE_STAMP_Y,
       approves: true
     })
 
     this.#denyStamp = new StampView(renderer, {
       counterSrc: 'assets/deny_stamp.png',
       inspectionDeskSrc: 'assets/deny_stamp.png',
-      x: DENY_STAMP_X_POS,
-      y: DENY_STAMP_Y_POS,
+      x: DENY_STAMP_X,
+      y: DENY_STAMP_Y,
       approves: false
     })
 
