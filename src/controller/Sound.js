@@ -37,15 +37,6 @@ export class Sound {
   }
 
   /**
-   * Returns the audio element.
-   *
-   * @returns {HTMLAudioElement} The audio element.
-   */
-  get sound() {
-    return this.#sound
-  }
-
-  /**
    * Returns the volume of the audio element.
    *
    * @returns {number} The volume, from 0 (silent) to 1 (full).
