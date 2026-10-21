@@ -2,10 +2,11 @@ import { SpriteRenderer } from '2d-sprite-renderer'
 import { InspectableItemView } from './InspectableItemView.js'
 
 /**
- * The size of the stamp on the inspection desk, in pixels.
+ * The size of the stamp on the inspection desk: a third of the image, in pixels.
  */
-const INSPECTION_WIDTH = 505 / 3
-const INSPECTION_HEIGHT = 593 / 3
+const STAMP_SCALE = 1 / 3
+const INSPECTION_WIDTH = 505 * STAMP_SCALE
+const INSPECTION_HEIGHT = 593 * STAMP_SCALE
 
 /**
  * The size of the stamp on the counter, in pixels.

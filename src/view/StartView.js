@@ -24,6 +24,11 @@ const HEIGHT = 1024
 const BUTTON_DISTANCE = 90
 
 /**
+ * The y coordinate of the first difficulty button, under the title in the image.
+ */
+const BUTTONS_Y = 770
+
+/**
  * The start screen, where the player chooses a difficulty to begin the game.
  */
 export class StartView {
@@ -62,7 +67,7 @@ export class StartView {
         new TextButton(renderer, {
           text: difficulty.toUpperCase(),
           centerX: gameWidth / 2,
-          y: gameHeight / 1.4 + index * BUTTON_DISTANCE,
+          y: BUTTONS_Y + index * BUTTON_DISTANCE,
           /**
            * Starts the game at this button's difficulty.
            */

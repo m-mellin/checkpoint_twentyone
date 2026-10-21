@@ -14,6 +14,11 @@ const TITLE_TEXT = 'SOUND SETTINGS'
 const TITLE_FONT = '18px "Press Start 2P"'
 
 /**
+ * How far down the screen the title is, as a share of the height.
+ */
+const TITLE_HEIGHT_SHARE = 0.25
+
+/**
  * The color of the title
  */
 const TEXT_COLOR = '#fff'
@@ -100,7 +105,7 @@ export class SoundView {
     })
 
     this.#title.x = (gameWidth - this.#title.width) / 2
-    this.#title.y = gameHeight / 4
+    this.#title.y = gameHeight * TITLE_HEIGHT_SHARE
 
     renderer.add(this.#background)
     renderer.add(this.#title)
