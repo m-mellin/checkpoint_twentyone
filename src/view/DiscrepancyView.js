@@ -28,9 +28,14 @@ const START_X = 600
 const START_Y = 700
 
 /**
- * The colour of the title and the possible discrepancies.
+ * The color of the title and the possible discrepancies.
  */
 const TEXT_COLOR = '#fff'
+
+/**
+ * The font of the possible discrepancies.
+ */
+const TEXT_FONT = '12px "Press Start 2P"'
 
 /**
  * The colour of the text while the list is closed on the counter, where it is too small to read.
@@ -122,7 +127,7 @@ export class DiscrepancyView extends InspectableItemView {
     })
 
     this.#fields = discrepanciesData[difficulty].map(
-      (code) => new TextSprite(DISCREPANCY_TEXTS[code] ?? code, { color: TEXT_COLOR })
+      (code) => new TextSprite(DISCREPANCY_TEXTS[code] ?? code, { font: TEXT_FONT, color: TEXT_COLOR })
     )
 
     for (const line of [this.#title, ...this.#fields]) {

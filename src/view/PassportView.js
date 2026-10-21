@@ -57,9 +57,10 @@ const PHOTO_OFFSET_X = 450
 const PHOTO_OFFSET_Y = 100
 
 /**
- * The color of the text on the passport.
+ * The color and the font of the text on the passport.
  */
 const TEXT_COLOR = '#2a1a1a'
+const TEXT_FONT = '12px "Press Start 2P"'
 
 /**
  * The offset of the text from the passports top-left corner.
@@ -165,16 +166,16 @@ export class PassportView extends InspectableItemView {
    * in the order they are shown from top to bottom.
    */
   #fields = {
-    name: new TextSprite('', { color: TEXT_COLOR }),
-    dateOfBirth: new TextSprite('', { color: TEXT_COLOR }),
-    sex: new TextSprite('', { color: TEXT_COLOR }),
-    nationality: new TextSprite('', { color: TEXT_COLOR }),
-    birthplace: new TextSprite('', { color: TEXT_COLOR }),
-    height: new TextSprite('', { color: TEXT_COLOR }),
-    issuingCity: new TextSprite('', { color: TEXT_COLOR }),
-    issueDate: new TextSprite('', { color: TEXT_COLOR }),
-    expiryDate: new TextSprite('', { color: TEXT_COLOR }),
-    identification: new TextSprite('', { color: TEXT_COLOR })
+    name: new TextSprite('', { font: TEXT_FONT, color: TEXT_COLOR }),
+    dateOfBirth: new TextSprite('', { font: TEXT_FONT, color: TEXT_COLOR }),
+    sex: new TextSprite('', { font: TEXT_FONT, color: TEXT_COLOR }),
+    nationality: new TextSprite('', { font: TEXT_FONT, color: TEXT_COLOR }),
+    birthplace: new TextSprite('', { font: TEXT_FONT, color: TEXT_COLOR }),
+    height: new TextSprite('', { font: TEXT_FONT, color: TEXT_COLOR }),
+    issuingCity: new TextSprite('', { font: TEXT_FONT, color: TEXT_COLOR }),
+    issueDate: new TextSprite('', { font: TEXT_FONT, color: TEXT_COLOR }),
+    expiryDate: new TextSprite('', { font: TEXT_FONT, color: TEXT_COLOR }),
+    identification: new TextSprite('', { font: TEXT_FONT, color: TEXT_COLOR }),
   }
 
   /**
