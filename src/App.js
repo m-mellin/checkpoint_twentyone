@@ -187,33 +187,30 @@ export class App {
       gameHeight: this.#canvas.height,
       difficulty: this.#gameController.difficulty,
       maxCitations: MAX_CITATIONS_PER_DAY,
-      volumeSettings: this.#volumeSettings()
+      volumeSettings: this.#volumeSettings(),
+      /**
+       * Plays the stamp sound when a stamp lands on the passport.
+       */
+      onStamp: () => {
+        this.#soundController.play(SOUNDS.STAMP)
+      },
+      /**
+       * Plays the voice asking for the passport when the traveller reaches the window.
+       */
+      onPassportShown: () => {
+        this.#soundController.play(SOUNDS.DOCUMENT)
+      },
+      /**
+       * Judges the decision when a stamped passport is handed back.
+       *
+       * @param {boolean} approved - True if the player approved the passport.
+       */
+      onPassportReturned: (approved) => {
+        this.#judgeDecision(approved)
+      }
     })
 
     view.gameDate = this.#gameController.gameDate
-
-    /**
-     * Plays the stamp sound when a stamp lands on the passport.
-     */
-    view.onStamp = () => {
-      this.#soundController.play(SOUNDS.STAMP)
-    }
-
-    /**
-     * Plays the voice asking for the passport when the traveller reaches the window.
-     */
-    view.onPassportShown = () => {
-      this.#soundController.play(SOUNDS.DOCUMENT)
-    }
-
-    /**
-     * Judges the decision when a stamped passport is handed back.
-     *
-     * @param {boolean} approved - True if the player approved the passport.
-     */
-    view.onPassportReturned = (approved) => {
-      this.#judgeDecision(approved)
-    }
 
     return view
   }

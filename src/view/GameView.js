@@ -124,38 +124,54 @@ export class GameView {
    *
    * @type {() => void}
    */
-  #onStamp = () => {}
+  #onStamp
 
   /**
    * Called when the traveller has reached the window and their passport is put on the counter.
    *
    * @type {() => void}
    */
-  #onPassportShown = () => {}
+  #onPassportShown
 
   /**
    * Called when a stamped passport is handed back to the traveller, with true if it was approved.
    *
    * @type {(approved: boolean) => void}
    */
-  #onPassportReturned = () => {}
+  #onPassportReturned
 
   /**
    * Creates every view. The order is the drawing order: later views are drawn on top, so the items
    * lie on the desk, and the sound settings and their button cover everything else.
    *
    * @param {SpriteRenderer} renderer - The renderer to draw with.
-   * @param {object} options - The size of the game, its difficulty and the volume settings.
+   * @param {object} options - The size of the game, its difficulty, the volume settings, and what happens when the player acts.
    * @param {number} options.gameWidth - The width of the canvas.
    * @param {number} options.gameHeight - The height of the canvas.
    * @param {'easy' | 'medium' | 'hard'} options.difficulty - Decides which discrepancies are listed.
    * @param {number} options.maxCitations - The maximum number of citations to create.
    * @param {import('./SoundView.js').VolumeSetting[]} options.volumeSettings - One slider per setting.
+   * @param {() => void} options.onStamp - Called when a stamp lands on the open passport.
+   * @param {() => void} options.onPassportShown - Called when the traveller reaches the window and their passport is put on the counter.
+   * @param {(approved: boolean) => void} options.onPassportReturned - Called with true if a handed back passport was approved.
    */
   constructor(
     renderer,
-    { gameWidth, gameHeight, difficulty, maxCitations, volumeSettings }
+    {
+      gameWidth,
+      gameHeight,
+      difficulty,
+      maxCitations,
+      volumeSettings,
+      onStamp,
+      onPassportShown,
+      onPassportReturned
+    }
   ) {
+    this.#onStamp = onStamp
+    this.#onPassportShown = onPassportShown
+    this.#onPassportReturned = onPassportReturned
+
     this.#boothView = new BoothView(renderer)
     new InspectionDeskView(renderer)
     this.#passportView = new PassportView(renderer)
@@ -205,33 +221,6 @@ export class GameView {
   set gameDate(date) {
     this.#dateDisplay.value = formatDate(date)
     this.#passportView.gameDate = date
-  }
-
-  /**
-   * Sets what happens when a stamp lands on the open passport.
-   *
-   * @param {() => void} callback - Called each time a stamp lands on the passport.
-   */
-  set onStamp(callback) {
-    this.#onStamp = callback
-  }
-
-  /**
-   * Sets what happens when the traveller reaches the window and their passport is put on the counter.
-   *
-   * @param {() => void} callback - Called once for each traveller.
-   */
-  set onPassportShown(callback) {
-    this.#onPassportShown = callback
-  }
-
-  /**
-   * Sets what happens when a stamped passport is handed back to the traveller.
-   *
-   * @param {(approved: boolean) => void} callback - Called with true if the passport was approved.
-   */
-  set onPassportReturned(callback) {
-    this.#onPassportReturned = callback
   }
 
   /**
