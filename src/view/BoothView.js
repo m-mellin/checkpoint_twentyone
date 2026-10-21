@@ -3,14 +3,14 @@ import portraitData from '../data/portraits.json'
 import { Traveller } from '../model/Traveller.js'
 
 /**
- * The image source of the desk, in front of the travellers.
+ * The image source of the counter in front of the travellers, where their passports are first placed.
  */
-const DESK_SRC = 'assets/desk_final_2.png'
+const COUNTER_SRC = 'assets/desk_final_2.png'
 
 /**
  * The image source of the background, behind the travellers.
  */
-const BG_SRC = 'assets/background_final_2.png'
+const BACKGROUND_SRC = 'assets/background_final_2.png'
 
 /**
  * The image source of the traveller portraits.
@@ -55,27 +55,28 @@ const WINDOW_X = 480
 const EXIT_X = 1400
 
 /**
- * How fast the traveller moves, in pixels per milisecond.
+ * How fast the traveller moves, in pixels per millisecond.
  */
 const WALK_SPEED = 0.4
 
 /**
- *
+ * The booth seen through the window: the background, the counter in front, and the traveller
+ * who walks up to the window, breathes while waiting, and leaves when their passport is handed back.
  */
-export class TravellerView {
+export class BoothView {
   /**
    * The background behind the traveller.
    *
    * @type {Sprite}
    */
-  #background = new Sprite(BG_SRC, { x: 0, y: 0, width: 1367, height: 629 })
+  #background = new Sprite(BACKGROUND_SRC, { x: 0, y: 0, width: 1367, height: 629 })
 
   /**
-   * The booth desk in front of the traveller.
+   * The counter in front of the traveller.
    *
    * @type {Sprite}
    */
-  #desk = new Sprite(DESK_SRC, { x: 0, y: 520, width: 1367, height: 511 })
+  #desk = new Sprite(COUNTER_SRC, { x: 0, y: 520, width: 1367, height: 511 })
 
   /**
    * The traveller's portrait. Its region decides which person is shown.

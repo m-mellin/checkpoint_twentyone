@@ -1,6 +1,6 @@
 import { SpriteRenderer } from '2d-sprite-renderer'
 import { Traveller } from '../model/Traveller.js'
-import { TravellerView } from './TravellerView.js'
+import { BoothView } from './BoothView.js'
 import { DeskView } from './DeskView.js'
 import { Passport } from '../model/Passport.js'
 import { PassportView } from './PassportView.js'
@@ -46,9 +46,9 @@ export class GameView {
   /**
    * The booth with the traveller walking up to the window.
    *
-   * @type {TravellerView}
+   * @type {BoothView}
    */
-  #travellerView
+  #boothView
 
   /**
    * The passport on the desk.
@@ -164,7 +164,7 @@ export class GameView {
     renderer,
     { gameWidth, gameHeight, difficulty, maxCitations, volumeSettings }
   ) {
-    this.#travellerView = new TravellerView(renderer)
+    this.#boothView = new BoothView(renderer)
     new DeskView(renderer)
     this.#passportView = new PassportView(renderer)
     this.#discrepancyView = new DiscrepancyView(renderer, difficulty)
@@ -329,7 +329,7 @@ export class GameView {
    */
   showTraveller(traveller) {
     this.#passportView.hide()
-    this.#travellerView.show(traveller)
+    this.#boothView.show(traveller)
     this.#heightDisplay.value = `${traveller.person.heightInCm} cm`
     this.#waitingPassport = traveller.passport
   }
@@ -340,7 +340,7 @@ export class GameView {
   travellerLeaves() {
     this.#passportView.hide()
     this.#waitingPassport = null
-    this.#travellerView.leave()
+    this.#boothView.leave()
   }
 
   /**
@@ -375,13 +375,13 @@ export class GameView {
    */
   update(deltaTime) {
     this.#nextDayView.update(deltaTime)
-    this.#travellerView.update(deltaTime)
+    this.#boothView.update(deltaTime)
 
     for (const item of this.#items()) {
       item.update(deltaTime)
     }
 
-    if (this.#waitingPassport !== null && this.#travellerView.isAtWindow) {
+    if (this.#waitingPassport !== null && this.#boothView.isAtWindow) {
       this.#passportView.showPassport(this.#waitingPassport)
       this.#waitingPassport = null
       this.#onPassportShown()
@@ -484,7 +484,7 @@ export class GameView {
       item === this.#passportView &&
       this.#passportView.isOnCounter &&
       this.#passportView.isStamped &&
-      this.#travellerView.isAtWindow
+      this.#boothView.isAtWindow
 
     if (!canHandBack) return false
 
