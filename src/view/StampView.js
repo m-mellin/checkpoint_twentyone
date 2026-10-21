@@ -2,10 +2,16 @@ import { SpriteRenderer } from '2d-sprite-renderer'
 import { InspectableItemView } from './InspectableItemView.js'
 
 /**
- * The size of the stamp on the inspection desk, in pixels. On the counter it is half as big.
+ * The size of the stamp on the inspection desk, in pixels.
  */
-const STAMP_WIDTH = 505 / 3
-const STAMP_HEIGHT = 593 / 3
+const INSPECTION_WIDTH = 505 / 3
+const INSPECTION_HEIGHT = 593 / 3
+
+/**
+ * The size of the stamp on the counter, in pixels.
+ */
+const COUNTER_WIDTH = INSPECTION_WIDTH / 2
+const COUNTER_HEIGHT = INSPECTION_HEIGHT / 2
 
 /**
  * A stamp the player drags onto the open passport to approve or deny it.
@@ -34,13 +40,13 @@ export class StampView extends InspectableItemView {
     super(renderer, {
       counter: {
         src: counterSrc,
-        width: STAMP_WIDTH / 2,
-        height: STAMP_HEIGHT / 2
+        width: COUNTER_WIDTH,
+        height: COUNTER_HEIGHT
       },
       inspectionDesk: {
         src: inspectionDeskSrc,
-        width: STAMP_WIDTH,
-        height: STAMP_HEIGHT
+        width: INSPECTION_WIDTH,
+        height: INSPECTION_HEIGHT
       },
       x,
       y
