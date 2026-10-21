@@ -127,7 +127,11 @@ export class DiscrepancyView extends InspectableItemView {
     })
 
     this.#fields = discrepanciesData[difficulty].map(
-      (code) => new TextSprite(DISCREPANCY_TEXTS[code] ?? code, { font: TEXT_FONT, color: TEXT_COLOR })
+      (code) =>
+        new TextSprite(DISCREPANCY_TEXTS[code] ?? code, {
+          font: TEXT_FONT,
+          color: TEXT_COLOR
+        })
     )
 
     for (const line of [this.#title, ...this.#fields]) {

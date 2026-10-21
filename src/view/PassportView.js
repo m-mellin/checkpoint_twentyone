@@ -175,7 +175,7 @@ export class PassportView extends InspectableItemView {
     issuingCity: new TextSprite('', { font: TEXT_FONT, color: TEXT_COLOR }),
     issueDate: new TextSprite('', { font: TEXT_FONT, color: TEXT_COLOR }),
     expiryDate: new TextSprite('', { font: TEXT_FONT, color: TEXT_COLOR }),
-    identification: new TextSprite('', { font: TEXT_FONT, color: TEXT_COLOR }),
+    identification: new TextSprite('', { font: TEXT_FONT, color: TEXT_COLOR })
   }
 
   /**
