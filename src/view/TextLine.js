@@ -1,8 +1,8 @@
 import { TextSprite } from '2d-sprite-renderer'
 
 /**
- * A line of text that knows its own size. Wraps a TextSprite and measures the text
- * whenever it changes, so it can be centred or stacked under other lines.
+ * A line of text that knows its own size. Wraps a TextSprite, which measures the text
+ * whenever it changes, so the line can be centred or stacked under other lines.
  */
 export class TextLine {
   /**
@@ -13,7 +13,7 @@ export class TextLine {
   #sprite
 
   /**
-   * Creates a line of text and measures it.
+   * Creates a line of text.
    *
    * @param {string} text - The text to draw.
    * @param {object} [options] - How the text looks.
@@ -44,7 +44,7 @@ export class TextLine {
   }
 
   /**
-   * Sets the text and measures its new size.
+   * Sets the text.
    *
    * @param {string} text - The text to draw.
    */
