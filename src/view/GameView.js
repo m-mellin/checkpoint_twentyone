@@ -29,9 +29,14 @@ const DENY_STAMP_Y_POS = 500
 const BUTTON_SETTING_SIZE = 60
 
 /**
- * The y coordinate of the height display.
+ * The x coordinate of the height display.
  */
 const HEIGHT_DISPLAY_X = 1100
+
+/**
+ * The y coordinate of the lcd displays.
+ */
+const DISPLAY_Y = 1040
 
 /**
  * The whole game screen. Creates every view in the order they are drawn,
@@ -182,8 +187,8 @@ export class GameView {
 
     this.#citations = this.#createCitations(renderer, maxCitations)
 
-    this.#dateDisplay = new LcdDisplayView(renderer)
-    this.#heightDisplay = new LcdDisplayView(renderer, { x: HEIGHT_DISPLAY_X })
+    this.#dateDisplay = new LcdDisplayView(renderer, { y: DISPLAY_Y })
+    this.#heightDisplay = new LcdDisplayView(renderer, { x: HEIGHT_DISPLAY_X, y: DISPLAY_Y })
 
     this.#soundView = new SoundView(renderer, {
       gameWidth,
