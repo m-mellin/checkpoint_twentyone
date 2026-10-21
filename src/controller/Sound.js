@@ -46,6 +46,29 @@ export class Sound {
   }
 
   /**
+   * Returns the volume of the audio element.
+   *
+   * @returns {number} The volume, from 0 (silent) to 1 (full).
+   */
+  get volume() {
+    return this.#sound.volume
+  }
+
+  /**
+   * Sets the volume of the audio element.
+   *
+   * @param {number} value - The volume, from 0 (silent) to 1 (full).
+   * @throws {RangeError} If the volume is not between 0 and 1.
+   */
+  set volume(value) {
+    if (!Number.isFinite(value) || value < 0 || value > 1) {
+      throw new RangeError('volume must be between 0 and 1')
+    }
+
+    this.#sound.volume = value
+  }
+
+  /**
    * Plays the sound from the start. Does nothing if the browser blocks it,
    * for example before the player has clicked on the page.
    */
@@ -67,28 +90,5 @@ export class Sound {
    */
   loop() {
     this.#sound.loop = true
-  }
-
-  /**
-   * Returns the volume of the audio element.
-   *
-   * @returns {number} The volume, from 0 (silent) to 1 (full).
-   */
-  get volume() {
-    return this.#sound.volume
-  }
-
-  /**
-   * Sets the volume of the audio element.
-   *
-   * @param {number} value - The volume, from 0 (silent) to 1 (full).
-   * @throws {RangeError} If the volume is not between 0 and 1.
-   */
-  set volume(value) {
-    if (!Number.isFinite(value) || value < 0 || value > 1) {
-      throw new RangeError('volume must be between 0 and 1')
-    }
-
-    this.#sound.volume = value
   }
 }
