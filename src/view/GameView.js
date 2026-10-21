@@ -410,9 +410,9 @@ export class GameView {
    * @param {string} reason - What the player missed, for example "WRONG ISSUING CITY".
    */
   addCitation(reason) {
-    const citatonSlip = this.#citations.find((citation) => !citation.isInUse)
+    const citationSlip = this.#citations.find((citation) => !citation.isInUse)
 
-    citatonSlip?.print(reason)
+    citationSlip?.print(reason)
   }
 
   /**
